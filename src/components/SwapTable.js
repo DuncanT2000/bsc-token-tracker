@@ -5,9 +5,7 @@ import '../index.css'
 
 const SwapTable =  (props) => {
 
-
-    useEffect(() => {
-    }, [props.swaps]);
+    console.log(props.bnbPrice);
 
     if (props.swaps === undefined) {
         return <p>Loading Swaps...</p>
@@ -39,15 +37,18 @@ const SwapTable =  (props) => {
             }else {
                 swapType =  'SELL'
             }
-             const amount = swapType =='BUY' ? parseFloat(item.amount0Out / 100000000).toFixed(4) : parseFloat(item.amount0In / 100000000).toFixed(4)
-            const txURL = `https://bscscan.com/tx/${item.txHash}`
+
+             const amount = swapType =='BUY' ? parseFloat(item.amount0Out / 100000000) : parseFloat(item.amount0In / 100000000)
+             const amountBNB = swapType =='BUY' ? parseFloat(item.amount1In / 1000000000000000000) : parseFloat(item.amount1Out / 1000000000000000000)
+             const amountPPT =  props.bnbPrice * (amountBNB/amount) 
+             const txURL = `https://bscscan.com/tx/${item.txHash}`
             return (<tr key={item.txHash + i} className={'swap-table-row'} >
             <td>{item.timestamp}</td>
            <td>{swapType}</td>
-           <td>{amount}</td>
-           <td></td>
-           <td></td>
-           <td></td>
+           <td>{amount.toFixed(4)}</td>
+           <td>${(amountBNB * props.bnbPrice).toPrecision(5)}</td>
+           <td>{amountBNB.toFixed(4)}</td>
+           <td>{amountPPT.toFixed(4)}</td>
            <td><a href={txURL} target="_blank"> <p>Check on BSC</p></a></td>
          </tr>
        )

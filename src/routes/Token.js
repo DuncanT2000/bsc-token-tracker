@@ -4,13 +4,37 @@ import SwapTable from '../components/SwapTable';
 import TradingChart from '../components/TradingChart.js';
 
 import Web3 from 'web3'
-
+const Binance = require('node-binance-api');
 
 const Token = (props) => {
 
     const [swaps, setswaps] = useState([]);
+    const [bnbPriceUSD, setbnbPriceUSD] = useState(0);
+    
+
+    const sleep= (ms)=> {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
 
+    const binance = new Binance().options({
+      APIKEY: '',
+      APISECRET: ''
+    });
+    let BNBprice;
+     
+    binance.prices('BNBUSDT', (error, ticker) => {
+      BNBprice = parseFloat(ticker.BNBUSDT);
+    });
+
+
+    useEffect( () => {
+      binance.prices('BNBUSDT', (error, ticker) => {
+        setbnbPriceUSD(parseFloat(ticker.BNBUSDT));
+      });
+  
+    }, [props.match.params.tokenAddress])
+  
 
 
     useEffect(async () => {
@@ -107,7 +131,7 @@ const Token = (props) => {
     return (
         <div>
           <TradingChart tokenAddress={props.match.params.tokenAddress}/>
-          <SwapTable swaps={swaps} />
+          <SwapTable swaps={swaps} bnbPrice={bnbPriceUSD}/>
         </div>
     )
 }
