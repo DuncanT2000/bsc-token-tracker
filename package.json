@@ -3,13 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ethersproject/address": "^5.1.0",
+    "@ethersproject/providers": "^5.1.2",
+    "@ethersproject/solidity": "^5.1.0",
+    "@material-ui/core": "^4.11.4",
+    "@pancakeswap/sdk": "^2.3.1",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
+    "date-fns": "^2.21.1",
+    "ethers": "^5.1.4",
+    "graphql-request": "^3.4.0",
+    "graphql-tag": "^2.12.4",
+    "lightweight-charts": "^3.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "web-vitals": "^1.1.1"
+    "subscriptions-transport-ws": "^0.9.18",
+    "web-vitals": "^1.1.1",
+    "web3": "^1.3.5"
   },
   "scripts": {
     "start": "react-scripts start",
