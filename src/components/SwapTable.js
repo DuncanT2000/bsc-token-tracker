@@ -1,22 +1,25 @@
 import React, {useEffect} from 'react'
-import { fromUnixTime, set } from 'date-fns'
 import '../index.css'
 
 
 const SwapTable =  (props) => {
 
-    console.log(props.bnbPrice);
 
-    if (props.swaps === undefined) {
+    useEffect(()=>{
+        console.log("New Swaps founds");
+    },[props.swaps])
+
+    if (props.swaps === undefined || props.tokenDetails == undefined) {
         return <p>Loading Swaps...</p>
     }
 
-    if (props.swaps == []) {
-        return <p>No Swaps Found!</p>
-    }
+    if (props.swaps === []) {
+        return(<div><p>No Swaps Found!</p></div> )    
+    
+    }else{
 
-
-
+        
+        const decimal = `1${"0".repeat(props.tokenDetails.tokenDecimal)}`
 
     return(  <div>
         <table key="swapTable">
@@ -38,17 +41,21 @@ const SwapTable =  (props) => {
                 swapType =  'SELL'
             }
 
-             const amount = swapType =='BUY' ? parseFloat(item.amount0Out / 100000000) : parseFloat(item.amount0In / 100000000)
+             const amount = swapType =='BUY' ? parseFloat(item.amount0Out / parseFloat(decimal)) : parseFloat(item.amount0In / parseFloat(decimal))
              const amountBNB = swapType =='BUY' ? parseFloat(item.amount1In / 1000000000000000000) : parseFloat(item.amount1Out / 1000000000000000000)
-             const amountPPT =  props.bnbPrice * (amountBNB/amount) 
+             const amountPPT =  (amountBNB * props.bnbPrice) / amount 
              const txURL = `https://bscscan.com/tx/${item.txHash}`
+             let swaptimed = new Date(0) 
+             swaptimed.setUTCSeconds(item.timestamp);
+              const swaptime = `${swaptimed.getHours() < 10? "0" + swaptimed.getHours(): swaptimed.getHours()}:${swaptimed.getMinutes() < 10? "0" + swaptimed.getMinutes(): swaptimed.getMinutes()}:${swaptimed.getSeconds() < 10? "0" + swaptimed.getSeconds(): swaptimed.getSeconds()}`
+
             return (<tr key={item.txHash + i} className={'swap-table-row'} >
-            <td>{item.timestamp}</td>
+            <td>{swaptime}</td>
            <td>{swapType}</td>
-           <td>{amount.toFixed(4)}</td>
+           <td>{parseInt(amount.toFixed(4)).toLocaleString()}</td>
            <td>${(amountBNB * props.bnbPrice).toPrecision(5)}</td>
            <td>{amountBNB.toFixed(4)}</td>
-           <td>{amountPPT.toFixed(4)}</td>
+           <td>{amountPPT < 0.00000 ? amountPPT.toFixed(4): amountPPT.toFixed(props.tokenDetails.tokenDecimal)}</td>
            <td><a href={txURL} target="_blank"> <p>Check on BSC</p></a></td>
          </tr>
        )
@@ -57,6 +64,12 @@ const SwapTable =  (props) => {
         </tbody>
         </table>
     </div>)
+
+    }
+
+
+
+    
 
     
 }

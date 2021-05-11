@@ -1,19 +1,21 @@
 
 import React, {useState, useEffect, useRef} from 'react'
 import {createChart} from 'lightweight-charts'
-import FetchChartData from './FetchChartData.js'
+import FetchChartData from './FetchComponents/FetchChartData.js'
 
 
 
 let chart;
-let candlestickSeries;
+let candlestickSeries= null;
 
 const TradingChart = (props) => {
     
   const tradingChart = useRef()
 
+  const [isLoading, setisLoading] = useState(true);
 
   useEffect(() => {
+
     chart = createChart(tradingChart.current, { width: 900, height: 500,
       localization: {
         priceFormatter: price =>
@@ -42,12 +44,23 @@ const TradingChart = (props) => {
   }, []);
 
 
-  useEffect(async () => {
-    const data = await FetchChartData(props.tokenAddress)
-    candlestickSeries.setData(data)
-  }, [props.tokenAddress])
+  useEffect( () => {
+    const init = async()=>{
+      if(props.bnbPrice == undefined) return
+    const data = await FetchChartData(props.tokenAddress,30, props.bnbPrice)
+      candlestickSeries.setData(data)
+      setisLoading(false)
+    }
+    init()
+  }, [props.tokenAddress, props.bnbPrice])
+    
+    return(<div>
+      {isLoading ==true ? <p>Loading Chart Data...</p> : <> </>}
+      <div ref={tradingChart}> </div>
+      </div>)
 
-    return(<div ref={tradingChart}> </div> )
+  
+    
    
 }
 
