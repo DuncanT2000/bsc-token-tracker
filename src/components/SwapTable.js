@@ -6,7 +6,8 @@ const SwapTable =  (props) => {
 
 
     useEffect(()=>{
-        console.log("New Swaps founds");
+        console.log("New Swaps founds")
+        console.log(props.swaps)
     },[props.swaps])
 
     if (props.swaps === undefined || props.tokenDetails == undefined) {
@@ -18,7 +19,6 @@ const SwapTable =  (props) => {
     
     }else{
 
-        
         const decimal = `1${"0".repeat(props.tokenDetails.tokenDecimal)}`
 
     return(  <div>
