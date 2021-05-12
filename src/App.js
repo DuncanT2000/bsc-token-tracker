@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import './App.css'
-import SwapTable from './components/SwapTable';
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,7 +7,7 @@ import {
   Link
 } from "react-router-dom";
 import Token from './routes/Token';
-import SearchTokenInput from './components/SearchTokenInput';
+import Navbar from './components/Navbar.js';
 
 
 function App() {
@@ -18,10 +17,9 @@ function App() {
   
   return (
     <Router>
-
+      <Navbar tokenAddressInput={tokenAddressInput} OntokenAddressInput={settokenAddressInput}/>
     <div className="App">
-      <h1>Enter Token Address:</h1>
-     <SearchTokenInput tokenAddressInput={tokenAddressInput} OntokenAddressInput={settokenAddressInput}/>
+      
 
      <Switch>
           <Route path="/token/:tokenAddress" component={Token}/>

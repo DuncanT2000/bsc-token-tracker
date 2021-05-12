@@ -140,6 +140,7 @@ const Token = (props) => {
 
 
     const refreshSwapsFeed = ()=>{
+      console.log(lastBlock);
       if (lastBlock == 0) {
         setlastBlock(swaps[0].blockNumber + 1)
       }else{
@@ -150,7 +151,7 @@ const Token = (props) => {
         fromBlock: lastBlock,
         toBlock: 'latest',
         topics:['0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822']
-    }, (error, events)=>{ 
+    }, async (error, events)=>{ 
       if (events !=undefined && events.length > 0) {
         events = events.map((event)=>{
           return {
@@ -164,7 +165,6 @@ const Token = (props) => {
         })
         console.log(events);
         setswaps([...events.reverse(),...swaps])
-        setlastBlock(events[events.length -1].blockNumber + 1)
     }else{console.log('No Events found');}
   
     console.log(lastBlock)
@@ -175,7 +175,7 @@ const Token = (props) => {
     fromBlock: lastBlock,
     toBlock: 'latest',
     topics:['0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822']
-}, (error, events)=>{ 
+}, async (error, events)=>{ 
   if (events !=undefined && events.length > 0) {
     events = events.map((event)=>{
       return {
@@ -189,16 +189,23 @@ const Token = (props) => {
     })
     console.log(events);
     setswaps([...events.reverse(),...swaps])
-    setlastBlock(events[events.length -1].blockNumber + 1)
 }else{console.log('No Events found');}
 
-console.log(lastBlock)
+
 }
 )
-
-
-
+console.log(swaps[0]);
+setlastBlock((bn)=> swaps[0].blockNumber + 1)
+console.log(lastBlock)
     }
+
+/*     useEffect(() => {
+      setTimeout(() => {
+        setInterval(() => {
+          refreshSwapsFeed()
+        }, 5000);
+      }, 10000);
+    }, []) */
 
 
     return (

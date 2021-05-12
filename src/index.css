@@ -11,6 +11,33 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.nav-bar{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1e1f1e;
+  height: 75px;
+}
+.nav-bar h1{
+  margin-left: 10px;
+  color: #5aa17f;
+}
+
+.nav-bar input{
+  border: 2px solid #5aa17f;
+  max-width: 300px;
+  width: 100vw;
+  font-size: larger;
+  background-color: #1e1f1e;
+  color: #5aa17f;
+  padding: 5px;
+
+
+}
+
+
 .swap-table-row{
   color: white;
 }
@@ -26,5 +53,6 @@ code {
 .swap-table-row:nth-child(2n){
 background-color: rgba(47, 52, 70, 0.8)
 }
+
 
 

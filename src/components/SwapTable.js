@@ -23,7 +23,7 @@ const SwapTable =  (props) => {
     return(  <div>
         <table key="swapTable">
         <tbody key="swapHeadings">
-            <th key="swapHeadingsTS">TimeStamp</th>
+            <th key="swapHeadingsTS">Block</th>
             <th key="swapHeadingsType">Swap Type</th>
             <th key="swapHeadingsAmount">Amount</th>
             <th key="swapHeadingsAmountUSD">Amount(USD)</th>
@@ -44,12 +44,12 @@ const SwapTable =  (props) => {
              const amountBNB = swapType =='BUY' ? parseFloat(item.amount1In / 1000000000000000000) : parseFloat(item.amount1Out / 1000000000000000000)
              const amountPPT =  (amountBNB * props.bnbPrice) / amount 
              const txURL = `https://bscscan.com/tx/${item.txHash}`
-             let swaptimed = new Date(0) 
+            /*  let swaptimed = new Date(0) 
              swaptimed.setUTCSeconds(item.timestamp);
               const swaptime = `${swaptimed.getHours() < 10? "0" + swaptimed.getHours(): swaptimed.getHours()}:${swaptimed.getMinutes() < 10? "0" + swaptimed.getMinutes(): swaptimed.getMinutes()}:${swaptimed.getSeconds() < 10? "0" + swaptimed.getSeconds(): swaptimed.getSeconds()}`
-
+ */
             return (<tr key={item.txHash + i} className={'swap-table-row'} >
-            <td>{swaptime}</td>
+            <td>{item.blockNumber}</td>
            <td>{swapType}</td>
            <td>{parseInt(amount.toFixed(4)).toLocaleString()}</td>
            <td>${(amountBNB * props.bnbPrice).toPrecision(5)}</td>
