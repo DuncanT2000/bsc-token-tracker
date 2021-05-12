@@ -54,7 +54,7 @@ const SwapTable =  (props) => {
            <td>{parseInt(amount.toFixed(4)).toLocaleString()}</td>
            <td>${(amountBNB * props.bnbPrice).toPrecision(5)}</td>
            <td>{amountBNB.toFixed(4)}</td>
-           <td>{amountPPT < 0.00000 ? amountPPT.toFixed(4): amountPPT.toFixed(props.tokenDetails.tokenDecimal)}</td>
+           <td>${parseFloat(amountPPT) > 0.00 ? amountPPT.toFixed(2) : amountPPT.toFixed(props.tokenDetails.tokenDecimal)}</td>
            <td><a href={txURL} target="_blank"> <p>Check on BSC</p></a></td>
          </tr>
        )

@@ -1,6 +1,6 @@
 
 import React, {useState, useEffect, useRef} from 'react'
-import {createChart} from 'lightweight-charts'
+import {createChart} from 'kaktana-react-lightweight-charts'
 import FetchChartData from './FetchComponents/FetchChartData.js'
 
 
@@ -16,7 +16,10 @@ const TradingChart = (props) => {
 
   useEffect(() => {
 
-    chart = createChart(tradingChart.current, { width: 900, height: 500,
+    chart = createChart(tradingChart.current, { 
+      autoHeight:true,
+      autoWidth: true,
+      darkTheme:true,
       localization: {
         priceFormatter: price =>
             '$' + price
@@ -38,8 +41,7 @@ const TradingChart = (props) => {
           labelVisible: true,
       },
       mode: 0,
-  },
-    });
+  },});
     candlestickSeries = chart.addCandlestickSeries();
   }, []);
 
@@ -56,12 +58,12 @@ const TradingChart = (props) => {
     
     return(<div>
       {isLoading ==true ? <p>Loading Chart Data...</p> : <> </>}
-      <div ref={tradingChart}> </div>
+      <div className="trading-chart" ref={tradingChart}> </div>
       </div>)
 
   
     
-   
+  
 }
 
 export default TradingChart

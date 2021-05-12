@@ -7,12 +7,13 @@ import Web3 from 'web3'
 import FetchTokenDetails from '../components/FetchComponents/FetchTokenDetails';
 import FetchSwapData from '../components/FetchComponents/FetchSwapData';
 const Binance = require('node-binance-api');
-let TokenDetails;
+let TokenDetails={};
 
 const web3 = new Web3('https://bsc-dataseed1.defibit.io/');
 
 let pairContract
 let pairContractv2 
+let runSwapLoop= null;
 
 const binance = new Binance().options({
   APIKEY: '',
@@ -87,6 +88,8 @@ const Token = (props) => {
        console.log(pastSwapEvents);
 
         setswaps([...pastSwapEvents].reverse())
+        runSwapLoop=0
+        setlastBlock([...pastSwapEvents].reverse()[0].blockNumber + 1)
       }
       initSwapEffect()
 
@@ -199,22 +202,28 @@ setlastBlock((bn)=> swaps[0].blockNumber + 1)
 console.log(lastBlock)
     }
 
-/*     useEffect(() => {
-      setTimeout(() => {
+     useEffect(() => {
+       if (swaps !== [] && runSwapLoop !== null){
+         console.log('Started');
         setInterval(() => {
           refreshSwapsFeed()
-        }, 5000);
-      }, 10000);
-    }, []) */
+        }, 10000); 
+       }
+        
+    }, [runSwapLoop]) 
 
 
     return (
-        <div>
-          <div>
-          <TradingChart bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
+        <div className="token-main-container">
+          <div className="token-info-container">
+            <p>Name: {Object.keys(TokenDetails).length > 0 ?TokenDetails.tokenName : "Loading..."}</p>
           </div>
-          <button onClick={refreshSwapsFeed} >Reload Token Feed</button>
+          <div className="token-chart-swap-container"> 
+          <TradingChart bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
+          
           <SwapTable swaps={swaps} tokenDetails={TokenDetails} bnbPrice={bnbPriceUSD}/>
+          </div>
+          <div className="upcoming-token-chart"></div>
         </div>
     )
 }

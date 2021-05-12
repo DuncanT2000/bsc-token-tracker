@@ -22,21 +22,45 @@ code {
 }
 .nav-bar h1{
   margin-left: 10px;
-  color: #5aa17f;
+  color: #00cccc;
 }
 
 .nav-bar input{
-  border: 2px solid #5aa17f;
+  border: 2px solid #00cccc;
   max-width: 300px;
   width: 100vw;
   font-size: larger;
   background-color: #1e1f1e;
-  color: #5aa17f;
+  color: #00cccc;
   padding: 5px;
-
-
 }
 
+.token-main-container{
+  display: flex;
+  width: 100vw;
+}
+
+.trading-chart{
+width: 100%;
+height: 100%;
+min-height: 300px;
+}
+
+.token-info-container{
+  background-color: aqua;
+  padding: 5px;
+  margin-right: 5px;
+  width: 20vw;
+  
+}
+
+.token-chart-swap-container{
+  width: 60vw;
+}
+
+.upcoming-token-chart{
+  width: 20vw;
+}
 
 .swap-table-row{
   color: white;
