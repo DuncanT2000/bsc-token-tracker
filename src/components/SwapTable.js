@@ -7,7 +7,6 @@ const SwapTable =  (props) => {
 
     useEffect(()=>{
         console.log("New Swaps founds")
-        console.log(props.swaps)
     },[props.swaps])
 
     if (props.swaps === undefined || props.tokenDetails == undefined) {
