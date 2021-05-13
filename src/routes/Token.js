@@ -6,7 +6,10 @@ import TradingChart from '../components/TradingChart.js';
 import Web3 from 'web3'
 import FetchTokenDetails from '../components/FetchComponents/FetchTokenDetails';
 import FetchSwapData from '../components/FetchComponents/FetchSwapData';
+import FetchChartData from '../components/FetchComponents/FetchChartData'
+
 const Binance = require('node-binance-api');
+
 let TokenDetails={};
 
 const web3 = new Web3('https://bsc-dataseed1.defibit.io/');
@@ -14,6 +17,7 @@ const web3 = new Web3('https://bsc-dataseed1.defibit.io/');
 let pairContract
 let pairContractv2 
 let runSwapLoop= null;
+let candleData = []
 
 const binance = new Binance().options({
   APIKEY: '',
@@ -72,8 +76,6 @@ const Token = (props) => {
 
     }, [props.match.params.tokenAddress])
   
-
-
 
     useEffect(() => {
       console.log('Started Fetch Swap Effect');
@@ -212,6 +214,17 @@ console.log(lastBlock)
         
     }, [runSwapLoop]) 
 
+    useEffect( () => {
+      const init = async()=>{
+        if(bnbPriceUSD == undefined) return
+      const data = await FetchChartData(props.match.params.tokenAddress,30, bnbPriceUSD)
+      candleData= data
+      }
+      init()
+    }, [props.match.params.tokenAddress, bnbPriceUSD])
+      
+
+
 
     return (
         <div className="token-main-container">
@@ -219,9 +232,11 @@ console.log(lastBlock)
             <p>Name: {Object.keys(TokenDetails).length > 0 ?TokenDetails.tokenName : "Loading..."}</p>
           </div>
           <div className="token-chart-swap-container"> 
-          <TradingChart bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
+          <TradingChart candleDataArr={candleData} bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
+          <div className="token-swap-feed-container">
+            <SwapTable swaps={swaps} tokenDetails={TokenDetails} bnbPrice={bnbPriceUSD}/>
+          </div>
           
-          <SwapTable swaps={swaps} tokenDetails={TokenDetails} bnbPrice={bnbPriceUSD}/>
           </div>
           <div className="upcoming-token-chart"></div>
         </div>

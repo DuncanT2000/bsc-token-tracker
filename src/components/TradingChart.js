@@ -1,7 +1,6 @@
 
 import React, {useState, useEffect, useRef} from 'react'
 import {createChart} from 'kaktana-react-lightweight-charts'
-import FetchChartData from './FetchComponents/FetchChartData.js'
 
 
 
@@ -15,14 +14,13 @@ const TradingChart = (props) => {
   const [isLoading, setisLoading] = useState(true);
 
   useEffect(() => {
-
     chart = createChart(tradingChart.current, { 
       autoHeight:true,
       autoWidth: true,
       darkTheme:true,
       localization: {
         priceFormatter: price =>
-            '$' + price
+            '$' + parseFloat(price) > 0.00000 ? parseFloat(price).toFixed(4) : parseFloat(price).toFixed(8)
         ,
     },
     crosshair: {
@@ -49,12 +47,13 @@ const TradingChart = (props) => {
   useEffect( () => {
     const init = async()=>{
       if(props.bnbPrice == undefined) return
-    const data = await FetchChartData(props.tokenAddress,30, props.bnbPrice)
-      candlestickSeries.setData(data)
+      candlestickSeries.setData(props.candleDataArr)
       setisLoading(false)
     }
     init()
-  }, [props.tokenAddress, props.bnbPrice])
+  }, [props.candleDataArr])
+
+
     
     return(<div>
       {isLoading ==true ? <p>Loading Chart Data...</p> : <> </>}

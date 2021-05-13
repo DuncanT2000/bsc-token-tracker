@@ -48,7 +48,8 @@ const SwapTable =  (props) => {
              swaptimed.setUTCSeconds(item.timestamp);
               const swaptime = `${swaptimed.getHours() < 10? "0" + swaptimed.getHours(): swaptimed.getHours()}:${swaptimed.getMinutes() < 10? "0" + swaptimed.getMinutes(): swaptimed.getMinutes()}:${swaptimed.getSeconds() < 10? "0" + swaptimed.getSeconds(): swaptimed.getSeconds()}`
  */
-            return (<tr key={item.txHash + i} className={'swap-table-row'} >
+            const transtype= (amountBNB * props.bnbPrice) > 1000 ? 'bigtransaction': ''
+            return (<tr key={item.txHash + i} className={`swap-table-row ${transtype}` } >
             <td>{item.blockNumber}</td>
            <td>{swapType}</td>
            <td>{parseInt(amount.toFixed(4)).toLocaleString()}</td>

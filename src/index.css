@@ -77,6 +77,14 @@ min-height: 300px;
 .swap-table-row:nth-child(2n){
 background-color: rgba(47, 52, 70, 0.8)
 }
+.token-swap-feed-container{
+  height: 70vh;
+  overflow-y: scroll;
+}
+
+.bigtransaction{
+background-color: rgba(138, 24, 24, 0.8);
+}
 
 
 
