@@ -7,18 +7,12 @@ import Web3 from 'web3'
 import FetchTokenDetails from '../components/FetchComponents/FetchTokenDetails';
 import FetchSwapData from '../components/FetchComponents/FetchSwapData';
 import FetchChartData from '../components/FetchComponents/FetchChartData'
-import { parse } from 'date-fns';
 import {
   Multicall,
   ContractCallContext,
   ContractCallResults,
   
 } from 'ethereum-multicall';
-
-
-
-
-
 
 
 const Binance = require('node-binance-api');

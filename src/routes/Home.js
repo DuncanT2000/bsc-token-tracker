@@ -1,11 +1,16 @@
-import React,{useEffect} from 'react'
+import React,{useEffect, useContext} from 'react'
+import {BlockContext} from '../components/Contexts/useBlockContext.js'
+import WalletTracker from '../components/WalletTracker.js';
 const { ethers } = require("ethers");
 const { Contract, Provider } = require('ethers-multicall');
 const provider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed1.defibit.io/');
 
+
 //0xe9e7cea3dedca5984780bafc599bd69add087d56 - BUSD
 
 const Home = () => {
+
+  const BlockContextCon = useContext(BlockContext)
 
 
     useEffect(() => {
@@ -66,7 +71,8 @@ const Home = () => {
 
     return (
         <div>
-            <h1>HOME PAGE</h1>
+          <h1>Home</h1>
+        <WalletTracker />
         </div>
     )
 }
