@@ -6,6 +6,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import Home from './routes/Home';
 import Token from './routes/Token';
 import Navbar from './components/Navbar.js';
 
@@ -22,7 +23,8 @@ function App() {
       
 
      <Switch>
-          <Route path="/token/:tokenAddress" component={Token}/>
+     <Route path="/" exact component={Home}/>
+          <Route path="/token/:tokenAddress" exact component={Token}/>
         </Switch>
 
     </div>
