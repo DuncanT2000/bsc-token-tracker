@@ -1,6 +1,5 @@
-
 import React, {useState, useEffect, useRef} from 'react'
-import {createChart} from 'kaktana-react-lightweight-charts'
+import {createChart} from 'lightweight-charts'
 
 
 
@@ -12,6 +11,7 @@ const TradingChart = (props) => {
   const tradingChart = useRef()
 
   const [isLoading, setisLoading] = useState(true);
+  const [isLoadingChartData, setisLoadingChartData] = useState(false);
 
   useEffect(() => {
     chart = createChart(tradingChart.current, { 
@@ -41,6 +41,25 @@ const TradingChart = (props) => {
       mode: 0,
   },});
     candlestickSeries = chart.addCandlestickSeries();
+
+    function onVisibleLogicalRangeChanged(newVisibleLogicalRange) {
+      const barsInfo = candlestickSeries.barsInLogicalRange(newVisibleLogicalRange);
+
+      
+
+      if (isLoadingChartData) {
+        return
+      }
+      if (barsInfo !== null && barsInfo.barsBefore < 50) {
+
+        return
+          
+      }
+     console.log(isLoadingChartData);
+ 
+  }
+      chart.timeScale().subscribeVisibleLogicalRangeChange(onVisibleLogicalRangeChanged);
+
   }, []);
 
 
@@ -66,7 +85,3 @@ const TradingChart = (props) => {
 }
 
 export default TradingChart
-
-
-
-
