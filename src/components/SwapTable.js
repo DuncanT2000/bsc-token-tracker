@@ -1,13 +1,19 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useContext} from 'react'
 import '../index.css'
+import {Web3Context} from './/Contexts/Web3Context.js'
 
 
 const SwapTable =  (props) => {
+
+    const swapWeb3Context = useContext(Web3Context)
+    const web3 = swapWeb3Context.web3
 
 
     useEffect(()=>{
         console.log("New Swaps founds")
     },[props.swaps])
+
+
 
     if (props.swaps === undefined || props.tokenDetails == undefined) {
         return <p>Loading Swaps...</p>
@@ -23,13 +29,12 @@ const SwapTable =  (props) => {
     return(  <div>
         <table key="swapTable">
         <tbody key="swapHeadings">
-            <th key="swapHeadingsTS">Block</th>
-            <th key="swapHeadingsType">Swap Type</th>
+            <th key="swapHeadingsTS">Time</th>
+            <th key="swapHeadingsType">Type</th>
             <th key="swapHeadingsAmount">Amount</th>
-            <th key="swapHeadingsAmountUSD">Amount(USD)</th>
+            <th key="swapHeadingsAmountUSD">Value(USD)</th>
             <th key="swapHeadingsAmountETH">Amount(BNB)</th>
             <th key="swapHeadingsPPT">Price per Token</th>
-
             <th key="swapHeadingsTxId">Tx ID</th>
         {props.swaps.map((item, i) =>{
             let swapType;

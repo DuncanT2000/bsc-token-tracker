@@ -55,7 +55,7 @@ const TradingChart = (props) => {
         return
           
       }
-     console.log(isLoadingChartData);
+     console.log(isLoadingChartData)
  
   }
       chart.timeScale().subscribeVisibleLogicalRangeChange(onVisibleLogicalRangeChanged);
@@ -68,6 +68,22 @@ const TradingChart = (props) => {
       if(props.bnbPrice == undefined) return
       candlestickSeries.setData(props.candleDataArr)
       setisLoading(false)
+      if (props.candleDataArr === []) {
+        return
+      }else{
+             setTimeout(() => {
+        candlestickSeries.update({
+          time: 1621295100,
+          open: props.candleDataArr[props.candleDataArr.length - 1],
+          high: 10.90,
+          low: 10.50,
+          close: 10.70,
+      },
+      );
+      }, 10000);
+      }
+ 
+      
     }
     init()
   }, [props.candleDataArr])

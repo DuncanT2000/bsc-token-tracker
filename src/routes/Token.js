@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react'
+import React, { useEffect, useState,useRef, useContext } from 'react'
 import '../App.css'
 import SwapTable from '../components/SwapTable';
 import TradingChart from '../components/TradingChart.js';
@@ -7,27 +7,17 @@ import Web3 from 'web3'
 import FetchTokenDetails from '../components/FetchComponents/FetchTokenDetails';
 import FetchSwapData from '../components/FetchComponents/FetchSwapData';
 import FetchChartData from '../components/FetchComponents/FetchChartData'
-import {
-  Multicall,
-  ContractCallContext,
-  ContractCallResults,
-  
-} from 'ethereum-multicall';
+
 import {useQuery, gql} from '@apollo/client'
 import { GET_CHART_DATA } from '../components/Queries';
-
+import {Web3Context} from '../components/Contexts/Web3Context.js'
+import {BlockContext} from '../components/Contexts/useBlockContext.js'
 
 const Binance = require('node-binance-api');
 
 let TokenDetails={};
 let PoolData={};
 
-
-
-const web3 = new Web3('https://bsc-dataseed1.defibit.io/');
-const multicall = new Multicall({ web3Instance: web3 });
-
-let candleData = []
 
 const binance = new Binance().options({
   APIKEY: '',
@@ -37,6 +27,11 @@ const binance = new Binance().options({
 
 
 const Token = (props) => {
+
+  const swapWeb3Context = useContext(Web3Context)
+  const web3 = swapWeb3Context.web3
+  const multicall = swapWeb3Context.multicall
+  const swapBlockContext = useContext(BlockContext)
 
     const [swaps, setswaps] = useState([]);
     const [bnbPriceUSD, setbnbPriceUSD] = useState(0);
@@ -414,13 +409,13 @@ const Token = (props) => {
       }
   })
 
-  useEffect( () => {
+  useEffect( async () => {
     console.log('Started Fetch BNB price Effect');
     binance.prices('BNBUSDT', (error, ticker) => {
       setbnbPriceUSD(parseFloat(ticker.BNBUSDT));
     });
   },[])
-      useEffect(() => {
+  useEffect(() => {
         console.log(`Refetching Chart Data - ${chartInterval}m` )
         refetch()
       }, [props.match.params.tokenAddress,chartInterval])
@@ -433,11 +428,11 @@ const Token = (props) => {
 
               return{
                 "time":new Date(kline.timeInterval.minute).getTime()/ 1000,
-                "open": kline.open_price,
-                "high": kline.maximum_price,
-                "low":  kline.minimum_price,
-                "close":   kline.close_price,
-                "volume":kline.tradeAmount
+                "open": bnbPriceUSD * kline.open_price,
+                "high": bnbPriceUSD * kline.maximum_price,
+                "low": bnbPriceUSD * kline.minimum_price,
+                "close": bnbPriceUSD * kline.close_price,
+                "volume":  kline.tradeAmount
               }
             })
             console.log(formatedkline);
@@ -447,14 +442,29 @@ const Token = (props) => {
     
 
         useEffect(() => {
-          console.log('Start');
           callnew()
-          setTimeout(() => {
-            
-          }, 2000);
-
         
         }, [])
+
+        useEffect(() => {
+          const initSwap = async ()=>{
+              const eventLog = await web3.eth.getPastLogs({
+                  address: ["0x0c5DA0f07962dd0256c079248633f2b43CaD6f62"],
+                  topics: ["0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"],
+                  fromBlock:swapBlockContext.LatestBlock.number,
+                  toBlock: 'latest'
+              })
+
+              if (eventLog.length > 0) {
+                console.log(parseInt(eventLog[0].data, 16));
+              }
+              console.log(eventLog);
+              
+              
+          }
+          initSwap()
+          
+      }, [swapBlockContext.LatestBlock])
 
 
 

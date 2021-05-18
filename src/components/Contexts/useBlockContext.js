@@ -14,14 +14,17 @@ export const BlockContextProvider = ({children}) => {
     const web3Con = useContext(Web3Context)
     const web3 = web3Con.web3
 
+
     const BlockListner = async ()=>{
-       const bn = await web3.eth.getBlockNumber();
+       const bn = await web3.eth.getBlock('latest');
+       
        setLatestBlock(bn)
     }
 
 
 
-    useEffect(() => {
+    useEffect(async () => {
+
         BlockListner()
         const addBlockListner = setInterval(() => {
             BlockListner()
