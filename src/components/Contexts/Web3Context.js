@@ -10,6 +10,8 @@ import {
 
 let web3 = new Web3('https://bsc-dataseed1.defibit.io/');
 
+
+
 const multicall = new Multicall({ web3Instance: web3 });
 export const Web3Context = createContext(0)
 

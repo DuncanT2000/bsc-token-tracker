@@ -17,7 +17,7 @@ code {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #1e1f1e;
+  background-color: #1B262C;
   height: 75px;
 }
 .nav-bar h1{
@@ -37,11 +37,13 @@ code {
 
 .token-main-container{
   display: flex;
-  width: 100vw;
+  width: 100%;
+  background-color: #163F56;
+  color: white;
 }
 
 .trading-chart{
-width: 100%;
+width: fit-content;
 height: 100%;
 min-height: 300px;
 }
@@ -55,20 +57,15 @@ min-height: 300px;
 }
 
 .token-chart-swap-container{
-  width: 80vw;
+  width: 77vw;
 }
 
 .upcoming-token-chart{
   width: 20vw;
 }
 
-.swap-table-row{
-  color: white;
-}
 
-.swap-table-row a{
-  color: white;
-}
+
 
 .swap-table-row:nth-child(1n){
   background-color: rgba(47, 52, 70, 0.9)
@@ -77,6 +74,11 @@ min-height: 300px;
 .swap-table-row:nth-child(2n){
 background-color: rgba(47, 52, 70, 0.8)
 }
+
+.swap-table-link{
+  color: white;
+}
+
 .token-swap-feed-container{
   height: 70vh;
   overflow-y: scroll;

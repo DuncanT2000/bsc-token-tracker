@@ -11,6 +11,7 @@ import Token from './routes/Token';
 import Navbar from './components/Navbar.js';
 import {BlockContextProvider} from './components/Contexts/useBlockContext'
 import { Web3ContextProvider } from './components/Contexts/Web3Context';
+
 import { Connectors } from 'web3-react'
 import { ApolloProvider, 
   ApolloClient, 
