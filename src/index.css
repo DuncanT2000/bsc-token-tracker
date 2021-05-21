@@ -54,7 +54,7 @@ min-height: 300px;
 }
 
 .token-info-container{
-  background-color: aqua;
+  background-color: rgba(22, 61, 82, 1);
   padding: 5px;
   margin-right: 5px;
   width: 20vw;

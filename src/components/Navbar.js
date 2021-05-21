@@ -2,6 +2,9 @@ import React, {useContext, useEffect} from 'react'
 import SearchTokenInput from './SearchTokenInput';
 import {Web3Context} from './Contexts/Web3Context';
 import {BlockContext} from './Contexts/useBlockContext';
+import {
+    Link
+  } from "react-router-dom";
 
 const Navbar = (props) => {
 
@@ -47,6 +50,10 @@ const Navbar = (props) => {
     return (
         <div className="nav-bar">
             <h1>Navbar</h1>
+            <div>
+                <Link to={'/charts'}><p style={{color:'white'}}>Charts</p></Link>
+                
+            </div>
             <SearchTokenInput tokenAddressInput={props.tokenAddressInput} OntokenAddressInput={props.OntokenAddressInput}/>
             <div style={{display: 'flex'}}>
             <button style={{marginRight:15}} onClick={connectWallet} >Connect</button>

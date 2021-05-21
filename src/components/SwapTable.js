@@ -34,12 +34,12 @@ const SwapTable =  (props) => {
 
       const StyledTableCell = withStyles((theme) => ({
         head: {
-          backgroundColor: '#163F56',
+          backgroundColor: '#1B262C',
           color: theme.palette.common.white,
         },
         body: {
           fontSize: 15,
-          backgroundColor: '#163F56',
+          backgroundColor: '#1B262C',
           
         },
         
