@@ -11,7 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
+.BUY{
+  color: 'green';
+}
+.SELL{
+  color: 'red';
+}
 .nav-bar{
   display: flex;
   flex-direction: row;
@@ -67,6 +72,8 @@ min-height: 300px;
 
 
 
+
+
 .swap-table-row:nth-child(1n){
   background-color: rgba(47, 52, 70, 0.9)
   }
@@ -79,14 +86,28 @@ background-color: rgba(47, 52, 70, 0.8)
   color: white;
 }
 
+
 .token-swap-feed-container{
   height: 70vh;
   overflow-y: scroll;
 }
 
-.bigtransaction{
-background-color: rgba(138, 24, 24, 0.8);
+
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
 
-
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(50, 130, 184, 0.75);
+  border-radius: 10px;
+}
