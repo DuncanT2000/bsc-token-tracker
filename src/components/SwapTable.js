@@ -134,7 +134,7 @@ const SwapTable =  (props) => {
                   key={columns[5].id}
                   align={columns[5].align}
                   style={{ minWidth: columns[5].minWidth, color: typecolor }}>
-                    ${ (usdAmount / tokenAmount).toFixed(4)}
+                    ${(usdAmount / tokenAmount).toFixed(12)}
                 </StyledTableCell>
                 <StyledTableCell 
                   key={columns[6].id}

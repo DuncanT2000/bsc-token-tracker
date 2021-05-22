@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import TabNav from './TabNav';
 import Tab from './Tab';
+import WalletTracker from './WalletTracker';
 
 
   
@@ -18,7 +19,7 @@ import Tab from './Tab';
                 <p>This is the Trending</p>
             </Tab>
             <Tab isSelected={Selected === 'Wallet'}>
-            <p>This is the Wallet</p>
+            <WalletTracker />
             </Tab>
             <Tab isSelected={Selected === 'Favourite'}>
             <p>This is the Favourite</p>
