@@ -20,6 +20,7 @@ export const Web3Context = createContext(0)
 export const Web3ContextProvider = ({children}) => {
 
     const [isWalletConnect, setisWalletConnect] = useState(false)
+    const [account, setAccount] = useState(null)
     
     const ethEnabled = async () => {
       
@@ -27,6 +28,7 @@ export const Web3ContextProvider = ({children}) => {
         const accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
         if(typeof accounts[0] == 'string'){
           setisWalletConnect(true)
+          setAccount(window.ethereum.selectedAddress)
         }else{setisWalletConnect(false)}
       }else{
         setisWalletConnect(false)
@@ -40,7 +42,7 @@ export const Web3ContextProvider = ({children}) => {
       }, []);
 
     return (
-        <Web3Context.Provider value={{web3,multicall,ethEnabled, isWalletConnect, setisWalletConnect}}>
+        <Web3Context.Provider value={{web3,multicall,ethEnabled, isWalletConnect, setisWalletConnect, account}}>
             {children}
         </Web3Context.Provider>
     )

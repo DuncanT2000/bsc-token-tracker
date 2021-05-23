@@ -379,7 +379,7 @@ setlpAddress([{
           </select> 
           <TradingChart candleDataArr={candleData} bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
           <div className="token-swap-feed-container">
-            <SwapTable swaps={swaps} TokenDetails={tokenDetails} bnbPrice={bnbPriceUSD}/>
+            
           </div>
           
           </div>

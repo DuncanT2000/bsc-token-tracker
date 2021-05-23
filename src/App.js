@@ -11,6 +11,7 @@ import Token from './routes/Token';
 import Navbar from './components/Navbar.js';
 import {BlockContextProvider} from './components/Contexts/useBlockContext'
 import { Web3ContextProvider } from './components/Contexts/Web3Context';
+import { LSContextProvider } from './components/Contexts/LSContext';
 
 import { Connectors } from 'web3-react'
 import { ApolloProvider, 
@@ -47,7 +48,7 @@ function App() {
   
   return (
     <ApolloProvider client={client}>
-
+      <LSContextProvider>
     <Web3ContextProvider>
     <BlockContextProvider>
     <Router>
@@ -64,6 +65,7 @@ function App() {
     </Router>
     </BlockContextProvider>
     </Web3ContextProvider>
+    </LSContextProvider>
     </ApolloProvider>
   );
 }
