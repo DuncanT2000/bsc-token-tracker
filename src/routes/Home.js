@@ -1,6 +1,7 @@
 import React,{useEffect, useContext} from 'react'
 import {BlockContext} from '../components/Contexts/useBlockContext.js'
 import WalletTracker from '../components/WalletTracker.js';
+import SideTab from '../components/SideTab.js';
 const { ethers } = require("ethers");
 const { Contract, Provider } = require('ethers-multicall');
 const provider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed1.defibit.io/');
@@ -72,7 +73,7 @@ const Home = () => {
     return (
         <div>
           <h1>Home</h1>
-        <WalletTracker />
+        <SideTab />
         </div>
     )
 }

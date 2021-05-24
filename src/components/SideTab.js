@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import TabNav from './TabNav';
 import Tab from './Tab';
 import WalletTracker from './WalletTracker';
-
+import FavouriteTracker from './FavouriteTracker';
 
   
   export default function SideBar() {
@@ -22,7 +22,7 @@ import WalletTracker from './WalletTracker';
             <WalletTracker />
             </Tab>
             <Tab isSelected={Selected === 'Favourite'}>
-            <p>This is the Favourite</p>
+            <FavouriteTracker />
             </Tab>
             <Tab  isSelected={Selected === 'History'}>
             <p>This is the History</p>

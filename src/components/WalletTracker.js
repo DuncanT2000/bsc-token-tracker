@@ -49,16 +49,24 @@ const WalletTracker = () => {
     }
 
     const favouriteToken = (e) => {
-        if( e.target.parentNode.parentNode.id == ""){
-            return
-        }
-        LSCon.setfavourite([... LSCon.favourite,e.target.parentNode.parentNode.id])
+        console.log(typeof e.target.parentNode.parentNode.children[0].children[0].children[0].children[0].innerText);
+        
+        
+        const tokenDetails = JSON.parse(e.target.parentNode.parentNode.children[0].children[0].children[0].children[0].innerText || {})
+    
+        console.log(tokenDetails);
+        console.log(tokenDetails);
+        if(tokenDetails['address'] == '-'){
+            tokenDetails['address'] = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+        } 
+        console.log(tokenDetails)
+        LSCon.setfavourite([... LSCon.favourite,tokenDetails])
     }
 
     const unfavouriteToken = (e) => {
         console.log(e.target.parentNode.parentNode.id);
         const removedToken = LSCon.favourite.filter((token)=>{
-            return token.toUpperCase() != e.target.parentNode.parentNode.id.toUpperCase() || token == ""
+            return token['address'].toUpperCase() != e.target.parentNode.parentNode.id.toUpperCase() || token == ""
         }) 
         LSCon.setfavourite([...removedToken])
     }
@@ -88,9 +96,14 @@ const WalletTracker = () => {
 
                    }else{
                        return (<div id={tokenAddress} key={tokenAddress} style={{display: 'flex', flexDirection:'row', justifyContent: 'center', alignItems: 'center'}}> <Link style={{color: 'white',}} to={`./${tokenAddress}`}> <div>
-                     <p key={token.currency.symbol}>{token.currency.symbol} - {token.value.toPrecision(8)}</p> 
+                     <p key={token.currency.symbol}><span style={{display: 'none'}}>{JSON.stringify(token.currency)}</span>{token.currency.symbol} - {token.value.toPrecision(8)}</p> 
                      </div></Link> 
-                     {LSCon.favourite.includes(tokenAddress) ? <MdFavorite style={{ marginLeft:'10px',  color: "red", fontSize: "1.5em" }} onClick={unfavouriteToken} /> : <MdFavoriteBorder style={{marginLeft:'10px', color: "white", fontSize: "1.5em" }} onClick={favouriteToken} />} 
+                     {LSCon.favourite.some(function (el) { return el.address.toUpperCase() == tokenAddress.toUpperCase() }) ? 
+                     <div onClick={unfavouriteToken}>
+                     <MdFavorite id={`fav${token.currency.symbol}`} style={{ marginLeft:'10px',  color: "red", fontSize: "1.5em" }} />
+                     </div> :
+                     <div onClick={favouriteToken}> 
+                     <MdFavoriteBorder id={`unfav${token.currency.symbol}`} style={{marginLeft:'10px', color: "white", fontSize: "1.5em" }} /></div>} 
                      <MdDelete  style={{ marginLeft:'10px', color: "white", fontSize: "1.5em" }} 
                      onClick={deleteToken} /> </div>)
                    }
