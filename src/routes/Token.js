@@ -8,7 +8,7 @@ import {useQuery, gql} from '@apollo/client'
 import { GET_CHART_DATA } from '../components/Queries';
 import {Web3Context} from '../components/Contexts/Web3Context.js'
 import {BlockContext} from '../components/Contexts/useBlockContext.js'
-import {TokenContext} from '../components/Contexts/TokenContext.js'
+import {LSContext} from '../components/Contexts/LSContext.js'
 import {TokenContextProvider} from '../components/Contexts/TokenContext.js'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SideTab from '../components/SideTab';
@@ -28,6 +28,8 @@ const binance = new Binance().options({
 
 const Token = (props) => {
 
+
+  const TokenLSContext = useContext(LSContext)
   const swapWeb3Context = useContext(Web3Context)
   const web3 = swapWeb3Context.web3
   
@@ -155,7 +157,13 @@ settokenDetails({
   tokenMC
 })
 
+const tokenHistory = {
+  TokenName,
+  TokenSymbol,
+  'TokenAddress': props.match.params.tokenAddress
+}
 
+TokenLSContext.sethistory([ tokenHistory, ...TokenLSContext.history])
 
 setisLoading(false)
 
@@ -271,7 +279,7 @@ setlpAddress([{
           
       }, [lpAddress])
 
-
+/*
         useEffect(() => {
 
           const initSwap = async ()=>{
@@ -352,14 +360,14 @@ setlpAddress([{
           
       }, [swapBlockContext.LatestBlock,props.match.params.tokenAddress])
 
-
+*/
 
 
     return (
       <TokenContextProvider>
     <div className="token-main-container">
           <div className="token-info-container">
-          <SideTab />
+          <SideTab pathprefix="./" />
           </div>
           <div className="token-chart-swap-container">
           <TokenInfoBar 
@@ -379,7 +387,9 @@ setlpAddress([{
           </select> 
           <TradingChart candleDataArr={candleData} bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
           <div className="token-swap-feed-container">
-            
+          {/*
+          <SwapTable swaps={swaps} TokenDetails={tokenDetails} bnbPrice={bnbPriceUSD}/> 
+          */}
           </div>
           
           </div>

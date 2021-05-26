@@ -6,6 +6,8 @@ import {
     Link
   } from "react-router-dom";
 
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+
 const Navbar = (props) => {
 
     const web3Con = useContext(Web3Context)
@@ -25,7 +27,16 @@ const Navbar = (props) => {
     if (web3Con.isWalletConnect == true) {
         return (
             <div className="nav-bar">
-                <h1>Navbar</h1>
+                <div style={{
+                    display:'flex', 
+                alignItems: 'center', 
+                marginLeft:'50px'}}>
+                <LazyLoadImage 
+                width={30}
+                height={30}
+                src={'./diamondLogo.png'}/>
+                <h3>Diamond Charts</h3>
+                </div>
                 <SearchTokenInput tokenAddressInput={props.tokenAddressInput} OntokenAddressInput={props.OntokenAddressInput}/>
                 {web3Con.isWalletConnect == true ?
                 <div style={{display: 'flex'}}>

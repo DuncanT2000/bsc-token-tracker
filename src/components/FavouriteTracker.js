@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { MdDelete, MdFavoriteBorder, MdFavorite } from "react-icons/md";
 
 
-const FavouriteTracker = () => {
+const FavouriteTracker = (props) => {
 
     const web3con = useContext(Web3Context)
     const LSCon = useContext(LSContext)
@@ -18,41 +18,48 @@ const FavouriteTracker = () => {
         
     }, [LSCon.favourite])
 
-    const favouriteToken = (e) => {
-        if( e.target.parentNode.parentNode.id == ""){
-            return
-        }
-        LSCon.setfavourite([... LSCon.favourite,e.target.parentNode.parentNode.id])
-    }
 
     const unfavouriteToken = (e) => {
-        console.log(e.target.parentNode.parentNode.id);
-        const removedToken = LSCon.favourite.filter((token)=>{
-            return token.toUpperCase() != e.target.parentNode.parentNode.id.toUpperCase() || token == ""
-        }) 
-        LSCon.setfavourite([...removedToken])
-    }
+        
+       
+        const removedToken = LSCon.favourite.filter((token)=>{return token.address != e.target.parentNode.parentNode.parentNode.id || token == ""}) 
 
-    const restoreWallet = () => {
-        LSCon.setdeleted([])
+        LSCon.setfavourite([...removedToken])
+        
     }
 
 
     return (
-        <div style={{background:'#163F56'}}>
+        <div  style={{background:'#163F56',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
+            }}>
             {LSCon.favourite.map(favourite =>{
-                return(<div style={{color:'white'}}> 
-                    <p>{favourite.name}</p>
+                return(<div id={favourite.address} key={favourite.address}  
+                style={{color:'white',
+                        display:'flex',
+                        flexDirection:'row',
+                        alignItems: 'center',
+                        width:'100%'
+                        }}> 
+                    <Link style={{color:'white'}} 
+                    to={`${props.tokenpathprefix}${favourite.address}`}> 
+                    <p style={{color:'white'}}>{favourite.name}</p>
+                    </Link>
+                    <div id={"UNFAVOR"} onClick={unfavouriteToken}>
+                     <MdFavorite id={`fav`} 
+                     style={{ 
+                         marginLeft:'10px',  
+                         color: "red", 
+                         fontSize: "1.5em",
+                         justifyContent:'flex-end' }} />
+                     </div>
                 </div>)
             })}
         </div>
-
     )
-    
-    
 
-
-    
 }
 
 export default FavouriteTracker

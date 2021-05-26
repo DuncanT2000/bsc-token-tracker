@@ -51,12 +51,18 @@ const TokenInfoBar = (props) => {
           <p> {!isLoading ? '$'+parseFloat(props.tokenDetails.tokenMC).toLocaleString(): 
           <CircularProgress color={'white'} size={20} disableShrink />} </p>
           </div>
+          <div style={{display:'flex',flexDirection:'row', justifyContent: 'center'}}>
+
+              <div style={{display:'flex',flexDirection:'row'}}>
+                
+                
+
+
+
+              </div>
+
+
       <div style={{display:'flex',flexDirection:'row'}} >
-
-
-      
-
-
 
   
              <a target="_blank" style={{height:'30%',
@@ -80,7 +86,10 @@ const TokenInfoBar = (props) => {
 
       </div>
       </div>
-      
+      </div>
+
+
+
       </div>
     
     )

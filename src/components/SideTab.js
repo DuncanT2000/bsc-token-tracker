@@ -3,9 +3,10 @@ import TabNav from './TabNav';
 import Tab from './Tab';
 import WalletTracker from './WalletTracker';
 import FavouriteTracker from './FavouriteTracker';
+import HistoryTracker from './HistoryTracker';
 
   
-  export default function SideBar() {
+  export default function SideBar(props) {
 
     const [Selected, setSelected] = useState('Trending')
 
@@ -19,13 +20,13 @@ import FavouriteTracker from './FavouriteTracker';
                 <p>This is the Trending</p>
             </Tab>
             <Tab isSelected={Selected === 'Wallet'}>
-            <WalletTracker />
+            <WalletTracker tokenpathprefix={props.pathprefix} />
             </Tab>
             <Tab isSelected={Selected === 'Favourite'}>
-            <FavouriteTracker />
+            <FavouriteTracker tokenpathprefix={props.pathprefix} />
             </Tab>
             <Tab  isSelected={Selected === 'History'}>
-            <p>This is the History</p>
+            <HistoryTracker />
             </Tab>
           </TabNav>
       </div>

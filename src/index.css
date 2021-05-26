@@ -23,13 +23,13 @@ code {
   background-color: #1B262C;
   height: 75px;
 }
-.nav-bar h1{
+.nav-bar h3{
   margin-left: 10px;
-  color: #00cccc;
+  color: #fdfdfd;
 }
 
 .nav-bar input{
-  border: 2px solid #00cccc;
+  border: 2px solid #fdfdfd;
   max-width: 300px;
   width: 100vw;
   font-size: larger;

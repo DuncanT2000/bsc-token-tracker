@@ -12,14 +12,22 @@ export const LSContextProvider = ({children}) => {
 
     useEffect(() => {
         let currentDeleted = localStorage.getItem('deleted')
+        console.log(currentDeleted);
         currentDeleted = currentDeleted == null ? localStorage.setItem('deleted',JSON.stringify([])) : JSON.parse(currentDeleted)
         setdeleted(currentDeleted)
         let currentfavourite = localStorage.getItem('favourite')
+        console.log(currentfavourite);
         currentfavourite = currentfavourite == null ? localStorage.setItem('favourite',JSON.stringify([])) : JSON.parse(currentfavourite)
         setfavourite(currentfavourite)
         let currenthistory = localStorage.getItem('history')
+        console.log(currenthistory);
         currenthistory = currenthistory == null ? localStorage.setItem('history',JSON.stringify([])) : JSON.parse(currenthistory)
         setfavourite(currenthistory)
+        let currentwalletInfo = localStorage.getItem('walletInfo')
+        console.log(currentwalletInfo);
+        currentwalletInfo = currentwalletInfo == null ? localStorage.setItem('walletInfo',JSON.stringify([])) : JSON.parse(currentwalletInfo)
+        setwalletInfo(currentwalletInfo)
+
 
 
     }, [])
@@ -35,6 +43,10 @@ export const LSContextProvider = ({children}) => {
     useEffect(() => {
         localStorage.setItem('history',JSON.stringify(history))
     }, [history]);
+    
+    useEffect(() => {
+        localStorage.setItem('walletInfo',JSON.stringify(walletInfo))
+    }, [walletInfo]);
 
 
     const dataProvided ={
