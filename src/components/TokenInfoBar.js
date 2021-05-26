@@ -21,15 +21,15 @@ const TokenInfoBar = (props) => {
 
     return ( 
         <div>
-        <div style={{display:'flex',flexDirection:'row', flexWrap:'wrap', alignItems: 'center'}}>
+        <div style={{display:'flex',flexDirection:'row', flexWrap:'wrap',  alignItems: 'center'}}>
+         <div style={{display:'flex',flexDirection:'row', justifyContent: 'space-evenly', alignItems: 'center'}}>
           <div style={{display:'flex', alignItems:'center', marginRight:5}}>
-            
             <LazyLoadImage 
             placeholder={<div></div>}
             height={50}
             width={50}
             src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(props.tokenAddress)}/logo.png` } />
-     </div>
+          </div>
           <div style={{ 
             marginRight:40}}> 
             <p>Token: </p>
@@ -51,13 +51,36 @@ const TokenInfoBar = (props) => {
           <p> {!isLoading ? '$'+parseFloat(props.tokenDetails.tokenMC).toLocaleString(): 
           <CircularProgress color={'white'} size={20} disableShrink />} </p>
           </div>
-          <div style={{display:'flex',flexDirection:'row', justifyContent: 'center'}}>
+          </div>
+          <div style={{display:'flex',flexDirection:'row', justifyContent: 'space-evenly',alignItems: 'center'}}>
 
-              <div style={{display:'flex',flexDirection:'row'}}>
+              <div style={{display:'flex',flexDirection:'row', minWidth:'100px' , width: 'max-content',justifyContent: 'space-evenly'}}>
+              <a target="_blank" href={``} > 
+              <LazyLoadImage 
+                width={30}
+                height={30}
+                src={'../twitter.png'}/>
+             </a>
                 
-                
+             <a target="_blank" href={``} > 
+              <LazyLoadImage 
+                width={30}
+                height={30}
+                src={'../telegram.png'}/>
+             </a>
 
-
+             <a target="_blank" href={``} > 
+              <LazyLoadImage 
+                width={30}
+                height={30}
+                src={'../discord.png'}/>
+             </a>
+             <a target="_blank" href={``} > 
+              <LazyLoadImage 
+                width={30}
+                height={30}
+                src={'../website.png'}/>
+             </a>
 
               </div>
 

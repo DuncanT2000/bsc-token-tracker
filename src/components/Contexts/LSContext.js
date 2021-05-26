@@ -22,7 +22,7 @@ export const LSContextProvider = ({children}) => {
         let currenthistory = localStorage.getItem('history')
         console.log(currenthistory);
         currenthistory = currenthistory == null ? localStorage.setItem('history',JSON.stringify([])) : JSON.parse(currenthistory)
-        setfavourite(currenthistory)
+        sethistory(currenthistory)
         let currentwalletInfo = localStorage.getItem('walletInfo')
         console.log(currentwalletInfo);
         currentwalletInfo = currentwalletInfo == null ? localStorage.setItem('walletInfo',JSON.stringify([])) : JSON.parse(currentwalletInfo)

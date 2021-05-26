@@ -1,7 +1,6 @@
 import React, {useEffect, useContext} from 'react'
 import '../index.css'
 import {Web3Context} from './/Contexts/Web3Context.js'
-import {TokenContext} from './/Contexts/TokenContext.js'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
@@ -17,9 +16,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const SwapTable =  (props) => {
 
     const swapWeb3Context = useContext(Web3Context)
-    const swapTokenContext = useContext(TokenContext)
     const web3 = swapWeb3Context.web3
-
 
     const columns = [
         { id: 'time', label: 'Time', minWidth: 100,align: 'center' },
@@ -31,7 +28,6 @@ const SwapTable =  (props) => {
         {id: 'txId',label: 'TxId',minWidth: 100,align: 'center'},
       ];
       
-
       const StyledTableCell = withStyles((theme) => ({
         head: {
           backgroundColor: '#1B262C',

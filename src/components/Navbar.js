@@ -34,7 +34,7 @@ const Navbar = (props) => {
                 <LazyLoadImage 
                 width={30}
                 height={30}
-                src={'./diamondLogo.png'}/>
+                src={'../diamondLogo.png'}/>
                 <h3>Diamond Charts</h3>
                 </div>
                 <SearchTokenInput tokenAddressInput={props.tokenAddressInput} OntokenAddressInput={props.OntokenAddressInput}/>

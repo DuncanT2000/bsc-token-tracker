@@ -9,7 +9,6 @@ import { GET_CHART_DATA } from '../components/Queries';
 import {Web3Context} from '../components/Contexts/Web3Context.js'
 import {BlockContext} from '../components/Contexts/useBlockContext.js'
 import {LSContext} from '../components/Contexts/LSContext.js'
-import {TokenContextProvider} from '../components/Contexts/TokenContext.js'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SideTab from '../components/SideTab';
 import TokenInfoBar from '../components/TokenInfoBar';
@@ -47,7 +46,10 @@ const Token = (props) => {
     
 
 
-useEffect(async () => {
+useEffect(() => {
+const initEffect = async () => {
+
+  
   const contractCallContext = [
     {
         reference: 'pancakeContractv1',
@@ -175,7 +177,9 @@ setlpAddress([{
 },Token0Results])
 
 
+}
 
+initEffect()
 
 
 }, [props.match.params.tokenAddress]);
@@ -361,11 +365,17 @@ setlpAddress([{
       }, [swapBlockContext.LatestBlock,props.match.params.tokenAddress])
 
 */
+/*
+useEffect(() => {
+  const addSwap = window.setInterval(() => {
+
+  },5000)
+
+}, [])
+*/
 
 
-    return (
-      <TokenContextProvider>
-    <div className="token-main-container">
+    return (<div className="token-main-container">
           <div className="token-info-container">
           <SideTab pathprefix="./" />
           </div>
@@ -387,15 +397,15 @@ setlpAddress([{
           </select> 
           <TradingChart candleDataArr={candleData} bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
           <div className="token-swap-feed-container">
-          {/*
+          {
           <SwapTable swaps={swaps} TokenDetails={tokenDetails} bnbPrice={bnbPriceUSD}/> 
-          */}
+          }
           </div>
           
           </div>
         
         </div>
-    </TokenContextProvider>
+    
     )
 }
 
