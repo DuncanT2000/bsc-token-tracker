@@ -156,7 +156,8 @@ settokenDetails({
   TokenSymbol,
   TokenDecimals,
   TokenSupply,
-  tokenMC
+  tokenMC,
+  'tokenAddress':props.match.params.tokenAddress
 })
 
 const tokenHistory = {
@@ -361,17 +362,12 @@ initEffect()
             initSwap()
           }
           
+          return ()=>{
+            console.log('Clean up')
+          }
           
       }, [swapBlockContext.LatestBlock,props.match.params.tokenAddress])
 
-*/
-/*
-useEffect(() => {
-  const addSwap = window.setInterval(() => {
-
-  },5000)
-
-}, [])
 */
 
 
@@ -395,6 +391,7 @@ useEffect(() => {
             <option value="720">12h</option>
             <option value="1440">24h</option>
           </select> 
+          
           <TradingChart candleDataArr={candleData} bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
           <div className="token-swap-feed-container">
           {

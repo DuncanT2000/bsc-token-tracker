@@ -17,6 +17,7 @@ const Navbar = (props) => {
 
   const connectWallet = async ()=>{
      const res =  await web3Con.ethEnabled()
+     console.log(window.web3);
     }
 
       useEffect(() => {
@@ -24,10 +25,11 @@ const Navbar = (props) => {
           console.log(web3Con.isWalletConnect);
       }, []);
 
-    if (web3Con.isWalletConnect == true) {
-        return (
-            <div className="nav-bar">
-                <div style={{
+
+
+    return (
+        <div className="nav-bar">
+            <div style={{
                     display:'flex', 
                 alignItems: 'center', 
                 marginLeft:'50px'}}>
@@ -37,10 +39,9 @@ const Navbar = (props) => {
                 src={'../diamondLogo.png'}/>
                 <h3>Diamond Charts</h3>
                 </div>
-                <SearchTokenInput tokenAddressInput={props.tokenAddressInput} OntokenAddressInput={props.OntokenAddressInput}/>
-                {web3Con.isWalletConnect == true ?
-                <div style={{display: 'flex'}}>
                 
+                <SearchTokenInput tokenAddressInput={props.tokenAddressInput} OntokenAddressInput={props.OntokenAddressInput}/><div style={{display: 'flex'}}>
+            {web3Con.isWalletConnect == true ? <div style={{display: 'flex'}}>
                 <p style={{
                     border: '1px solid',
                     borderRadius:50, 
@@ -49,25 +50,7 @@ const Navbar = (props) => {
                     marginRight:25}}>...
                     {window.ethereum.selectedAddress.toString().substring(window.ethereum.selectedAddress.length - 6, window.ethereum.selectedAddress.length).toUpperCase()}
                     </p>
-                </div> 
-                : <button style={{marginRight:15}} onClick={connectWallet} >Connect</button>
-                }
-                
-            </div>
-        )
-    }
-
-
-    return (
-        <div className="nav-bar">
-            <h1>Navbar</h1>
-            <div>
-                <Link to={'/charts'}><p style={{color:'white'}}>Charts</p></Link>
-                
-            </div>
-            <SearchTokenInput tokenAddressInput={props.tokenAddressInput} OntokenAddressInput={props.OntokenAddressInput}/>
-            <div style={{display: 'flex'}}>
-            <button style={{marginRight:15}} onClick={connectWallet} >Connect</button>
+                </div>  : <button style={{marginRight:15}} onClick={connectWallet} >Connect</button>} 
             </div>
         </div>
     )

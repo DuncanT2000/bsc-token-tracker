@@ -21,8 +21,8 @@ const FavouriteTracker = (props) => {
 
     const unfavouriteToken = (e) => {
         
-       
-        const removedToken = LSCon.favourite.filter((token)=>{return token.address != e.target.parentNode.parentNode.parentNode.id || token == ""}) 
+
+        const removedToken = LSCon.favourite.filter((token)=>{return token.address != e.target.parentNode.parentNode.parentNode.parentNode.id || token == ""}) 
 
         LSCon.setfavourite([...removedToken])
         
@@ -35,18 +35,25 @@ const FavouriteTracker = (props) => {
                     flexDirection: 'column',
                     alignItems: 'center'
             }}>
+                <table>
+                <tr>
+    <th>Token Name</th>
+    <th>Balance</th>
+    <th></th>
+   
+  </tr>
             {LSCon.favourite.map(favourite =>{
-                return(<div id={favourite.address} key={favourite.address}  
-                style={{color:'white',
-                        display:'flex',
-                        flexDirection:'row',
-                        alignItems: 'center',
-                        width:'100%'
-                        }}> 
+                return(<tr id={favourite.address}>
+                <td>
                     <Link style={{color:'white'}} 
                     to={`${props.tokenpathprefix}${favourite.address}`}> 
                     <p style={{color:'white'}}>{favourite.name}</p>
                     </Link>
+                    </td>
+                    <td>
+                        0.0000
+                    </td>
+                    <td>
                     <div id={"UNFAVOR"} onClick={unfavouriteToken}>
                      <MdFavorite id={`fav`} 
                      style={{ 
@@ -55,8 +62,11 @@ const FavouriteTracker = (props) => {
                          fontSize: "1.5em",
                          justifyContent:'flex-end' }} />
                      </div>
-                </div>)
+                     </td>
+                 </tr>)
             })}
+            
+            </table>
         </div>
     )
 

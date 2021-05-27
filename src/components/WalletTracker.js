@@ -93,8 +93,9 @@ const WalletTracker = (props) => {
                <button onClick={updateTokensInWallet}>Load new Tokens</button>
             
                 {error ? <p>Error Collecting Wallet Data...</p> : <></> }
+                {typeof LSCon.walletInfo[0] == 'object' ? LSCon.walletInfo[0].balances.length == 0 ? <p style={{color: 'white'}}>No Tokens found!</p> :'' :''}
                  { typeof LSCon.walletInfo[0] == 'object' ? LSCon.walletInfo[0].balances.map((token)=>{
-
+                    
                    const tokenAddress = token.currency.address == '-' ? "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c" : token.currency.address
                    
                    if(LSCon.deleted.includes(tokenAddress)){

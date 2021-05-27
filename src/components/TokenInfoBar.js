@@ -3,11 +3,14 @@ import React, {useEffect,useState, useContext} from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import {Web3Context} from './Contexts/Web3Context.js'
+import {LSContext} from './Contexts/LSContext.js'
+import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 
 import { Link } from 'react-router-dom'
 const TokenInfoBar = (props) => {
 
     const tokenInfoWeb3Context = useContext(Web3Context)
+    const tokenInfoLSContext = useContext(LSContext)
     const web3 = tokenInfoWeb3Context.web3
     const [isLoading, setisLoading] = useState(true)
 
@@ -18,6 +21,32 @@ const TokenInfoBar = (props) => {
     useEffect(() => {
         Object.keys(props.tokenDetails).length > 0 ? setisLoading(false) : setisLoading(true)
     }, [props.tokenDetails])
+
+    const FavouriteToken = (e)=> {
+
+      const parsedTokenDetails = JSON.parse(e.target.id)
+
+      console.log(parsedTokenDetails);
+
+      const tokenDetails = {
+        'name': parsedTokenDetails.TokenName,
+        'symbol': parsedTokenDetails.TokenSymbol,
+        'address':parsedTokenDetails.tokenAddress
+
+      }
+      console.log();
+
+      tokenInfoLSContext.setfavourite([... tokenInfoLSContext.favourite,tokenDetails])
+    }
+
+    const unfavouriteToken = (e) => {
+      const tokenDetails = JSON.parse(e.target.parentNode.id)
+      const removedToken = tokenInfoLSContext.favourite.filter((token)=>{
+          return token['address'].toUpperCase() != tokenDetails.tokenAddress.toUpperCase() || token == ""
+      }) 
+      tokenInfoLSContext.setfavourite([...removedToken])
+  }
+
 
     return ( 
         <div>
@@ -51,6 +80,16 @@ const TokenInfoBar = (props) => {
           <p> {!isLoading ? '$'+parseFloat(props.tokenDetails.tokenMC).toLocaleString(): 
           <CircularProgress color={'white'} size={20} disableShrink />} </p>
           </div>
+          <div style={{marginRight:40}}>
+         
+          <p> {!isLoading ? tokenInfoLSContext.favourite.some(function (el) { return el.address.toUpperCase() == props.tokenAddress.toUpperCase() }) 
+          ?  <MdFavorite onClick={unfavouriteToken} id={JSON.stringify({...props.tokenDetails})}  style={{ marginLeft:'10px',  color: "red", fontSize: "1.5em" }} />
+          : <MdFavoriteBorder id={JSON.stringify({...props.tokenDetails})} 
+          onClick={FavouriteToken}  
+          style={{marginLeft:'10px',  color: "white", fontSize: "1.5em" }} />: 
+          <CircularProgress color={'white'} size={20} disableShrink />} </p>
+          </div>
+          
           </div>
           <div style={{display:'flex',flexDirection:'row', justifyContent: 'space-evenly',alignItems: 'center'}}>
 
