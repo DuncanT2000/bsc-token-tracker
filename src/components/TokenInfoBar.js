@@ -57,13 +57,13 @@ const TokenInfoBar = (props) => {
             placeholder={<div></div>}
             height={50}
             width={50}
-            src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(props.tokenAddress)}/logo.png` } />
+            src={ web3.utils.isAddress(props.tokenAddress) ? `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(props.tokenAddress)}/logo.png` : '' } />
           </div>
           <div style={{ 
             marginRight:40}}> 
             <p>Token: </p>
             <p>{!isLoading ? props.tokenDetails.TokenName : 
-            <CircularProgress color={'white'} size={20} disableShrink />}</p>
+            <CircularProgress color='white' size={20} disableShrink />}</p>
           </div>
           <div style={{ marginRight:40}}> 
             <p>Symbol: </p>
@@ -73,12 +73,12 @@ const TokenInfoBar = (props) => {
           <div style={{marginRight:40}}> 
             <p>Total Supply:</p>
             <p> {!isLoading ? parseInt(props.tokenDetails.TokenSupply / `1${"0".repeat(props.tokenDetails.TokenDecimals)}`).toLocaleString(): 
-            <CircularProgress color={'white'} size={20} disableShrink />} </p>
+            <CircularProgress color='white' size={20} disableShrink />} </p>
           </div>
           <div style={{marginRight:40}}>
           <p>Market Cap: </p>
           <p> {!isLoading ? '$'+parseFloat(props.tokenDetails.tokenMC).toLocaleString(): 
-          <CircularProgress color={'white'} size={20} disableShrink />} </p>
+          <CircularProgress color='white' size={20} disableShrink />} </p>
           </div>
           <div style={{marginRight:40}}>
          
@@ -87,7 +87,7 @@ const TokenInfoBar = (props) => {
           : <MdFavoriteBorder id={JSON.stringify({...props.tokenDetails})} 
           onClick={FavouriteToken}  
           style={{marginLeft:'10px',  color: "white", fontSize: "1.5em" }} />: 
-          <CircularProgress color={'white'} size={20} disableShrink />} </p>
+          <CircularProgress color='white' size={20} disableShrink />} </p>
           </div>
           
           </div>

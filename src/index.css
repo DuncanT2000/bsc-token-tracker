@@ -87,7 +87,6 @@ background-color: rgba(47, 52, 70, 0.8)
 
 .token-swap-feed-container{
   height: 70vh;
-  overflow-y: scroll;
 }
 
 
@@ -108,4 +107,8 @@ background-color: rgba(47, 52, 70, 0.8)
 ::-webkit-scrollbar-thumb {
   background: rgba(50, 130, 184, 0.75);
   border-radius: 10px;
+}
+.tx-id{
+  color: 'white';
+
 }

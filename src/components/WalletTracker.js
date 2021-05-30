@@ -57,10 +57,8 @@ const WalletTracker = (props) => {
     }, [web3con.account])
     
     const favouriteToken = (e) => {
-
-        
-        const tokenDetails = JSON.parse(e.target.parentNode.parentNode.children[1].children[0].children[0].children[0].innerText)
-    
+        const tokenDetails = JSON.parse(e.target.parentNode.id);
+        console.log(tokenDetails);
         if(tokenDetails['address'] == '-'){
             tokenDetails['address'] = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
         } 
@@ -69,9 +67,10 @@ const WalletTracker = (props) => {
     }
 
     const unfavouriteToken = (e) => {
-        console.log(e.target.parentNode.parentNode.id);
+        const tokenDetails = JSON.parse(e.target.parentNode.id);
+        tokenDetails['address'] = tokenDetails['address'] == '-' ? "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c" : tokenDetails['address'] 
         const removedToken = LSCon.favourite.filter((token)=>{
-            return token['address'].toUpperCase() != e.target.parentNode.parentNode.id.toUpperCase() || token == ""
+            return token['address'].toUpperCase() != tokenDetails.address.toUpperCase() || token == ""
         }) 
         LSCon.setfavourite([...removedToken])
     }
@@ -108,14 +107,14 @@ const WalletTracker = (props) => {
                             width={25}
                             src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(tokenAddress)}/logo.png` } />
                             <Link style={{marginLeft:'10px' ,color: 'white',}} to={`${props.tokenpathprefix}${tokenAddress}`}> <div>
-                     <p key={token.currency.symbol}><span style={{display: 'none'}}>{JSON.stringify(token.currency)}</span>{token.currency.symbol} - {token.value.toPrecision(8)}</p> 
+                     <p key={token.currency.symbol}>{token.currency.symbol} - {token.value.toPrecision(8)}</p> 
                      </div></Link> 
                      {LSCon.favourite.some(function (el) { return el.address.toUpperCase() == tokenAddress.toUpperCase() }) ? 
-                     <div id={"UNFAVOR"} onClick={unfavouriteToken}>
-                     <MdFavorite id={`fav${token.currency.symbol}`} style={{ marginLeft:'10px',  color: "red", fontSize: "1.5em" }} />
+                     <div id={JSON.stringify(token.currency)} onClick={unfavouriteToken}>
+                     <MdFavorite id={JSON.stringify(token.currency)} style={{ marginLeft:'10px',  color: "red", fontSize: "1.5em" }} />
                      </div> :
-                     <div id={"FAVOR"} onClick={favouriteToken}> 
-                     <MdFavoriteBorder id={`unfav${token.currency.symbol}`} style={{marginLeft:'10px', color: "white", fontSize: "1.5em" }} /></div>} 
+                     <div id={JSON.stringify(token.currency)} onClick={favouriteToken}> 
+                     <MdFavoriteBorder id={JSON.stringify(token.currency)} style={{marginLeft:'10px', color: "white", fontSize: "1.5em" }} /></div>} 
                      <MdDelete  style={{ marginLeft:'10px', color: "white", fontSize: "1.5em" }} 
                      onClick={deleteToken} /> </div>)
                    }

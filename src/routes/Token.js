@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef, useContext, createContext } from 'react'
+import React, { useEffect, useState,useRef,useMemo, useContext, createContext } from 'react'
 import '../App.css'
 import SwapTable from '../components/SwapTable';
 import TradingChart from '../components/TradingChart.js';
@@ -9,12 +9,14 @@ import { GET_CHART_DATA } from '../components/Queries';
 import {Web3Context} from '../components/Contexts/Web3Context.js'
 import {BlockContext} from '../components/Contexts/useBlockContext.js'
 import {LSContext} from '../components/Contexts/LSContext.js'
-import CircularProgress from '@material-ui/core/CircularProgress';
 import SideTab from '../components/SideTab';
 import TokenInfoBar from '../components/TokenInfoBar';
+import {Alert} from '@material-ui/lab';
+import Web3 from 'web3'
+
 
 const Binance = require('node-binance-api');
-
+let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
 let PoolData={};
 
@@ -23,6 +25,38 @@ const binance = new Binance().options({
   APIKEY: '',
   APISECRET: ''
 });
+
+async function processSwaps(uswaps) {
+  
+      const promises = uswaps.map(async event => {
+        const swapABI = [
+          {
+            'type': 'uint256',
+            'name': 'amount0In'
+          },{
+            'type': 'uint256',
+            'name': 'amount1In'
+          },
+          {
+          'type': 'uint256',
+          'name': 'amount0Out'
+        },{
+          'type': 'uint256',
+          'name': 'amount1Out'
+        },]
+
+        const blockData = await web3token.eth.getBlock(event.blockNumber)
+          event['blockData'] = blockData
+          const decodeLogs = web3token.eth.abi.decodeLog(swapABI,event.data)
+          event['decodeLogs'] = decodeLogs
+          return event
+      })
+
+      const results = Promise.all(promises)
+      return results
+      
+
+    }
 
 
 const Token = (props) => {
@@ -35,16 +69,23 @@ const Token = (props) => {
   const multicall = swapWeb3Context.multicall
   const swapBlockContext = useContext(BlockContext)
 
-
     const [swaps, setswaps] = useState([]);
     const [bnbPriceUSD, setbnbPriceUSD] = useState(0);
-    const [isLoading, setisLoading] = useState(true);
     const [candleData, setcandleData] = useState([]);
     const [chartInterval, setchartInterval] = useState(15);
     const [lpAddress, setlpAddress] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
+    const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
+  
+
+
     
 
+useEffect(() => {
+  if(!web3.utils.isAddress(props.match.params.tokenAddress)){
+    setinvalidTokenAddress(true)
+  }
+}, [props.match.params.tokenAddress]);
 
 useEffect(() => {
 const initEffect = async () => {
@@ -132,10 +173,7 @@ const ReservesToken0CallContext = [
 
 const ReservesToken0Results = await multicall.call(ReservesToken0CallContext);
 
-
  const Token0Results = filteredAddress.map((element,i) => {
-
-
   const token0 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[1].returnValues[0];
   return {
     'address':element.contractAddress,
@@ -166,9 +204,11 @@ const tokenHistory = {
   'TokenAddress': props.match.params.tokenAddress
 }
 
-TokenLSContext.sethistory([ tokenHistory, ...TokenLSContext.history])
+if (!TokenLSContext.history.some(e => e.TokenAddress == tokenHistory.TokenAddress)) {
+  TokenLSContext.sethistory([ tokenHistory, ...TokenLSContext.history])
+}
 
-setisLoading(false)
+
 
 setlpAddress([{
   [tokenPairBNBv1Address] : 'BNB',
@@ -179,11 +219,13 @@ setlpAddress([{
 
 
 }
-
-initEffect()
-
+if(web3.utils.isAddress(props.match.params.tokenAddress)){
+  initEffect()
+}
 
 }, [props.match.params.tokenAddress]);
+
+
 
 
     const {error,loading,data,refetch} = useQuery(GET_CHART_DATA,{
@@ -200,10 +242,6 @@ initEffect()
       }
   })
 
-  useEffect( async () => {
-    setswaps([])
-  },[props.match.params.tokenAddress])
-
       useEffect( async () => {
         console.log('Started Fetch BNB price Effect');
         binance.prices('BNBUSDT', (error, ticker) => {
@@ -212,12 +250,12 @@ initEffect()
       },[props.match.params.tokenAddress])
       
       useEffect(() => {
-            console.log(`Refetching Chart Data - ${chartInterval}m` )
-            refetch()
+        if(web3.utils.isAddress(props.match.params.tokenAddress)){
+          refetch()
+        }
           }, [props.match.params.tokenAddress,chartInterval])
 
         useEffect(() => {
-          console.log('New Data Found');
           if (typeof data !== 'undefined') {
 
            const formatedkline = data.ethereum.dexTrades.map((kline)=>{
@@ -240,42 +278,19 @@ initEffect()
         useEffect(() => {
 
           const initSwap = async ()=>{
-
             const swapevents = await web3.eth.getPastLogs({
               address: Object.keys(lpAddress[0]),
               topics: ["0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"],
               fromBlock:swapBlockContext.LatestBlock.number - 4500,
               toBlock: 'latest'
             })
-            const swapABI = [
-                          {
-                            'type': 'uint256',
-                            'name': 'amount0In'
-                          },{
-                            'type': 'uint256',
-                            'name': 'amount1In'
-                          },
-                          {
-                          'type': 'uint256',
-                          'name': 'amount0Out'
-                        },{
-                          'type': 'uint256',
-                          'name': 'amount1Out'
-                        },]
-            const promises = swapevents.map(async event=>{
-              const blockData = await web3.eth.getBlock(event.blockNumber)
-                event['blockData'] = blockData
-                const decodeLogs = web3.eth.abi.decodeLog(swapABI,event.data)
-                event['decodeLogs'] = decodeLogs
-                
-                return event
             
-            })
+            const results = await processSwaps(swapevents)
 
-           
-            const results = await Promise.all(promises)
-   
-            setswaps([...swaps, ...results].reverse())
+            console.log(results);
+
+            setswaps([...swaps,...results].reverse())
+            
           }
           if (lpAddress.length > 0) {
             initSwap()
@@ -284,7 +299,7 @@ initEffect()
           
       }, [lpAddress])
 
-/*
+
         useEffect(() => {
 
           const initSwap = async ()=>{
@@ -362,13 +377,9 @@ initEffect()
             initSwap()
           }
           
-          return ()=>{
-            console.log('Clean up')
-          }
-          
       }, [swapBlockContext.LatestBlock,props.match.params.tokenAddress])
 
-*/
+
 
 
     return (<div className="token-main-container">
@@ -376,6 +387,9 @@ initEffect()
           <SideTab pathprefix="./" />
           </div>
           <div className="token-chart-swap-container">
+          {invalidTokenAddress == true ? <div style={{margin: '5px', display:'flex', justifyContent:'center' }}>
+          <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>
+          : <></>}
           <TokenInfoBar 
           tokenDetails={tokenDetails}
           tokenAddress={props.match.params.tokenAddress}
@@ -394,9 +408,9 @@ initEffect()
           
           <TradingChart candleDataArr={candleData} bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
           <div className="token-swap-feed-container">
-          {
+          
           <SwapTable swaps={swaps} TokenDetails={tokenDetails} bnbPrice={bnbPriceUSD}/> 
-          }
+          
           </div>
           
           </div>

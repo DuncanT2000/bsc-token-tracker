@@ -13,19 +13,11 @@ const Navbar = (props) => {
     const web3Con = useContext(Web3Context)
     const web3 = web3Con.web3
     
-  const BlockContextCon = useContext(BlockContext)
 
   const connectWallet = async ()=>{
      const res =  await web3Con.ethEnabled()
      console.log(window.web3);
     }
-
-      useEffect(() => {
-          console.log('Test');
-          console.log(web3Con.isWalletConnect);
-      }, []);
-
-
 
     return (
         <div className="nav-bar">

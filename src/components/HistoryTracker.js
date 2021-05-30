@@ -12,15 +12,10 @@ const HistoryTracker = (props) => {
 
     const web3 = web3con.web3
 
-    useEffect(() => {
-        
-    }, [LSCon.history])
-
 
     return (
         <div style={{background:'#163F56'}}>
             {LSCon.history.map(history =>{
-                console.log(history);
                 return(<div style={{color:'white'}}> 
                     <p>{history.TokenName}</p>
                 </div>)

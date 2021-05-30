@@ -36,6 +36,7 @@ const FavouriteTracker = (props) => {
                     alignItems: 'center'
             }}>
                 <table>
+                <tbody>
                 <tr>
     <th>Token Name</th>
     <th>Balance</th>
@@ -43,7 +44,7 @@ const FavouriteTracker = (props) => {
    
   </tr>
             {LSCon.favourite.map(favourite =>{
-                return(<tr id={favourite.address}>
+                return(<tr key={favourite.address} id={favourite.address}>
                 <td>
                     <Link style={{color:'white'}} 
                     to={`${props.tokenpathprefix}${favourite.address}`}> 
@@ -65,7 +66,7 @@ const FavouriteTracker = (props) => {
                      </td>
                  </tr>)
             })}
-            
+            </tbody>
             </table>
         </div>
     )

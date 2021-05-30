@@ -1,8 +1,9 @@
-import React, {useEffect, useContext} from 'react'
+import React, {useEffect, useContext, useMemo, useRef} from 'react'
 import '../index.css'
 import {Web3Context} from './/Contexts/Web3Context.js'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
+/*
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,14 +11,29 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+*/
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import {List, 
+  AutoSizer, 
+  CellMeasurer, 
+  CellMeasurerCache, 
+  Table, 
+  Column} from 'react-virtualized'
+  import 'react-virtualized/styles.css'
 
 const SwapTable =  (props) => {
+
+  const cache = useRef(new CellMeasurerCache({
+    fixedWidth:true,
+    defaultHeight:100,
+  }))
 
     const swapWeb3Context = useContext(Web3Context)
     const web3 = swapWeb3Context.web3
 
+
+  
+/*
     const columns = [
         { id: 'time', label: 'Time', minWidth: 100,align: 'center' },
         { id: 'type', label: 'Type', minWidth: 100,align: 'center' },
@@ -57,7 +73,140 @@ const SwapTable =  (props) => {
       });
 
       const classes = useStyles();
-   
+      */
+      //return(<div>{JSON.stringify(props.swaps)}</div>)
+
+      const list = [
+        {name: 'Brian Vaughn', description: 'Software engineer'},
+        {name: 'Brian Vaughn', description: 'Software engineer'},
+        {name: 'Brian Vaughn', description: 'Software engineer'},
+        {name: 'Brian Vaughn', description: 'Software engineer'},
+
+        // And so on...
+      ];
+      
+
+
+
+      return (
+        <div style={{ height: 400 }}>
+          <AutoSizer>
+            {({ height, width }) => (
+              <Table
+                width={width}
+                height={height}
+                headerHeight={20}
+                rowHeight={30}
+                rowCount={props.swaps.length}
+                rowGetter={({ index }) => props.swaps[index]}
+                >
+                
+                <Column cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
+                const d = new Date(0); 
+                d.setUTCSeconds(swap.blockData.timestamp);
+                const timestamp = `${d.getHours()< 10 ? "0"+d.getHours():d.getHours()}:${d.getMinutes()< 10 ? "0"+d.getMinutes():d.getMinutes()}:${d.getUTCSeconds()< 10 ? "0"+d.getUTCSeconds():d.getUTCSeconds()}`;
+                  return timestamp
+                }}  label="Time" width={200} />
+                
+                <Column cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
+
+                const logs =  swap['decodeLogs']
+                const amount1Out = logs['amount1Out']
+
+                const type = amount1Out == 0 ? 'BUY' : 'SELL'
+
+                return type
+
+                }}  width={300} label="Type" dataKey="type" />
+                
+                <Column cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
+
+                const logs =  swap['decodeLogs']
+                const amount0In = logs['amount0In']
+                const amount0Out = logs['amount0Out']
+                const amount1In = logs['amount1In']
+                const amount1Out = logs['amount1Out']
+                const type = amount1Out == 0 ? 'BUY' : 'SELL'
+
+                const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+
+                return tokenAmount
+
+                }} width={300} label="Tokens" dataKey="tokensAmount" />
+                
+
+                
+                <Column cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
+                const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
+                return <a style={{color:'white'}} href={txURL} target="_blank">{swap.transactionHash.substring(0,6)}</a>
+                }}  width={300} label="Tx ID" dataKey="txid" />
+
+
+              </Table>
+            )}
+          </AutoSizer>
+        </div>
+      );
+      
+    
+
+
+
+      
+      /*
+      return(<AutoSizer>
+          {({width,height})=>(
+          <List
+          width={width}
+          height={height}
+          rowHeight={cache.current.rowHeight}
+          deferredMeasurementCache={cache.current}
+          columnCount={2}
+          rowCount={props.swaps.length}
+          rowRenderer={({key,index,style,parent})=>{
+            const swap = props.swaps[index]
+            const d = new Date(0); 
+              d.setUTCSeconds(swap.blockData.timestamp);
+                const timestamp = `${d.getHours()< 10 ? "0"+d.getHours():d.getHours()}:${d.getMinutes()< 10 ? "0"+d.getMinutes():d.getMinutes()}:${d.getUTCSeconds()< 10 ? "0"+d.getUTCSeconds():d.getUTCSeconds()}`;
+                const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
+                const logs =  swap['decodeLogs']
+                const amount0In = logs['amount0In']
+                const amount0Out = logs['amount0Out']
+                const amount1In = logs['amount1In']
+                const amount1Out = logs['amount1Out']
+
+                const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                const typecolor = type == 'BUY' ? '#7EF654': '#F65454'
+
+                const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+                const usdAmount = type =='SELL' ? (props.bnbPrice * (amount1Out / `1${"0".repeat(18)}`)).toFixed(2): (props.bnbPrice * ( amount1In / `1${"0".repeat(18)}`)).toFixed(2)
+                const bnbAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
+
+            return <CellMeasurer 
+            key={key} 
+            cache={cache.current} 
+            parent={parent} 
+            columnIndex={0} 
+            rowIndex={index}> 
+            <div style={style} className="swap-row">
+              <div style={{display:'flex', flexDirection:'row', alignItems: 'center'}} >
+                  <p style={{padding:'5px'}}>{timestamp}</p>
+                  <p style={{padding:'5px'}}>{type}</p>
+                  <p style={{padding:'5px'}}>{tokenAmount}</p>
+                  <a style={{padding:'5px'}} href={txURL} target="_blank" >{swap.transactionHash.substring(0,5)}</a>
+              </div>
+                  
+            </div>
+            </CellMeasurer>
+          }}
+        />)}
+        
+        </AutoSizer>
+      )
       
       
         return(<Paper>
@@ -148,6 +297,7 @@ const SwapTable =  (props) => {
                  </Table>
                  </TableContainer>
             </Paper>)
+            */
 }
 
 

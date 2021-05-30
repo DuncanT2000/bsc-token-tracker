@@ -10,7 +10,9 @@ const SearchTokenInput = (props) => {
         return (
           <div>
             <form onSubmit={submitForm}>
-              <input placeholder="Enter Token Address..." value={props.tokenAddressInput} onChange={(e)=> props.OntokenAddressInput(e.target.value)} type="text"></input>
+              <input placeholder="Enter Token Address..." 
+              value={props.tokenAddressInput} 
+              onChange={(e)=> props.OntokenAddressInput(e.target.value)} type="text"></input>
             </form>
           </div>
         );
