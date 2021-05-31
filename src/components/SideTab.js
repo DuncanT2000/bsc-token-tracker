@@ -26,7 +26,7 @@ import HistoryTracker from './HistoryTracker';
             <FavouriteTracker tokenpathprefix={props.pathprefix} />
             </Tab>
             <Tab  isSelected={Selected === 'History'}>
-            <HistoryTracker />
+            <HistoryTracker  tokenpathprefix={props.pathprefix}/>
             </Tab>
           </TabNav>
       </div>

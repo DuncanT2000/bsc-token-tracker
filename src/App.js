@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './App.css'
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import Home from './routes/Home';
 import Token from './routes/Token';
@@ -12,8 +11,6 @@ import Navbar from './components/Navbar.js';
 import {BlockContextProvider} from './components/Contexts/useBlockContext'
 import { Web3ContextProvider } from './components/Contexts/Web3Context';
 import { LSContextProvider } from './components/Contexts/LSContext';
-
-import { Connectors } from 'web3-react'
 import { ApolloProvider, 
   ApolloClient, 
   InMemoryCache, 
@@ -21,9 +18,9 @@ import { ApolloProvider,
   from } from '@apollo/client';
 import {onError} from '@apollo/client/link/error'
 
-const errorLink = onError(({graphqlErrors, networkError})=>{
+const errorLink = onError(({graphqlErrors})=>{
   if (graphqlErrors) {
-    graphqlErrors.map((error, location,path)=>{
+    graphqlErrors.map((error)=>{
       alert(`Graphql error ${error}`)
     });
   }
@@ -49,8 +46,9 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <LSContextProvider>
+        <BlockContextProvider>
     <Web3ContextProvider>
-    <BlockContextProvider>
+    
     <Router>
       <Navbar tokenAddressInput={tokenAddressInput} OntokenAddressInput={settokenAddressInput}/>
     <div className="App">
@@ -63,8 +61,9 @@ function App() {
 
     </div>
     </Router>
-    </BlockContextProvider>
     </Web3ContextProvider>
+    </BlockContextProvider>
+    
     </LSContextProvider>
     </ApolloProvider>
   );

@@ -21,6 +21,8 @@ export const Web3ContextProvider = ({children}) => {
     const [isWalletConnect, setisWalletConnect] = useState(false)
     const [account, setAccount] = useState(null)
     
+    const [bnbPrice, setbnbPrice] = useState(0)
+
     const ethEnabled = async () => {
       
       if (typeof window.ethereum !== 'undefined') {
@@ -77,8 +79,18 @@ export const Web3ContextProvider = ({children}) => {
         ethEnabled()
       }, []);
 
+      
     return (
-        <Web3Context.Provider value={{web3,multicall,ethEnabled, isWalletConnect, setisWalletConnect, account}}>
+        <Web3Context.Provider 
+        value={{web3,
+        multicall,
+        ethEnabled, 
+        isWalletConnect, 
+        setisWalletConnect, 
+        account,
+        bnbPrice,
+        setbnbPrice
+        }}>
             {children}
         </Web3Context.Provider>
     )

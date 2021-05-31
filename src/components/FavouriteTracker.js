@@ -3,7 +3,7 @@ import {Web3Context} from './Contexts/Web3Context'
 import {LSContext} from './Contexts/LSContext'
 
 import { Link } from 'react-router-dom'
-import { MdDelete, MdFavoriteBorder, MdFavorite } from "react-icons/md";
+import { MdFavorite } from "react-icons/md";
 
 
 const FavouriteTracker = (props) => {

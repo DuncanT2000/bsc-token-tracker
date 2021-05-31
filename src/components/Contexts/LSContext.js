@@ -5,7 +5,9 @@ export const LSContext = createContext([])
 
 export const LSContextProvider = ({children}) => {
 
-    const  [walletInfo, setwalletInfo] = useState([])
+    const [walletInfo, setwalletInfo] = useState([])
+    const [trackWalletInfo, settrackWalletInfo] = useState(null)
+    const [trackWalletAddress, settrackWalletAddress] = useState(null)
     const [favourite, setfavourite] = useState([])
     const [deleted, setdeleted] = useState([])
     const [history, sethistory] = useState([])
@@ -28,6 +30,16 @@ export const LSContextProvider = ({children}) => {
         currentwalletInfo = currentwalletInfo == null ? localStorage.setItem('walletInfo',JSON.stringify([])) : JSON.parse(currentwalletInfo)
         setwalletInfo(currentwalletInfo)
 
+        let currentTrackwalletInfo = localStorage.getItem('trackWalletInfo')
+        console.log(currentTrackwalletInfo);
+        currentTrackwalletInfo = currentTrackwalletInfo == null ? localStorage.setItem('trackWalletInfo',JSON.stringify(null)) : JSON.parse(currentTrackwalletInfo)
+        settrackWalletInfo(currentTrackwalletInfo)
+
+        let currentTrackwalletAddress = localStorage.getItem('trackWalletAddress')
+        console.log(currentTrackwalletAddress);
+        currentTrackwalletAddress = currentTrackwalletAddress == null ? localStorage.setItem('trackWalletAddress',JSON.stringify(null)) : JSON.parse(currentTrackwalletAddress)
+        settrackWalletAddress(currentTrackwalletAddress)
+
 
 
     }, [])
@@ -41,25 +53,35 @@ export const LSContextProvider = ({children}) => {
     }, [deleted]);
 
     useEffect(() => {
+        console.log(sethistory);
         localStorage.setItem('history',JSON.stringify(history))
     }, [history]);
     
     useEffect(() => {
         localStorage.setItem('walletInfo',JSON.stringify(walletInfo))
     }, [walletInfo]);
+    useEffect(() => {
+        localStorage.setItem('trackWalletInfo',JSON.stringify(trackWalletInfo))
+    }, [trackWalletInfo]);
+
+    useEffect(() => {
+        localStorage.setItem('trackWalletAddress',JSON.stringify(trackWalletAddress))
+    }, [trackWalletAddress]);
 
 
     const dataProvided ={
         walletInfo,
         setwalletInfo,
+        trackWalletInfo,
+        settrackWalletInfo,
+        trackWalletAddress,
+        settrackWalletAddress,
         favourite,
         setfavourite,
         deleted,
         setdeleted,
         history,
         sethistory
-
-
     }
 
     return (

@@ -9,12 +9,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-.BUY{
-  color: 'green';
-}
-.SELL{
-  color: 'red';
-}
+
 .nav-bar{
   display: flex;
   flex-direction: row;
@@ -109,6 +104,13 @@ background-color: rgba(47, 52, 70, 0.8)
   border-radius: 10px;
 }
 .tx-id{
-  color: 'white';
+  color: white;
 
+}
+
+.BUY{
+  color: #7EF654;
+}
+.SELL{
+  color: #F65454 ;
 }

@@ -1,7 +1,6 @@
-import React, {useEffect, useContext, useMemo, useRef} from 'react'
+import React, {useContext, useRef} from 'react'
 import '../index.css'
 import {Web3Context} from './/Contexts/Web3Context.js'
-import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 /*
 import Paper from '@material-ui/core/Paper';
@@ -76,76 +75,399 @@ const SwapTable =  (props) => {
       */
       //return(<div>{JSON.stringify(props.swaps)}</div>)
 
-      const list = [
-        {name: 'Brian Vaughn', description: 'Software engineer'},
-        {name: 'Brian Vaughn', description: 'Software engineer'},
-        {name: 'Brian Vaughn', description: 'Software engineer'},
-        {name: 'Brian Vaughn', description: 'Software engineer'},
-
-        // And so on...
-      ];
       
-
-
-
       return (
-        <div style={{ height: 400 }}>
+        <div  style={{ height: 400 , backgroundColor:'#1B262C'}}>
           <AutoSizer>
             {({ height, width }) => (
               <Table
                 width={width}
                 height={height}
-                headerHeight={20}
-                rowHeight={30}
+                headerHeight={45}
+                rowHeight={60}
                 rowCount={props.swaps.length}
                 rowGetter={({ index }) => props.swaps[index]}
                 >
                 
+                {/* Time Column */}
+
                 <Column cellRenderer={(col)=>{
                 const swap = props.swaps[col.rowIndex]
                 const d = new Date(0); 
                 d.setUTCSeconds(swap.blockData.timestamp);
                 const timestamp = `${d.getHours()< 10 ? "0"+d.getHours():d.getHours()}:${d.getMinutes()< 10 ? "0"+d.getMinutes():d.getMinutes()}:${d.getUTCSeconds()< 10 ? "0"+d.getUTCSeconds():d.getUTCSeconds()}`;
-                  return timestamp
-                }}  label="Time" width={200} />
                 
-                <Column cellRenderer={(col)=>{
-                const swap = props.swaps[col.rowIndex]
+                const tokenDetails = props.TokenDetails
+                const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
+                  return element.address == swap.address} )
 
+                if (filterLPAddress[0].type == 'BUSD') {
+
+                  if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                    const logs =  swap['decodeLogs']
+                    const amount1Out = logs['amount1Out']
+                    const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                    return <span className={type} >{timestamp}</span>
+                  }
+
+              if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
                 const logs =  swap['decodeLogs']
-                const amount1Out = logs['amount1Out']
-
-                const type = amount1Out == 0 ? 'BUY' : 'SELL'
-
-                return type
-
-                }}  width={300} label="Type" dataKey="type" />
-                
-                <Column cellRenderer={(col)=>{
-                const swap = props.swaps[col.rowIndex]
-
-                const logs =  swap['decodeLogs']
-                const amount0In = logs['amount0In']
                 const amount0Out = logs['amount0Out']
-                const amount1In = logs['amount1In']
-                const amount1Out = logs['amount1Out']
-                const type = amount1Out == 0 ? 'BUY' : 'SELL'
 
-                const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+                const type = amount0Out == 0 ? 'BUY' : 'SELL'
 
-                return tokenAmount
+                return <span className={type} >{timestamp}</span>
+              }
+                }else{
+                  if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                    const logs =  swap['decodeLogs']
+                    const amount1Out = logs['amount1Out']
+                    const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                    return <span className={type} >{timestamp}</span>
+                  }
 
-                }} width={300} label="Tokens" dataKey="tokensAmount" />
+              if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                const logs =  swap['decodeLogs']
+                const amount0Out = logs['amount0Out']
+                const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                return <span className={type} >{timestamp}</span>
+              }
+                }
+
+
+                }}  disableSort={true} label="Time" width={200} />
                 
+                {/* Swap Type Column */}
 
-                
                 <Column cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
+                const tokenDetails = props.TokenDetails
+                const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
+                  return element.address == swap.address} )
+
+                if (filterLPAddress[0].type == 'BUSD') {
+
+                  if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                    const logs =  swap['decodeLogs']
+                    const amount1Out = logs['amount1Out']
+                    const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                    return <span className={type} >{type}</span>
+                  }
+
+              if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                const logs =  swap['decodeLogs']
+                const amount0Out = logs['amount0Out']
+
+                const type = amount0Out == 0 ? 'BUY' : 'SELL'
+
+                return <span className={type} >{type}</span>
+              }
+                }else{
+                  if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                    const logs =  swap['decodeLogs']
+                    const amount1Out = logs['amount1Out']
+                    const type = amount1Out == 0 ? 'BUY' : 'SELL'
+
+
+                    return <span className={type} >{type}</span>
+                  }
+
+              if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                const logs =  swap['decodeLogs']
+                const amount0Out = logs['amount0Out']
+                const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                return <span className={type} >{type}</span>
+              }
+                }
+
+                }} disableSort={true}  width={300} label="Type" dataKey="type" />
+                
+                  {/* Token Amount Column */}
+
+                <Column 
+                cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
+
+                const tokenDetails = props.TokenDetails
+                const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
+                  return element.address == swap.address} )
+
+                  if (filterLPAddress[0].type == 'BUSD') {
+
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                      const logs =  swap['decodeLogs']
+                      const amount0In = logs['amount0In']
+                      const amount0Out = logs['amount0Out']
+
+                      const amount1Out = logs['amount1Out']
+                      const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                      const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+
+                      return (<div className={type}>
+                        <p style={{fontSize:'1rem',
+                            marginBlockStart: '0',
+                            marginBlockEnd: '0',
+                            marginInlineStart: '0',
+                            marginInlineEnd: '0',
+                      }}>{tokenAmount.toLocaleString()}</p>
+                        <p style={{fontSize:'0.5rem',
+                            marginBlockStart: '0',
+                            marginBlockEnd: '0',
+                            marginInlineStart: '0px',
+                            marginInlineEnd: '0px',
+                      }}>{tokenDetails.TokenSymbol}</p>
+                        </div>)
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  const logs =  swap['decodeLogs']
+                  const amount0Out = logs['amount0Out']
+                  const amount1In = logs['amount1In']
+                  const amount1Out = logs['amount1Out']
+                  const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                  const tokenAmount = type =='SELL' ? amount1In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount1Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+
+                  return (<div className={type}>
+                    <p style={{fontSize:'1rem',
+                        marginBlockStart: '0',
+                        marginBlockEnd: '0',
+                        marginInlineStart: '0',
+                        marginInlineEnd: '0',
+                  }}>{tokenAmount.toLocaleString()}</p>
+                    <p style={{fontSize:'0.5rem',
+                        marginBlockStart: '0',
+                        marginBlockEnd: '0',
+                        marginInlineStart: '0px',
+                        marginInlineEnd: '0px',
+                  }}>{tokenDetails.TokenSymbol}</p>
+                    </div>)
+                }
+                  }else{
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                      const logs =  swap['decodeLogs']
+                      const amount0In = logs['amount0In']
+                      const amount0Out = logs['amount0Out']
+
+                      const amount1Out = logs['amount1Out']
+                      const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                      const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+
+                      return (<div className={type}>
+                        <p style={{fontSize:'1rem',
+                            marginBlockStart: '0',
+                            marginBlockEnd: '0',
+                            marginInlineStart: '0',
+                            marginInlineEnd: '0',
+                      }}>{tokenAmount.toLocaleString()}</p>
+                        <p style={{fontSize:'0.5rem',
+                            marginBlockStart: '0',
+                            marginBlockEnd: '0',
+                            marginInlineStart: '0px',
+                            marginInlineEnd: '0px',
+                      }}>{tokenDetails.TokenSymbol}</p>
+                        </div>)
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  const logs =  swap['decodeLogs']
+                      const amount0Out = logs['amount0Out']
+                      const amount1In = logs['amount1In']
+                      const amount1Out = logs['amount1Out']
+                      const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                      const tokenAmount = type =='SELL' ? amount1In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount1Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+                    
+                      return (<div className={type}>
+                        <p style={{fontSize:'1rem',
+                            marginBlockStart: '0',
+                            marginBlockEnd: '0',
+                            marginInlineStart: '0',
+                            marginInlineEnd: '0',
+                      }}>{tokenAmount.toLocaleString()}</p>
+                        <p style={{fontSize:'0.5rem',
+                            marginBlockStart: '0',
+                            marginBlockEnd: '0',
+                            marginInlineStart: '0px',
+                            marginInlineEnd: '0px',
+                      }}>{tokenDetails.TokenSymbol}</p>
+                        </div>)
+                }
+                  }
+
+
+                }} disableSort={true} 
+                width={300} 
+                label="Tokens" 
+                dataKey="tokensAmount" />
+
+                {/* Amount USD */}
+
+                <Column disableSort={true} 
+                cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
+
+                const tokenDetails = props.TokenDetails
+                const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
+                  return element.address == swap.address} )
+
+                  if (filterLPAddress[0].type == 'BUSD') {
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                      const logs =  swap['decodeLogs']
+                      const amount0In = logs['amount0In']
+                      const amount0Out = logs['amount0Out']
+                      const amount1In = logs['amount1In']
+                      const amount1Out = logs['amount1Out']
+                      const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                      const bUSDAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
+                      const bnbAmount = parseFloat(bUSDAmount / props.bnbPrice).toFixed(2)
+                      const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
+                      return <span className={type}>${USDAmount}</span>
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  const logs =  swap['decodeLogs']
+                      const amount0In = logs['amount0In']
+                      const amount0Out = logs['amount0Out']
+                      const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                      const bUSDAmount = type =='SELL' ? parseFloat(amount0Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount0In / `1${"0".repeat(18)}`).toFixed(6)
+                      const bnbAmount = parseFloat(bUSDAmount / props.bnbPrice).toFixed(6)
+                      const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
+                      return <span className={type}>${USDAmount}</span>
+                }
+                  }else{
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                      const logs =  swap['decodeLogs']
+                      const amount1In = logs['amount1In']
+                      const amount1Out = logs['amount1Out']
+                      const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                      const bnbAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
+                      const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
+                      return <span className={type}>${USDAmount}</span>
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  const logs =  swap['decodeLogs']
+                  const amount0In = logs['amount0In']
+                  const amount0Out = logs['amount0Out']
+                  const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                  const bnbAmount = type =='SELL' ? parseFloat(amount0Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount0In / `1${"0".repeat(18)}`).toFixed(6)
+                  const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
+                  return <span className={type}>${USDAmount}</span>
+                }
+                  }
+
+                
+                }} 
+                disableSort={true}  
+                width={300} 
+                label="Amount(USD)" datakey={'AmountUSD'}  />               
+
+
+                {/* Amount BNB */}
+
+                <Column disableSort={true} 
+                cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
+
+                const tokenDetails = props.TokenDetails
+                const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
+                  return element.address == swap.address} )
+
+                  if (filterLPAddress[0].type == 'BUSD') {
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                      const logs =  swap['decodeLogs']
+                      const amount0In = logs['amount0In']
+                      const amount0Out = logs['amount0Out']
+                      const amount1In = logs['amount1In']
+                      const amount1Out = logs['amount1Out']
+                      const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                      const bUSDAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
+                      const bnbAmount = parseFloat(bUSDAmount / props.bnbPrice).toFixed(6)
+                      return <span className={type}>{bnbAmount}</span>
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  const logs =  swap['decodeLogs']
+                      const amount0In = logs['amount0In']
+                      const amount0Out = logs['amount0Out']
+                      const amount1In = logs['amount1In']
+                      const amount1Out = logs['amount1Out']
+                      const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                      const bUSDAmount = type =='SELL' ? parseFloat(amount0Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount0In / `1${"0".repeat(18)}`).toFixed(6)
+                      const bnbAmount = parseFloat(bUSDAmount / props.bnbPrice).toFixed(6)
+                      return <span className={type}>{bnbAmount}</span>
+                }
+                  }else{
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                      const logs =  swap['decodeLogs']
+                      const amount0In = logs['amount0In']
+                      const amount0Out = logs['amount0Out']
+                      const amount1In = logs['amount1In']
+                      const amount1Out = logs['amount1Out']
+                      const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                      const bnbAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
+                      return <span className={type}>{bnbAmount}</span>
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  const logs =  swap['decodeLogs']
+                  const amount0In = logs['amount0In']
+                  const amount0Out = logs['amount0Out']
+                  const amount1In = logs['amount1In']
+                  const amount1Out = logs['amount1Out']
+                  const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                  const bnbAmount = type =='SELL' ? parseFloat(amount0Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount0In / `1${"0".repeat(18)}`).toFixed(6)
+                  return <span className={type}>{bnbAmount}</span>
+                }
+                  }
+
+                
+                }} 
+                disableSort={true}  
+                width={300} 
+                label="Amount(BNB)"
+                datakey={'AmountBNB'}  />      
+                         
+
+                {/* TX id Col */}
+                <Column 
+                cellRenderer={(col)=>{
                 const swap = props.swaps[col.rowIndex]
                 const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
                 return <a style={{color:'white'}} href={txURL} target="_blank">{swap.transactionHash.substring(0,6)}</a>
-                }}  width={300} label="Tx ID" dataKey="txid" />
+                }} disableSort={true}  width={300} label="Tx ID"  />
+                
+                {/* Token Order Column 
+                <Column cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
 
+                const tokenDetails = props.TokenDetails
+                const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
+                  return element.address == swap.address} )
 
+                  if (filterLPAddress[0].type == 'BUSD') {
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                        return 'Token1 is BUSD '
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  return 'Token0 is BUSD '
+                }
+                  }else{
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                      return 'Token1 is BNB '
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  return 'Token0 is BNB '
+                }
+                  }
+
+                }} 
+                  disableSort={true} 
+                 width={300} 
+                 label="Token Order"
+                 datakey={'Amount'}  />
+                */}
               </Table>
             )}
           </AutoSizer>

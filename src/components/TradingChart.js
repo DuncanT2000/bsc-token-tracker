@@ -64,6 +64,7 @@ const TradingChart = (props) => {
 
 
   useEffect( () => {
+    console.log(props.candleDataArr);
     const init = async()=>{
       if(props.bnbPrice == undefined) return
       candlestickSeries.setData(props.candleDataArr)
@@ -71,16 +72,7 @@ const TradingChart = (props) => {
       if (props.candleDataArr === []) {
         return
       }else{
-             setTimeout(() => {
-        candlestickSeries.update({
-          time: 1621295100,
-          open: props.candleDataArr[props.candleDataArr.length - 1],
-          high: 10.90,
-          low: 10.50,
-          close: 10.70,
-      },
-      );
-      }, 10000);
+          
       }
  
       

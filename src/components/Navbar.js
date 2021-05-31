@@ -1,11 +1,7 @@
 import React, {useContext, useEffect} from 'react'
 import SearchTokenInput from './SearchTokenInput';
 import {Web3Context} from './Contexts/Web3Context';
-import {BlockContext} from './Contexts/useBlockContext';
-import {
-    Link
-  } from "react-router-dom";
-
+//import {BlockContext} from './Contexts/useBlockContext';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const Navbar = (props) => {
@@ -14,9 +10,9 @@ const Navbar = (props) => {
     const web3 = web3Con.web3
     
 
+
   const connectWallet = async ()=>{
-     const res =  await web3Con.ethEnabled()
-     console.log(window.web3);
+     await web3Con.ethEnabled()
     }
 
     return (
@@ -33,6 +29,9 @@ const Navbar = (props) => {
                 </div>
                 
                 <SearchTokenInput tokenAddressInput={props.tokenAddressInput} OntokenAddressInput={props.OntokenAddressInput}/><div style={{display: 'flex'}}>
+                <div style={{display: 'flex', alignItems: 'center' , marginRight:40}}>
+                   <span style={{color: 'white'}}> BNB Price: ${web3Con.bnbPrice.toFixed(2)}</span>
+                </div>
             {web3Con.isWalletConnect == true ? <div style={{display: 'flex'}}>
                 <p style={{
                     border: '1px solid',

@@ -1,4 +1,6 @@
-import React, { useEffect, useState,useRef,useMemo, useContext, createContext } from 'react'
+// eslint-disable-next-linelet BNBUSDPairv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[1].returnValues[0]
+
+import React, { useEffect, useState, useContext } from 'react'
 import '../App.css'
 import SwapTable from '../components/SwapTable';
 import TradingChart from '../components/TradingChart.js';
@@ -18,16 +20,15 @@ import Web3 from 'web3'
 const Binance = require('node-binance-api');
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
-let PoolData={};
-
-
 const binance = new Binance().options({
   APIKEY: '',
   APISECRET: ''
 });
 
+
 async function processSwaps(uswaps) {
-  
+
+
       const promises = uswaps.map(async event => {
         const swapABI = [
           {
@@ -55,7 +56,6 @@ async function processSwaps(uswaps) {
       const results = Promise.all(promises)
       return results
       
-
     }
 
 
@@ -70,17 +70,12 @@ const Token = (props) => {
   const swapBlockContext = useContext(BlockContext)
 
     const [swaps, setswaps] = useState([]);
-    const [bnbPriceUSD, setbnbPriceUSD] = useState(0);
     const [candleData, setcandleData] = useState([]);
     const [chartInterval, setchartInterval] = useState(15);
     const [lpAddress, setlpAddress] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
     const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
   
-
-
-    
-
 useEffect(() => {
   if(!web3.utils.isAddress(props.match.params.tokenAddress)){
     setinvalidTokenAddress(true)
@@ -88,6 +83,7 @@ useEffect(() => {
 }, [props.match.params.tokenAddress]);
 
 useEffect(() => {
+  setswaps([])
 const initEffect = async () => {
 
   
@@ -137,6 +133,7 @@ let tokenPairBUSDv2Address =pairNtokenResults.results.pancakeContractv2.callsRet
 
 let BNBUSDPairv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[1].returnValues[0]
 
+
 const tokenPairAddressArray = [tokenPairBNBv1Address,tokenPairBNBv2Address, tokenPairBUSDv1Address, tokenPairBUSDv2Address]
 
 let filteredAddress = tokenPairAddressArray.filter(address =>  address != '0x0000000000000000000000000000000000000000')
@@ -169,15 +166,30 @@ const ReservesToken0CallContext = [
     
     ]
 },
+{
+  reference: 'bnbPrice',
+  contractAddress: BNBUSDPairv2Address,
+  abi: [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[],"name":"_getBurnFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"_getMaxTxAmount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"_getTaxFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"burnFee","type":"uint256"}],"name":"_setBurnFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"taxFee","type":"uint256"}],"name":"_setTaxFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tAmount","type":"uint256"}],"name":"deliver","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"excludeAccount","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"includeAccount","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"isExcluded","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tAmount","type":"uint256"},{"internalType":"bool","name":"deductTransferFee","type":"bool"}],"name":"reflectionFromToken","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"rAmount","type":"uint256"}],"name":"tokenFromReflection","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalBurn","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalFees","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}],
+  calls: [  ]
+
+}
 ]
 
 const ReservesToken0Results = await multicall.call(ReservesToken0CallContext);
 
  const Token0Results = filteredAddress.map((element,i) => {
   const token0 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[1].returnValues[0];
+  const token1 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[2].returnValues[0];
+  const BNBorBUSD = 
+  token0 == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" 
+  || token1 == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" ? 'BNB': 
+  token0 == "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56" 
+  || token1 == "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56" ? 'BUSD' : ''
   return {
+    'type': BNBorBUSD,
     'address':element.contractAddress,
-    token0
+    token0,
+    token1
   }
 });
 
@@ -195,7 +207,8 @@ settokenDetails({
   TokenDecimals,
   TokenSupply,
   tokenMC,
-  'tokenAddress':props.match.params.tokenAddress
+  'tokenAddress':props.match.params.tokenAddress,
+  'lpaddress':Token0Results
 })
 
 const tokenHistory = {
@@ -223,7 +236,7 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
   initEffect()
 }
 
-}, [props.match.params.tokenAddress]);
+}, [props.match.params.tokenAddress, ]);
 
 
 
@@ -242,12 +255,13 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
       }
   })
 
-      useEffect( async () => {
+      useEffect(() => {
         console.log('Started Fetch BNB price Effect');
         binance.prices('BNBUSDT', (error, ticker) => {
-          setbnbPriceUSD(parseFloat(ticker.BNBUSDT));
+          swapWeb3Context.setbnbPrice(parseFloat(ticker.BNBUSDT))
         });
-      },[props.match.params.tokenAddress])
+      },[props.match.params.tokenAddress,
+        lpAddress])
       
       useEffect(() => {
         if(web3.utils.isAddress(props.match.params.tokenAddress)){
@@ -262,10 +276,10 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
 
               return{
                 "time":new Date(kline.timeInterval.minute).getTime()/ 1000,
-                "open": bnbPriceUSD * kline.open_price,
-                "high": bnbPriceUSD * kline.maximum_price,
-                "low": bnbPriceUSD * kline.minimum_price,
-                "close": bnbPriceUSD * kline.close_price,
+                "open": swapWeb3Context.bnbPrice * kline.open_price,
+                "high": swapWeb3Context.bnbPrice * kline.maximum_price,
+                "low": swapWeb3Context.bnbPrice * kline.minimum_price,
+                "close": swapWeb3Context.bnbPrice * kline.close_price,
                 "volume":  kline.tradeAmount
               }
             })
@@ -287,8 +301,6 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
             
             const results = await processSwaps(swapevents)
 
-            console.log(results);
-
             setswaps([...swaps,...results].reverse())
             
           }
@@ -303,22 +315,18 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
         useEffect(() => {
 
           const initSwap = async ()=>{
-
-
             const swapevents = await web3.eth.getPastLogs({
               address: Object.keys(lpAddress[0]),
               topics: ["0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"],
               fromBlock:swapBlockContext.LatestBlock.number,
-              toBlock: 'latest'
-            })
-
+              toBlock: 'latest'})
             const syncevents = await web3.eth.getPastLogs({
               address: Object.keys(lpAddress[0]),
               topics: ["0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"],
               fromBlock:swapBlockContext.LatestBlock.number,
-              toBlock: 'latest'
-            })
-            if (swapevents.length > 0) {
+              toBlock: 'latest'})
+            
+              if (swapevents.length > 0) {
               const swapABI = [
                 {
                   'type': 'uint256',
@@ -362,11 +370,9 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
 
               console.log(token0);
               console.log(token1);
-              const tokenPrice = (token1 / token0)
-              
-              console.log('Token Price: ' + tokenPrice);
+            
 
-              const tokenMC = (tokenPrice * tokenDetails.TokenSupply)
+              const tokenMC = 1
 
               settokenDetails({...tokenDetails,tokenMC})
 
@@ -377,7 +383,22 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
             initSwap()
           }
           
-      }, [swapBlockContext.LatestBlock,props.match.params.tokenAddress])
+      }, [swapBlockContext.LatestBlock.number,
+        props.match.params.tokenAddress])
+
+
+      useEffect(() => {
+
+        const initSwap = async ()=>{
+          
+          
+        }
+        if (lpAddress.length > 0) {
+          initSwap()
+        }
+        
+    }, [lpAddress,swapBlockContext.LatestBlock.number,
+      props.match.params.tokenAddress])
 
 
 
@@ -406,10 +427,11 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
             <option value="1440">24h</option>
           </select> 
           
-          <TradingChart candleDataArr={candleData} bnbPrice={bnbPriceUSD} tokenAddress={props.match.params.tokenAddress}/>
+          <TradingChart candleDataArr={candleData} bnbPrice={swapWeb3Context.bnbPrice} tokenAddress={props.match.params.tokenAddress}/>
           <div className="token-swap-feed-container">
           
-          <SwapTable swaps={swaps} TokenDetails={tokenDetails} bnbPrice={bnbPriceUSD}/> 
+          <SwapTable swaps={swaps} TokenDetails={tokenDetails} 
+          bnbPrice={swapWeb3Context.bnbPrice}/> 
           
           </div>
           

@@ -5,8 +5,11 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import {Web3Context} from './Contexts/Web3Context.js'
 import {LSContext} from './Contexts/LSContext.js'
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
+import {Popover} from '@material-ui/core';
 
 import { Link } from 'react-router-dom'
+
+import MouseOverIcon from './MouseOverIcon'
 const TokenInfoBar = (props) => {
 
     const tokenInfoWeb3Context = useContext(Web3Context)
@@ -71,7 +74,8 @@ const TokenInfoBar = (props) => {
             <CircularProgress color={'white'} size={20} disableShrink />}</p>
           </div>
           <div style={{marginRight:40}}> 
-            <p>Total Supply:</p>
+            <p>Total Supply: {!isLoading ? <MouseOverIcon number={props.tokenDetails.TokenSupply / `1${"0".repeat(props.tokenDetails.TokenDecimals)}`} /> : 
+            <CircularProgress color='white' size={20} disableShrink />} </p>
             <p> {!isLoading ? parseInt(props.tokenDetails.TokenSupply / `1${"0".repeat(props.tokenDetails.TokenDecimals)}`).toLocaleString(): 
             <CircularProgress color='white' size={20} disableShrink />} </p>
           </div>

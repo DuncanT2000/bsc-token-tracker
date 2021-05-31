@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useContext} from 'react'
 import {Web3Context} from './Contexts/Web3Context'
 import {LSContext} from './Contexts/LSContext'
-
 import { Link } from 'react-router-dom'
+
 
 
 const HistoryTracker = (props) => {
@@ -14,10 +14,12 @@ const HistoryTracker = (props) => {
 
 
     return (
-        <div style={{background:'#163F56'}}>
+        <div style={{background:'#163F56', marginTop:'25px'}}>
             {LSCon.history.map(history =>{
                 return(<div style={{color:'white'}}> 
-                    <p>{history.TokenName}</p>
+                    <Link style={{color:'white'}} to={`${props.tokenpathprefix}${history.TokenAddress}`}>
+                        <span style={{color:'white'}}>{history.TokenName}</span>
+                        </Link>
                 </div>)
             })}
         </div>

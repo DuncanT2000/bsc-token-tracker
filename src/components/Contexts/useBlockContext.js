@@ -1,9 +1,11 @@
 
-import React, {createContext, useContext, useState, useEffect} from 'react'
-import {Web3Context} from './Web3Context'
+import React, {createContext, useState, useEffect} from 'react'
+import Web3 from 'web3'
 
 const pollingBlockInterval = 3000 //4 Seconds
 const pollingBalanceInterval = 5000
+
+const web3 = new Web3('https://bsc-dataseed1.defibit.io/')
 
 export const BlockContext = createContext(null)
 
@@ -11,8 +13,7 @@ export const BlockContextProvider = ({children}) => {
 
     const [LatestBlock, setLatestBlock] = useState(0)
 
-    const web3Con = useContext(Web3Context)
-    const web3 = web3Con.web3
+
 
 
     const BlockListner = async ()=>{
@@ -23,8 +24,7 @@ export const BlockContextProvider = ({children}) => {
 
 
 
-    useEffect(async () => {
-
+    useEffect( () => {
         BlockListner()
         const addBlockListner = setInterval(() => {
             BlockListner()
