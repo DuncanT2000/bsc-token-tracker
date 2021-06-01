@@ -3,6 +3,7 @@ body {
   font-family: 'Rubik', 'Roboto';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #163F56;
 }
 
 code {
@@ -38,6 +39,7 @@ code {
   width: 100%;
   background-color: #163F56;
   color: white;
+  margin: 0.3% 0 0 0;
 }
 
 .trading-chart{
@@ -50,12 +52,31 @@ min-height: 300px;
   background-color: rgba(22, 61, 82, 1);
   padding: 5px;
   margin-right: 5px;
-  width: 20vw;
+  
+  min-width: 20vw;
+  width: auto;
   
 }
 
+.panel{
+  min-width: 20vw;
+  width: auto;
+}
+
+.sidebar{
+  min-width: 20vw;
+  width: auto;
+}
+
+.ResizePanel-module_ResizeBarHorizontal__3TBZ5{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+
 .token-chart-swap-container{
-  width: 77vw;
+  width: 78%;
+  height: auto;
 }
 
 .upcoming-token-chart{

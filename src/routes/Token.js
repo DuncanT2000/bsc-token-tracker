@@ -15,6 +15,7 @@ import SideTab from '../components/SideTab';
 import TokenInfoBar from '../components/TokenInfoBar';
 import {Alert} from '@material-ui/lab';
 import Web3 from 'web3'
+import ResizePanel from "react-resize-panel";
 
 
 const Binance = require('node-binance-api');
@@ -404,9 +405,9 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
 
 
     return (<div className="token-main-container">
-          <div className="token-info-container">
+          <ResizePanel direction="e" className="token-info-container" style={{marginRight:'20px'}}>
           <SideTab pathprefix="./" />
-          </div>
+          </ResizePanel>
           <div className="token-chart-swap-container">
           {invalidTokenAddress == true ? <div style={{margin: '5px', display:'flex', justifyContent:'center' }}>
           <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>

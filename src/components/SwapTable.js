@@ -23,7 +23,7 @@ import {List,
 const SwapTable =  (props) => {
 
   const cache = useRef(new CellMeasurerCache({
-    fixedWidth:true,
+    fixedWidth:false,
     defaultHeight:100,
   }))
 
@@ -77,7 +77,7 @@ const SwapTable =  (props) => {
 
       
       return (
-        <div  style={{ height: 400 , backgroundColor:'#1B262C'}}>
+        <div  style={{ height: 'auto', minHeight: '100%', backgroundColor:'#1B262C'}}>
           <AutoSizer>
             {({ height, width }) => (
               <Table

@@ -43,7 +43,7 @@ const FavouriteTracker = (props) => {
     <th></th>
    
   </tr>
-            {LSCon.favourite.map(favourite =>{
+        {LSCon.favourite.map(favourite =>{
                 return(<tr key={favourite.address} id={favourite.address}>
                 <td>
                     <Link style={{color:'white'}} 
@@ -52,7 +52,7 @@ const FavouriteTracker = (props) => {
                     </Link>
                     </td>
                     <td>
-                        0.0000
+                        {console.log(favourite)}
                     </td>
                     <td>
                     <div id={"UNFAVOR"} onClick={unfavouriteToken}>

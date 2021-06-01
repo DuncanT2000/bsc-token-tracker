@@ -2,7 +2,7 @@ const TabNav = (props) => {
 
 
     return (
-        <div style={{width:'100%'}}>
+        <div id="TabDiv" style={{width:'100%' ,minWidth:'25vw',  maxWidth:'40vw'}}>
      
             {
                 props.tabs.map((tab) =>{

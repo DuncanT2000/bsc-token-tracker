@@ -5,6 +5,7 @@ import WalletTracker from './WalletTracker';
 import FavouriteTracker from './FavouriteTracker';
 import HistoryTracker from './HistoryTracker';
 
+
   
   export default function SideBar(props) {
 
@@ -14,7 +15,8 @@ import HistoryTracker from './HistoryTracker';
 
 
     return (
-      <div >
+      <div id="STDiv" style={{width: '100%',minWidth:'25vw',maxWidth: '40vw', 
+      height: '100vh'}} className="panel sidebar">
           <TabNav tabs={['Trending','Wallet','Favourite','History']} selected={Selected} setSelected={setSelected} >
             <Tab isSelected={Selected === 'Trending'}>
                 <p>This is the Trending</p>
