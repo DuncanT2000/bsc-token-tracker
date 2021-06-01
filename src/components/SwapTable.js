@@ -22,10 +22,6 @@ import {List,
 
 const SwapTable =  (props) => {
 
-  const cache = useRef(new CellMeasurerCache({
-    fixedWidth:false,
-    defaultHeight:100,
-  }))
 
     const swapWeb3Context = useContext(Web3Context)
     const web3 = swapWeb3Context.web3

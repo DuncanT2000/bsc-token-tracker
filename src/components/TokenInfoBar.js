@@ -73,6 +73,12 @@ const TokenInfoBar = (props) => {
             <p>{!isLoading ?  props.tokenDetails.TokenSymbol: 
             <CircularProgress color={'white'} size={20} disableShrink />}</p>
           </div>
+          <div style={{ marginRight:40}}> 
+            <p>Price: </p>
+            <p>{!isLoading ?  parseFloat(props.tokenDetails.TokenPrice).toFixed(6): 
+            <CircularProgress color={'white'} size={20} disableShrink />}</p>
+          </div>
+          
           <div style={{marginRight:40}}> 
             <p>Total Supply: {!isLoading ? <MouseOverIcon number={props.tokenDetails.TokenSupply / `1${"0".repeat(props.tokenDetails.TokenDecimals)}`} /> : 
             <CircularProgress color='white' size={20} disableShrink />} </p>
@@ -81,7 +87,7 @@ const TokenInfoBar = (props) => {
           </div>
           <div style={{marginRight:40}}>
           <p>Market Cap: </p>
-          <p> {!isLoading ? '$'+parseFloat(props.tokenDetails.tokenMC).toLocaleString(): 
+          <p> {!isLoading ? '$'+parseFloat(props.tokenDetails.TokenMC).toLocaleString(): 
           <CircularProgress color='white' size={20} disableShrink />} </p>
           </div>
           <div style={{marginRight:40}}>

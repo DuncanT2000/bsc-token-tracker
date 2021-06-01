@@ -448,6 +448,7 @@ const WalletTracker = (props) => {
   };
   const removetrackWallet = () => {
     LSCon.settrackWalletAddress(null);
+    LSCon.settrackWalletInfo([]);
   };
 
   const settrackWallet = (e) => {
@@ -459,9 +460,152 @@ const WalletTracker = (props) => {
   };
 
 
-  const renderWalletTable = (LSCon) =>{
+  const renderWalletTable = (LSCon, type) =>{
 
-    const filteredTokens = LSCon.trackWalletInfo[0].balances.filter(
+    if (type === 'personal') {
+      const filteredTokens = LSCon.walletInfo[0].balances.filter(
+        (token) => {
+            const deleted = LSCon.deleted.map((d)=>{
+                d = JSON.parse(d)
+                return d.address
+            })
+            
+          return !deleted.includes(token.currency.address);
+        }
+      );
+
+      return (
+        <div  style={{ height: 'auto', 
+        margin:'2%',
+        minHeight: '60vh', 
+        maxHeight: '100%',
+        backgroundColor: "#1B262C" }}>
+          <AutoSizer>
+            {({ height, width }) => (
+              <Table
+                width={width}
+                height={height}
+                headerHeight={45}
+                rowHeight={60}
+    
+                rowCount={filteredTokens.length}
+                rowGetter={({ index }) => filteredTokens[index]}
+              >
+                {/* Token Name Col */}
+                <Column
+                  cellRenderer={(col) => {
+                    const token = filteredTokens[col.rowIndex];
+    
+                    return <Link
+                    style={{ marginLeft: "10px", color: "white" }}
+                    to={`${props.tokenpathprefix}${token.currency.address}`}>
+                    {token.currency.name}</Link>
+                  }}
+                  disableSort={true}
+                  width={300}
+                  label="Token Name"
+                />
+    
+                {/* TX id Col */}
+                <Column
+                  cellRenderer={(col) => {
+                    const token = filteredTokens[col.rowIndex];
+                    return (
+                      token.value /
+                      `1${"0".repeat(
+                        typeof token.currency.decimals == "number"
+                          ? token.currency.decimals
+                          : 18
+                      )}`
+                    ).toFixed(6);
+                  }}
+                  disableSort={true}
+                  width={300}
+                  label="Balance"
+                />
+    
+                {/* Like Button */}
+                <Column
+                  cellRenderer={(col) => {
+                    const token = filteredTokens[col.rowIndex];
+                    const isFavourite = LSCon.favourite.some(function (
+                      el
+                    ) {
+                      return (
+                        el.address.toUpperCase() ==
+                        token.currency.address.toUpperCase()
+                      );
+                    });
+                    if (isFavourite) {
+                      return (
+                        <div
+                          id={JSON.stringify(token.currency)}
+                          onClick={unfavouriteToken}
+                        >
+                          <MdFavorite
+                            id={JSON.stringify(token.currency)}
+                            style={{
+                              marginLeft: "10px",
+                              color: "red",
+                              fontSize: "1.5em",
+                            }}
+                          />
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div
+                          id={JSON.stringify(token.currency)}
+                          onClick={favouriteToken}
+                        >
+                          <MdFavoriteBorder
+                            id={JSON.stringify(token.currency)}
+                            style={{
+                              marginLeft: "10px",
+                              color: "white",
+                              fontSize: "1.5em",
+                            }}
+                          />
+                        </div>
+                      );
+                    }
+                  }}
+                  disableSort={true}
+                  width={175}
+                  label=""
+                />
+    
+                {/* Like Button */}
+                <Column
+                  cellRenderer={(col) => {
+                    const token = filteredTokens[col.rowIndex];
+    
+                    return (
+                      <MdDelete
+                        id={JSON.stringify(token.currency)}
+                        style={{
+                          marginLeft: "10px",
+                          color: "white",
+                          fontSize: "1.5em",
+                        }}
+                        onClick={deleteToken}
+                      />
+                    );
+                  }}
+                  disableSort={true}
+                  width={200}
+                  label=""
+                />
+              </Table>
+            )}
+          </AutoSizer>
+        </div>
+      )
+
+    }
+
+    if (type === 'track') {
+          const filteredTokens = LSCon.trackWalletInfo[0].balances.filter(
     (token) => {
         const deleted = LSCon.deleted.map((d)=>{
             d = JSON.parse(d)
@@ -495,7 +639,10 @@ const WalletTracker = (props) => {
               cellRenderer={(col) => {
                 const token = filteredTokens[col.rowIndex];
 
-                return token.currency.name;
+                return <Link
+                style={{ marginLeft: "10px", color: "white" }}
+                to={`${props.tokenpathprefix}${token.currency.address}`}>
+                {token.currency.name}</Link>
               }}
               disableSort={true}
               width={300}
@@ -597,6 +744,9 @@ const WalletTracker = (props) => {
       </AutoSizer>
     </div>
   )
+    }
+
+
 }
 
 
@@ -673,94 +823,14 @@ const WalletTracker = (props) => {
           ) : (
             ""
           )}
-          {typeof LSCon.walletInfo[0] == "object" ? (
-            LSCon.walletInfo[0].balances.map((token) => {
-              const tokenAddress =
-                token.currency.address == "-"
-                  ? "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
-                  : token.currency.address;
-
-              if (LSCon.deleted.includes(tokenAddress)) {
-              } else {
-                return (
-                  <div
-                    id={tokenAddress}
-                    key={tokenAddress}
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <LazyLoadImage
-                      placeholder={<div></div>}
-                      height={25}
-                      width={25}
-                      src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(
-                        tokenAddress
-                      )}/logo.png`}
-                    />
-                    <Link
-                      style={{ marginLeft: "10px", color: "white" }}
-                      to={`${props.tokenpathprefix}${tokenAddress}`}
-                    >
-                      {" "}
-                      <div>
-                        <p key={token.currency.symbol}>
-                          {token.currency.symbol} - {token.value.toPrecision(8)}
-                        </p>
-                      </div>
-                    </Link>
-                    {LSCon.favourite.some(function (el) {
-                      return (
-                        el.address.toUpperCase() == tokenAddress.toUpperCase()
-                      );
-                    }) ? (
-                      <div
-                        id={JSON.stringify(token.currency)}
-                        onClick={unfavouriteToken}
-                      >
-                        <MdFavorite
-                          id={JSON.stringify(token.currency)}
-                          style={{
-                            marginLeft: "10px",
-                            color: "red",
-                            fontSize: "1.5em",
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        id={JSON.stringify(token.currency)}
-                        onClick={favouriteToken}
-                      >
-                        <MdFavoriteBorder
-                          id={JSON.stringify(token.currency)}
-                          style={{
-                            marginLeft: "10px",
-                            color: "white",
-                            fontSize: "1.5em",
-                          }}
-                        />
-                      </div>
-                    )}
-                    <MdDelete
-                      style={{
-                        marginLeft: "10px",
-                        color: "white",
-                        fontSize: "1.5em",
-                      }}
-                      onClick={deleteToken}
-                    />{" "}
-                  </div>
-                );
-              }
-            })
+          {typeof LSCon.walletInfo[0] == "object" ? 
+          (
+            renderWalletTable(LSCon, 'personal')
           ) : typeof LSCon.trackWalletInfo[0] == "object" ? (
-            renderWalletTable(LSCon)
-          ) : (
-            <p>No Track Found!</p>
+            renderWalletTable(LSCon, 'track')
+          ) : 
+          (
+            <> </>
           )}
         </div>
       )}
