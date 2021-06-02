@@ -86,8 +86,9 @@ const TokenInfoBar = (props) => {
             <CircularProgress color='white' size={20} disableShrink />} </p>
           </div>
           <div style={{marginRight:40}}>
-          <p>Market Cap: </p>
-          <p> {!isLoading ? '$'+parseFloat(props.tokenDetails.TokenMC).toLocaleString(): 
+          <p>Market Cap: {!isLoading ? <MouseOverIcon number={parseFloat(props.tokenDetails.TokenMC)} /> : 
+            <CircularProgress color='white' size={20} disableShrink />} </p>
+          <p> {!isLoading ? '$'+parseInt(props.tokenDetails.TokenMC).toLocaleString(): 
           <CircularProgress color='white' size={20} disableShrink />} </p>
           </div>
           <div style={{marginRight:40}}>

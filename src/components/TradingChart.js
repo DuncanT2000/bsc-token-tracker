@@ -15,19 +15,6 @@ const TradingChart = (props) => {
     chart = createChart(tradingChart.current, { 
       autoWidth:true,
       autoHeight:true,
-      darkTheme:true,
-      timeScale: {
-        rightOffset: 12,
-        barSpacing: 3,
-        fixLeftEdge: true,
-        lockVisibleTimeRangeOnResize: true,
-        rightBarStaysOnScroll: false,
-        borderVisible: false,
-        borderColor: "#fff000",
-        visible: true,
-        timeVisible: true,
-        secondsVisible: false
-      }
      });
     candlestickSeries = chart.addCandlestickSeries();
     

@@ -53,18 +53,17 @@ const WalletTracker = (props) => {
   });
 
   useEffect(() => {
-    console.log(data);
     if (typeof data == "object") {
-      console.log('Runnging');
      if (LSCon.trackWalletAddress == null) {
        console.log('Tracking Personal Address');
+       LSCon.settrackWalletInfo(null);
         LSCon.setwalletInfo([data.ethereum.address[0]]);
-        LSCon.settrackWalletInfo(null);
         setisloadingWalletData(false)
       } else if (LSCon.trackWalletAddress != null) {
         console.log('Tracking External Address');
-        LSCon.settrackWalletInfo([data.ethereum.address[0]]);
         LSCon.setwalletInfo(null);
+        LSCon.settrackWalletInfo([data.ethereum.address[0]]);
+        
         setisloadingWalletData(false)
       }
     }
@@ -104,10 +103,38 @@ const WalletTracker = (props) => {
 
 
   useEffect(() => {
-    const getBalance = setInterval(() => {
-      
+
+    let TTO
+    let PTO
+    let getBalance
+
+           if (LSCon.trackWalletAddress !== null) {
+
+      TTO = setTimeout(() => {
+        updateWalletBalances(
+          LSCon,
+          web3con,
+          web3,
+          multicall,
+          'track'
+        );
+      }, 2000);
+     }
+     else if(web3con.account !== null){
+      PTO = setTimeout(() => {
+        updateWalletBalances(
+          LSCon,
+          web3con,
+          web3,
+          multicall,
+          'personal'
+        );
+      }, 2000);
+     }
+    
+    getBalance = setInterval(() => {
       if (LSCon.trackWalletAddress !== null) {
-        console.log('Updating Wallet Balance');
+
         updateWalletBalances(
           LSCon,
           web3,
@@ -116,10 +143,10 @@ const WalletTracker = (props) => {
           LSCon.trackWalletInfo,
           'track'
         );
+        
       }
       else if (web3con.account !== null) {
-        console.log('Updating Wallet Balance');
-        updateWalletBalances(
+          updateWalletBalances(
           LSCon,
           web3,
           multicall,
@@ -127,14 +154,20 @@ const WalletTracker = (props) => {
           LSCon.walletInfo,
           'personal'
         );
+        
+        
       }
-    }, 10000);
+  }, 9000);
+
+
 
     return () => {
       window.clearInterval(getBalance);
-      console.log("Get balance is not longer running");
+      window.clearTimeout(PTO)
+      window.clearTimeout(TTO)
+      console.log('No Longer Updating Balances');
     };
-  }, []);
+  }, [LSCon.trackWalletAddress]);
 
   /* */
   return (
@@ -181,8 +214,6 @@ const WalletTracker = (props) => {
             <></>
           )}
           {error ? <p>Error Collecting Wallet Data...</p> : <></>}
-          {console.log(LSCon.walletInfo === null)}
-          {console.log(LSCon.trackWalletInfo === null)}
           {LSCon.walletInfo != null ? 
           (
             renderWalletTable(LSCon, 'personal',props)

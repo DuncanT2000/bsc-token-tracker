@@ -26,54 +26,12 @@ const SwapTable =  (props) => {
     const swapWeb3Context = useContext(Web3Context)
     const web3 = swapWeb3Context.web3
 
+    if (typeof props.TokenDetails.lpaddress == 'undefined' || props.TokenDetails.lpaddress.length == 0) {
+      return(<div style={{color: 'white'}} ><p>Loading...</p></div>)
+    }else{
 
-  
-/*
-    const columns = [
-        { id: 'time', label: 'Time', minWidth: 100,align: 'center' },
-        { id: 'type', label: 'Type', minWidth: 100,align: 'center' },
-        {id: 'amount', label: 'Amount',minWidth: 100,align: 'center'},
-        {id: 'valueusd',label: 'Value(USD)',minWidth: 100,align: 'center'},
-        {id: 'valuebnb',label: 'Amount(BNB)',minWidth: 100,align: 'center'},
-        {id: 'ppt',label: 'Price Per Token',minWidth: 100,align: 'center'}, 
-        {id: 'txId',label: 'TxId',minWidth: 100,align: 'center'},
-      ];
-      
-      const StyledTableCell = withStyles((theme) => ({
-        head: {
-          backgroundColor: '#1B262C',
-          color: theme.palette.common.white,
-        },
-        body: {
-          fontSize: 15,
-          backgroundColor: '#1B262C',
-          
-        },
-        
-      }))(TableCell);
-      
-      const StyledTableRow = withStyles((theme) => ({
-        root: {
-          '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.action.hover,
-            
-          },
-        },
-      }))(TableRow);
-
-      const useStyles = makeStyles({
-        table: {
-          minWidth: 400,
-        },
-      });
-
-      const classes = useStyles();
-      */
-      //return(<div>{JSON.stringify(props.swaps)}</div>)
-
-      
       return (
-        <div  style={{ 
+        <div style={{ 
 
           height: 'auto', 
           minHeight: '100%', backgroundColor:'#1B262C'}}>
@@ -100,7 +58,8 @@ const SwapTable =  (props) => {
                 const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
                   return element.address == swap.address} )
 
-                if (filterLPAddress[0].type == 'BUSD') {
+                  if(filterLPAddress.length > 0){
+                                    if (filterLPAddress[0].type == 'BUSD') {
 
                   if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
                     const logs =  swap['decodeLogs']
@@ -132,6 +91,9 @@ const SwapTable =  (props) => {
                 return <span className={type} >{timestamp}</span>
               }
                 }
+                  }
+
+
 
 
                 }}  disableSort={true} label="Time" width={200} />
@@ -144,7 +106,8 @@ const SwapTable =  (props) => {
                 const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
                   return element.address == swap.address} )
 
-                if (filterLPAddress[0].type == 'BUSD') {
+                  if(filterLPAddress.length > 0){
+                    if (filterLPAddress[0].type == 'BUSD') {
 
                   if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
                     const logs =  swap['decodeLogs']
@@ -178,6 +141,9 @@ const SwapTable =  (props) => {
                 return <span className={type} >{type}</span>
               }
                 }
+                  }
+
+                
 
                 }} disableSort={true}  width={300} label="Type" dataKey="type" />
                 
@@ -191,7 +157,8 @@ const SwapTable =  (props) => {
                 const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
                   return element.address == swap.address} )
 
-                  if (filterLPAddress[0].type == 'BUSD') {
+                  if(filterLPAddress.length > 0){
+                                      if (filterLPAddress[0].type == 'BUSD') {
 
                     if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
                       const logs =  swap['decodeLogs']
@@ -291,6 +258,9 @@ const SwapTable =  (props) => {
                         </div>)
                 }
                   }
+                  }
+
+
 
 
                 }} disableSort={true} 
@@ -308,7 +278,8 @@ const SwapTable =  (props) => {
                 const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
                   return element.address == swap.address} )
 
-                  if (filterLPAddress[0].type == 'BUSD') {
+                  if(filterLPAddress.length > 0){
+                    if (filterLPAddress[0].type == 'BUSD') {
                     if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
                       const logs =  swap['decodeLogs']
                       const amount0In = logs['amount0In']
@@ -353,6 +324,9 @@ const SwapTable =  (props) => {
                   return <span className={type}>${USDAmount}</span>
                 }
                   }
+                  }
+
+                  
 
                 
                 }} 
@@ -371,7 +345,8 @@ const SwapTable =  (props) => {
                 const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
                   return element.address == swap.address} )
 
-                  if (filterLPAddress[0].type == 'BUSD') {
+                  if(filterLPAddress.length > 0){
+                                      if (filterLPAddress[0].type == 'BUSD') {
                     if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
                       const logs =  swap['decodeLogs']
                       const amount0In = logs['amount0In']
@@ -418,6 +393,9 @@ const SwapTable =  (props) => {
                   return <span className={type}>{bnbAmount}</span>
                 }
                   }
+                  }
+
+
 
                 
                 }} 
@@ -472,6 +450,10 @@ const SwapTable =  (props) => {
           </AutoSizer>
         </div>
       );
+    
+    }
+      
+      
       
     
 

@@ -11,6 +11,7 @@ export const LSContextProvider = ({children}) => {
     const [favourite, setfavourite] = useState([])
     const [deleted, setdeleted] = useState([])
     const [history, sethistory] = useState([])
+    const [selectedSideBarTab, setselectedSideBarTab] = useState('trending')
 
     useEffect(() => {
         let currentDeleted = localStorage.getItem('deleted')
@@ -28,6 +29,15 @@ export const LSContextProvider = ({children}) => {
         : JSON.parse(currenthistory)
 
         sethistory(currenthistory)
+
+        let currentselectedSideBar = localStorage.getItem('selectedSideBarTab')
+        console.log(currentselectedSideBar);
+        currentselectedSideBar = currentselectedSideBar == null 
+        ? localStorage.setItem('selectedSideBarTab',JSON.stringify('Trending')) 
+        : JSON.parse(currentselectedSideBar)
+
+        setselectedSideBarTab(currentselectedSideBar)
+
 
         let currentwalletInfo = localStorage.getItem('walletInfo')
         console.log(currentwalletInfo);
@@ -49,9 +59,6 @@ export const LSContextProvider = ({children}) => {
         ? localStorage.setItem('trackWalletAddress',JSON.stringify(null)) 
         : JSON.parse(currentTrackwalletAddress)
         settrackWalletAddress(currentTrackwalletAddress)
-
-        console.log(currentwalletInfo);
-        console.log(currentTrackwalletInfo);
 
     }, [])
 
@@ -78,6 +85,11 @@ export const LSContextProvider = ({children}) => {
         localStorage.setItem('trackWalletAddress',JSON.stringify(trackWalletAddress))
     }, [trackWalletAddress]);
 
+    useEffect(() => {
+        console.log(selectedSideBarTab);
+        localStorage.setItem('selectedSideBarTab',JSON.stringify(selectedSideBarTab))
+    }, [selectedSideBarTab]);
+
 
     const dataProvided ={
         walletInfo,
@@ -91,7 +103,9 @@ export const LSContextProvider = ({children}) => {
         deleted,
         setdeleted,
         history,
-        sethistory
+        sethistory,
+        selectedSideBarTab,
+        setselectedSideBarTab
     }
 
     return (

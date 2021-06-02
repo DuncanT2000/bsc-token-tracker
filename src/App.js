@@ -17,6 +17,7 @@ import { ApolloProvider,
   HttpLink,
   from } from '@apollo/client';
 import {onError} from '@apollo/client/link/error'
+import NewPSListings from './routes/NewPSListings';
 
 const errorLink = onError(({graphqlErrors})=>{
   if (graphqlErrors) {
@@ -56,7 +57,8 @@ function App() {
 
      <Switch>
      <Route path="/" exact component={Home}/>
-          <Route path="/token/:tokenAddress" exact component={Token}/>
+      <Route path="/token/:tokenAddress" exact component={Token}/>
+      <Route path="/NewPairs" exact component={NewPSListings}/>
         </Switch>
 
     </div>

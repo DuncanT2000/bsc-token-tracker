@@ -1,16 +1,18 @@
 export default async function updateWalletBalances(
     LSCon,
+    Web3Con,
     web3,
     multicall,
-    wallet,
-    tokenAddresses,
     type
   ) {
     // Wallet Address, Address of the tokens in wallet
-    const tokenAddressesDetails = tokenAddresses;
-  
+
+
+
     if(type === 'personal'){
-       if (LSCon.walletInfo[0].balances.length == 0) return
+      const tokenAddressesDetails = JSON.parse(localStorage.getItem('walletInfo'))
+      console.log(tokenAddressesDetails);
+       if (tokenAddressesDetails[0].balances.length == 0) return
 
        const tokenABI = [
         { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -303,7 +305,7 @@ export default async function updateWalletBalances(
               {
                 reference: "getBalance",
                 methodName: "balanceOf",
-                methodParameters: [wallet],
+                methodParameters: [Web3Con.account],
               },
               {
                 reference: "getDecimals",
@@ -339,7 +341,9 @@ export default async function updateWalletBalances(
 
     }
     else if (type ==='track'){
-      if (LSCon.trackWalletInfo[0].balances.length === 0) return 
+      const tokenAddressesDetails = JSON.parse(localStorage.getItem('trackWalletInfo'))
+      console.log(tokenAddressesDetails);
+      if (tokenAddressesDetails[0].balances.length === 0) return 
       
       const tokenABI = [
         { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -632,7 +636,7 @@ export default async function updateWalletBalances(
               {
                 reference: "getBalance",
                 methodName: "balanceOf",
-                methodParameters: [wallet],
+                methodParameters: [LSCon.trackWalletAddress],
               },
               {
                 reference: "getDecimals",
@@ -646,6 +650,7 @@ export default async function updateWalletBalances(
     
       const tokenbalanceResult = await multicall.call(tokenbalanceCalls);
     
+
       const newBalances = Object.keys(tokenbalanceResult.results).map(
         (result, i) => {
           const TokenDecimals =
@@ -658,8 +663,7 @@ export default async function updateWalletBalances(
           );
     
           tokenAddressesDetails[0].balances[i]["value"] = parseFloat(decNumber);
-          tokenAddressesDetails[0].balances[i]["currency"]["decimals"] =
-            TokenDecimals;
+          tokenAddressesDetails[0].balances[i]["currency"]["decimals"] = TokenDecimals;
           return tokenAddressesDetails[0];
         }
       );

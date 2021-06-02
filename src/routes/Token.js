@@ -16,8 +16,8 @@ import TokenInfoBar from '../components/TokenInfoBar';
 import {Alert} from '@material-ui/lab';
 import Web3 from 'web3'
 import ResizePanel from "react-resize-panel";
-
-
+import {MdPlayArrow} from 'react-icons/md'
+import getTokenPrice from '../components/getTokenPrice'
 
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
@@ -73,6 +73,7 @@ const Token = (props) => {
     const [lpAddress, setlpAddress] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
     const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
+    const [displaySideBar, setdisplaySideBar] = useState(true);
   
 useEffect(() => {
   if(!web3.utils.isAddress(props.match.params.tokenAddress)){
@@ -255,12 +256,6 @@ const bnbBalance = web3.utils.hexToNumberString(ReservesToken0Results.results.bn
 const bUsdBalance = web3.utils.hexToNumberString(ReservesToken0Results.results.bUSDBalance.callsReturnContext[0].returnValues[0].hex) / `1${"0".repeat(18)}`
 
 
-console.log("BNB Balance: " + bnbBalance);
-
-console.log("BUSD Balance: " + bUsdBalance);
-
-console.log("BNB Price: " + bUsdBalance/bnbBalance );
-
 swapWeb3Context.setbnbPrice(bUsdBalance/bnbBalance)
  
 const Token0Results = filteredAddress.map((element,i) => {
@@ -332,7 +327,6 @@ else{
 
 TokenMC = parseInt((TokenSupply/ `1${"0".repeat(TokenDecimals)}`) * parseFloat(TokenPrice))
 
-// Get Price of Token (BNBValue / TokenDecimals) / (Token / TokenDecimals)
 
 
 settokenDetails({
@@ -364,7 +358,8 @@ setlpAddress([{
   [tokenPairBNBv2Address] : 'BNB',
   [tokenPairBUSDv1Address] : 'BUSD',
   [tokenPairBUSDv2Address] : 'BUSD'
-},Token0Results])
+},Token0Results,{
+  'TokenPairBalancesCalls':PairBalances.flat()}])
 
 
 }
@@ -478,9 +473,17 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
 
               setswaps([...swapevents, ...swaps])
 
+              const TokenPrice = await getTokenPrice(lpAddress, web3, multicall,TokenLSContext, tokenDetails, swapWeb3Context.bnbPrice)
+              const TokenMC = TokenPrice * (tokenDetails.TokenSupply / `1${"0".repeat(tokenDetails.TokenDecimals)}`)
+
+              settokenDetails({...tokenDetails,TokenPrice, TokenMC});
+
             }
 
+          
 
+
+          
           }
           if (lpAddress.length > 0) {
             initSwap()
@@ -500,6 +503,8 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
           initSwap()
         }
         
+        return ()=> {return }
+
     }, [lpAddress,swapBlockContext.LatestBlock.number,
       props.match.params.tokenAddress])
 
@@ -507,10 +512,18 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
 
 
     return (<div className="token-main-container">
-          <ResizePanel direction="e" className="token-info-container" 
+          {displaySideBar ?<ResizePanel direction="e" className="token-info-container" 
           style={{marginRight:'20px'}}>
           <SideTab pathprefix="./" />
-          </ResizePanel>
+          </ResizePanel>: <></>}
+          <div style={{width:'2%'}}>
+          {displaySideBar ?
+          <MdPlayArrow style={{color:'white', fontSize: "1.5rem",transform: 'rotate(180deg)'}} onClick={(e)=>{setdisplaySideBar(s=> !s)}} />
+          :
+          <MdPlayArrow style={{color:'white', fontSize: "1.5rem" }} onClick={(e)=>{setdisplaySideBar(s=> !s)}} />
+          }
+          </div>
+    
           <div className="token-chart-swap-container">
           {invalidTokenAddress == true ? <div style={{margin: '5px', display:'flex', justifyContent:'center' }}>
           <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>

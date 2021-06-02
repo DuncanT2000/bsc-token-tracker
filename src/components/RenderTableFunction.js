@@ -52,7 +52,7 @@ const renderWalletTable = (LSCon, type, props) =>{
 
 
     if (type === 'personal') {
-
+      console.log('Running Personal');
       if (LSCon.walletInfo[0].balances.length === 0) {
         return (<div>
           <p>No Tokens Found</p>
@@ -206,7 +206,7 @@ const renderWalletTable = (LSCon, type, props) =>{
     }
 
     if (type === 'track') {
-      
+      console.log('Running Tracking');
       if (LSCon.trackWalletInfo[0].balances.length === 0) {
         return (<div>
           <p>No Tokens Found</p>
