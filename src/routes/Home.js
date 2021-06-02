@@ -9,7 +9,12 @@ const Home = () => {
 
 
     return (
-        <div style={{backgroundColor:'#163F56'}}>
+        <div style={{
+          backgroundColor:'#163F56',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems:'center',
+          }}>
           <h1 style={{color:'white'}}>Home</h1>
         <SideTab  pathprefix="./token/"/>
         </div>

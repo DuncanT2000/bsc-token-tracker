@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
-import {createChart} from 'lightweight-charts'
-
+import { createChart } from 'kaktana-react-lightweight-charts'
 
 
 let chart;
@@ -11,69 +10,42 @@ const TradingChart = (props) => {
   const tradingChart = useRef()
 
   const [isLoading, setisLoading] = useState(true);
-  const [isLoadingChartData, setisLoadingChartData] = useState(false);
 
   useEffect(() => {
     chart = createChart(tradingChart.current, { 
+      autoWidth:true,
       autoHeight:true,
-      autoWidth: true,
       darkTheme:true,
-      localization: {
-        priceFormatter: price =>
-            '$' + parseFloat(price) > 0.00000 ? parseFloat(price).toFixed(4) : parseFloat(price).toFixed(8)
-        ,
-    },
-    crosshair: {
-      vertLine: {
-          color: '#6A5ACD',
-          width: 0.5,
-          style: 1,
-          visible: true,
-          labelVisible: false,
-      },
-      horzLine: {
-          color: '#6A5ACD',
-          width: 0.5,
-          style: 4,
-          visible: true,
-          labelVisible: true,
-      },
-      mode: 0,
-  },});
+      timeScale: {
+        rightOffset: 12,
+        barSpacing: 3,
+        fixLeftEdge: true,
+        lockVisibleTimeRangeOnResize: true,
+        rightBarStaysOnScroll: false,
+        borderVisible: false,
+        borderColor: "#fff000",
+        visible: true,
+        timeVisible: true,
+        secondsVisible: false
+      }
+     });
     candlestickSeries = chart.addCandlestickSeries();
-
-    function onVisibleLogicalRangeChanged(newVisibleLogicalRange) {
-      const barsInfo = candlestickSeries.barsInLogicalRange(newVisibleLogicalRange);
-
-      
-
-      if (isLoadingChartData) {
-        return
-      }
-      if (barsInfo !== null && barsInfo.barsBefore < 50) {
-
-        return
-          
-      }
-     console.log(isLoadingChartData)
- 
-  }
-      chart.timeScale().subscribeVisibleLogicalRangeChange(onVisibleLogicalRangeChanged);
-
+    
   }, []);
 
 
-  useEffect( () => {
-    console.log(props.candleDataArr);
+  useEffect(() => {
+    
     const init = async()=>{
-      if(props.bnbPrice == undefined) return
-      candlestickSeries.setData(props.candleDataArr)
+      
+      if (props.candleDataArr.length > 0) {
+        candlestickSeries.setData(props.candleDataArr)
       setisLoading(false)
-      if (props.candleDataArr === []) {
-        return
       }else{
-          
+
       }
+      
+      
  
       
     }
@@ -81,9 +53,8 @@ const TradingChart = (props) => {
   }, [props.candleDataArr])
 
 
-    
     return(<div>
-      {isLoading ==true ? <p>Loading Chart Data...</p> : <> </>}
+      {isLoading ==true ? <p>Loading Chart Data...</p> : <></>}
       <div className="trading-chart" ref={tradingChart}> </div>
       </div>)
 

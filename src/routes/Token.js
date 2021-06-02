@@ -381,8 +381,8 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
       variables:{
         "baseCurrency": props.match.params.tokenAddress,
         "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-        "since": "2021-05-14T22:35:00.000Z",
-        "till": "2021-05-17T13:35:00.000Z",
+        "since": "2021-05-29T23:00:00.000Z",
+        "till": "2021-05-31T22:00:00.000Z",
         "window": chartInterval,
         "exchangeAddresses": [
           "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"
@@ -507,7 +507,8 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
 
 
     return (<div className="token-main-container">
-          <ResizePanel direction="e" className="token-info-container" style={{marginRight:'20px'}}>
+          <ResizePanel direction="e" className="token-info-container" 
+          style={{marginRight:'20px'}}>
           <SideTab pathprefix="./" />
           </ResizePanel>
           <div className="token-chart-swap-container">
@@ -530,7 +531,8 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
             <option value="1440">24h</option>
           </select> 
           
-          <TradingChart candleDataArr={candleData} bnbPrice={swapWeb3Context.bnbPrice} tokenAddress={props.match.params.tokenAddress}/>
+          <TradingChart candleDataArr={candleData} 
+          tokenAddress={props.match.params.tokenAddress}/>
           <div className="token-swap-feed-container">
           
           <SwapTable swaps={swaps} TokenDetails={tokenDetails} 

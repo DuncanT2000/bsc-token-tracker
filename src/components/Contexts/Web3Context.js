@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect} from 'react'
+import React, {createContext, useState, useEffect, useContext} from 'react'
 import Web3 from 'web3';
 import {
     Multicall,
@@ -6,6 +6,7 @@ import {
     ContractCallResults,
     
   } from 'ethereum-multicall';
+import { LSContext } from './LSContext';
 
 
 let web3 = new Web3('https://bsc-dataseed1.defibit.io/');
@@ -18,6 +19,7 @@ export const Web3Context = createContext(0)
 
 export const Web3ContextProvider = ({children}) => {
 
+  const LSCon = useContext(LSContext)
     const [isWalletConnect, setisWalletConnect] = useState(false)
     const [account, setAccount] = useState(null)
     
@@ -37,6 +39,7 @@ export const Web3ContextProvider = ({children}) => {
           
           window.ethereum.on('chainChanged', (chainId) => {
             if(chainId == '0x38'){
+              LSCon.setwalletInfo([])
               window.location.reload();
             }else{
               setisWalletConnect(false)
@@ -45,10 +48,15 @@ export const Web3ContextProvider = ({children}) => {
           });
           window.ethereum.on('accountsChanged', (accounts) => {
             if (accounts.length > 0) {
+              LSCon.setwalletInfo(null)
               setAccount(accounts[0])
+              window.location.reload();
             }else{
               setisWalletConnect(false)
+              
+              LSCon.setwalletInfo(null)
               setAccount(null)
+              window.location.reload();
             }
             
             

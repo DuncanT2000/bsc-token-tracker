@@ -73,7 +73,10 @@ const SwapTable =  (props) => {
 
       
       return (
-        <div  style={{ height: 'auto', minHeight: '100%', backgroundColor:'#1B262C'}}>
+        <div  style={{ 
+
+          height: 'auto', 
+          minHeight: '100%', backgroundColor:'#1B262C'}}>
           <AutoSizer>
             {({ height, width }) => (
               <Table
