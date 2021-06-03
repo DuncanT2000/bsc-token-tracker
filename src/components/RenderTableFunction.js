@@ -176,7 +176,7 @@ const renderWalletTable = (LSCon, type, props) =>{
                   label=""
                 />
     
-                {/* Like Button */}
+                {/* Delete Button */}
                 <Column
                   cellRenderer={(col) => {
                     const token = filteredTokens[col.rowIndex];

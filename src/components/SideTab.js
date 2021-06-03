@@ -15,9 +15,8 @@ import { LSContext } from './Contexts/LSContext';
     const [Selected, setSelected] = useState(LSCon.selectedSideBarTab)
 
 
-    const handleChange =(e)=> {
-      console.log(e);
-    }
+    console.log('Selected Tab: ' + Selected);
+
 
 
     return (

@@ -407,6 +407,92 @@ const SwapTable =  (props) => {
                 label="Amount(BNB)"
                 dataKey={'removed'}  />      
                          
+                {/* Amount USD */}
+
+                <Column disableSort={true} 
+                cellRenderer={(col)=>{
+                const swap = props.swaps[col.rowIndex]
+
+                const tokenDetails = props.TokenDetails
+                const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
+                  return element.address == swap.address} )
+
+                  if(filterLPAddress.length > 0){
+                    if (filterLPAddress[0].type == 'BUSD') {
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                      
+
+                      const logs =  swap['decodeLogs']
+                      const amount0In = logs['amount0In']
+                      const amount0Out = logs['amount0Out']
+                      const amount1In = logs['amount1In']
+                      const amount1Out = logs['amount1Out']
+                      const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                      const bUSDAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
+                      const bnbAmount = parseFloat(bUSDAmount / props.bnbPrice).toFixed(2)
+                      const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
+                      const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+                      const PPT =  USDAmount / tokenAmount
+                      return <span className={type}>${PPT}</span>
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  const logs =  swap['decodeLogs']
+                  const amount0In = logs['amount0In']
+                  const amount0Out = logs['amount0Out']
+                  const amount1In = logs['amount1In']
+                  const amount1Out = logs['amount1Out']
+                      const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                      const bUSDAmount = type =='SELL' ? parseFloat(amount0Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount0In / `1${"0".repeat(18)}`).toFixed(6)
+                      const bnbAmount = parseFloat(bUSDAmount / props.bnbPrice).toFixed(6)
+                      const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
+                      const tokenAmount = type =='SELL' ? amount1In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount1Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+                      const PPT =  USDAmount / tokenAmount
+                      return <span className={type}>${PPT}</span>
+                }
+                  }else{
+                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                      const logs =  swap['decodeLogs']
+                      const amount0In = logs['amount0In']
+                      const amount0Out = logs['amount0Out']
+                      const amount1In = logs['amount1In']
+                      const amount1Out = logs['amount1Out']
+                      const type = amount1Out == 0 ? 'BUY' : 'SELL'
+                      const bnbAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
+                      const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
+                      const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+
+                      const PPT =  USDAmount / tokenAmount
+                      return <span className={type}>${PPT.toFixed(4)}</span>
+                    }
+
+                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                  const logs =  swap['decodeLogs']
+                  const amount0In = logs['amount0In']
+                  const amount0Out = logs['amount0Out']
+                  const amount1In = logs['amount1In']
+                  const amount1Out = logs['amount1Out']
+                  const type = amount0Out == 0 ? 'BUY' : 'SELL'
+                  const bnbAmount = type =='SELL' ? parseFloat(amount0Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount0In / `1${"0".repeat(18)}`).toFixed(6)
+                  const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
+                  const tokenAmount = type =='SELL' ? amount1In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount1Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
+                  const PPT =  USDAmount / tokenAmount
+                  return <span className={type}>${PPT.toFixed(4)}</span>
+                }
+                  }
+                  }
+
+                  
+
+                
+                }} 
+                disableSort={true}  
+                width={300} 
+                label="Price/Token" 
+                dataKey={'logIndex'}  />               
+
+                         
+
 
                 {/* TX id Col */}
                 <Column 

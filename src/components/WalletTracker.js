@@ -55,12 +55,10 @@ const WalletTracker = (props) => {
   useEffect(() => {
     if (typeof data == "object") {
      if (LSCon.trackWalletAddress == null) {
-       console.log('Tracking Personal Address');
        LSCon.settrackWalletInfo(null);
         LSCon.setwalletInfo([data.ethereum.address[0]]);
         setisloadingWalletData(false)
       } else if (LSCon.trackWalletAddress != null) {
-        console.log('Tracking External Address');
         LSCon.setwalletInfo(null);
         LSCon.settrackWalletInfo([data.ethereum.address[0]]);
         
@@ -214,7 +212,9 @@ const WalletTracker = (props) => {
             <></>
           )}
           {error ? <p>Error Collecting Wallet Data...</p> : <></>}
-          {LSCon.walletInfo != null ? 
+          {
+          web3con.isWalletConnect ?
+          LSCon.walletInfo != null ? 
           (
             renderWalletTable(LSCon, 'personal',props)
           ) : 
@@ -223,7 +223,12 @@ const WalletTracker = (props) => {
           ) : 
           (
             <> </>
-          )}
+          )
+            :
+            (
+              <p>Please Connect Wallet</p>
+            )
+        }
         </div>
       ) }
     </div>
