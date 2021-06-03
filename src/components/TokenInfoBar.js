@@ -1,4 +1,4 @@
-import React, {useEffect,useState, useContext} from 'react'
+import React, {useEffect,useState, useContext, useRef} from 'react'
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
@@ -12,17 +12,31 @@ import { Link } from 'react-router-dom'
 import MouseOverIcon from './MouseOverIcon'
 const TokenInfoBar = (props) => {
 
+  const isMounted = useRef(true)
+
     const tokenInfoWeb3Context = useContext(Web3Context)
     const tokenInfoLSContext = useContext(LSContext)
     const web3 = tokenInfoWeb3Context.web3
     const [isLoading, setisLoading] = useState(true)
 
     useEffect(() => {
+      return ()=>{
+        isMounted.current = false
+      }
+  }, [])
+
+    useEffect(() => {
+      if (isMounted.current) {
         setisLoading(true)
+      }
+        
     }, [props.tokenAddress])
 
     useEffect(() => {
+      if (isMounted.current) {
         Object.keys(props.tokenDetails).length > 0 ? setisLoading(false) : setisLoading(true)
+      }
+        
     }, [props.tokenDetails])
 
     const FavouriteToken = (e)=> {
@@ -37,7 +51,6 @@ const TokenInfoBar = (props) => {
         'address':parsedTokenDetails.tokenAddress
 
       }
-      console.log();
 
       tokenInfoLSContext.setfavourite([... tokenInfoLSContext.favourite,tokenDetails])
     }

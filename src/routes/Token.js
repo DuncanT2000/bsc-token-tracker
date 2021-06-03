@@ -73,11 +73,15 @@ const Token = (props) => {
     const [lpAddress, setlpAddress] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
     const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
+    const [noPairFound, setnoPairFound] = useState(false);
     const [displaySideBar, setdisplaySideBar] = useState(true);
   
 useEffect(() => {
   if(!web3.utils.isAddress(props.match.params.tokenAddress)){
     setinvalidTokenAddress(true)
+    return
+  }else{
+    setinvalidTokenAddress(false)
   }
 }, [props.match.params.tokenAddress]);
 
@@ -306,7 +310,8 @@ else if(typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object'
   TokenPrice = (bUsdBalance/bnbBalance) * v1Price
 
 }
-else{
+else if (typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object' 
+&& typeof ReservesToken0Results.results.tokenPairBalancebnb2 == 'object'){
 
   let tokenBalanceBNBPairv1 = web3.utils.hexToNumberString(ReservesToken0Results.results.tokenPairBalancebnb1.callsReturnContext[0].returnValues[0].hex);
   let BNBBalanceBNBPairv1 = web3.utils.hexToNumberString(ReservesToken0Results.results.BNBPairBalancebnb1.callsReturnContext[0].returnValues[0].hex);
@@ -320,8 +325,23 @@ else{
 
 
   TokenPrice = (bUsdBalance/bnbBalance) * v2Price
+  
+}else{
+  setnoPairFound(true)
+  settokenDetails({
+    TokenName,
+    TokenSymbol,
+    'TokenPrice':0,
+    TokenDecimals,
+    TokenSupply,
+    'TokenMC': 0,
+    'tokenAddress':props.match.params.tokenAddress,
+    'lpaddress':Token0Results
+  })
+  return 
 }
 
+setnoPairFound(false)
 
 
 
@@ -527,6 +547,14 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
           <div className="token-chart-swap-container">
           {invalidTokenAddress == true ? <div style={{margin: '5px', display:'flex', justifyContent:'center' }}>
           <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>
+          : <></>}
+           {noPairFound == true ? <div 
+           style={{margin: '5px', display:'flex', justifyContent:'center' }}>
+          <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} 
+          severity="error">
+            No BNB Pair Found.
+          </Alert> 
+          </div>
           : <></>}
           <TokenInfoBar 
           tokenDetails={tokenDetails}
