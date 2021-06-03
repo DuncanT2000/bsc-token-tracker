@@ -11,7 +11,6 @@ export default async function updateWalletBalances(
 
     if(type === 'personal'){
       const tokenAddressesDetails = JSON.parse(localStorage.getItem('walletInfo'))
-      console.log(tokenAddressesDetails);
        if (tokenAddressesDetails[0].balances.length == 0) return
 
        const tokenABI = [
@@ -342,7 +341,6 @@ export default async function updateWalletBalances(
     }
     else if (type ==='track'){
       const tokenAddressesDetails = JSON.parse(localStorage.getItem('trackWalletInfo'))
-      console.log(tokenAddressesDetails);
       if (tokenAddressesDetails[0].balances.length === 0) return 
       
       const tokenABI = [

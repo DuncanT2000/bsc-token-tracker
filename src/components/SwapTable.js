@@ -96,7 +96,8 @@ const SwapTable =  (props) => {
 
 
 
-                }}  disableSort={true} label="Time" width={200} />
+                }}  disableSort={true} label="Time" width={200}
+                dataKey={'blockNumber'} />
                 
                 {/* Swap Type Column */}
 
@@ -145,7 +146,8 @@ const SwapTable =  (props) => {
 
                 
 
-                }} disableSort={true}  width={300} label="Type" dataKey="type" />
+                }} disableSort={true}  width={300} label="Type" 
+                dataKey="logIndex" />
                 
                   {/* Token Amount Column */}
 
@@ -332,7 +334,8 @@ const SwapTable =  (props) => {
                 }} 
                 disableSort={true}  
                 width={300} 
-                label="Amount(USD)" datakey={'AmountUSD'}  />               
+                label="Amount(USD)" 
+                dataKey={'logIndex'}  />               
 
 
                 {/* Amount BNB */}
@@ -402,7 +405,7 @@ const SwapTable =  (props) => {
                 disableSort={true}  
                 width={300} 
                 label="Amount(BNB)"
-                datakey={'AmountBNB'}  />      
+                dataKey={'removed'}  />      
                          
 
                 {/* TX id Col */}
@@ -411,40 +414,10 @@ const SwapTable =  (props) => {
                 const swap = props.swaps[col.rowIndex]
                 const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
                 return <a style={{color:'white'}} href={txURL} target="_blank">{swap.transactionHash.substring(0,6)}</a>
-                }} disableSort={true}  width={300} label="Tx ID"  />
-                
-                {/* Token Order Column 
-                <Column cellRenderer={(col)=>{
-                const swap = props.swaps[col.rowIndex]
-
-                const tokenDetails = props.TokenDetails
-                const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
-                  return element.address == swap.address} )
-
-                  if (filterLPAddress[0].type == 'BUSD') {
-                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
-                        return 'Token1 is BUSD '
-                    }
-
-                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
-                  return 'Token0 is BUSD '
-                }
-                  }else{
-                    if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
-                      return 'Token1 is BNB '
-                    }
-
-                if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
-                  return 'Token0 is BNB '
-                }
-                  }
-
-                }} 
-                  disableSort={true} 
-                 width={300} 
-                 label="Token Order"
-                 datakey={'Amount'}  />
-                */}
+                }} disableSort={true}  
+                width={300} label="Tx ID" 
+                dataKey={'transactionHash'}  />
+              
               </Table>
             )}
           </AutoSizer>

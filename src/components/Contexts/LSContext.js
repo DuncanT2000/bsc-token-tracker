@@ -5,6 +5,7 @@ export const LSContext = createContext([])
 
 export const LSContextProvider = ({children}) => {
 
+    const [walletAddress, setwalletAddress] = useState(null)
     const [walletInfo, setwalletInfo] = useState(null)
     const [trackWalletInfo, settrackWalletInfo] = useState(null)
     const [trackWalletAddress, settrackWalletAddress] = useState(null)
@@ -14,16 +15,16 @@ export const LSContextProvider = ({children}) => {
     const [selectedSideBarTab, setselectedSideBarTab] = useState('trending')
 
     useEffect(() => {
+        
         let currentDeleted = localStorage.getItem('deleted')
-        console.log(currentDeleted);
         currentDeleted = currentDeleted == null ? localStorage.setItem('deleted',JSON.stringify([])) : JSON.parse(currentDeleted)
         setdeleted(currentDeleted)
+        
         let currentfavourite = localStorage.getItem('favourite')
-        console.log(currentfavourite);
         currentfavourite = currentfavourite == null ? localStorage.setItem('favourite',JSON.stringify([])) : JSON.parse(currentfavourite)
         setfavourite(currentfavourite)
+        
         let currenthistory = localStorage.getItem('history')
-        console.log(currenthistory);
         currenthistory = currenthistory == null 
         ? localStorage.setItem('history',JSON.stringify([])) 
         : JSON.parse(currenthistory)
@@ -31,7 +32,6 @@ export const LSContextProvider = ({children}) => {
         sethistory(currenthistory)
 
         let currentselectedSideBar = localStorage.getItem('selectedSideBarTab')
-        console.log(currentselectedSideBar);
         currentselectedSideBar = currentselectedSideBar == null 
         ? localStorage.setItem('selectedSideBarTab',JSON.stringify('Trending')) 
         : JSON.parse(currentselectedSideBar)
@@ -40,12 +40,18 @@ export const LSContextProvider = ({children}) => {
 
 
         let currentwalletInfo = localStorage.getItem('walletInfo')
-        console.log(currentwalletInfo);
         currentwalletInfo = currentwalletInfo == [] || currentwalletInfo == null 
         ? localStorage.setItem('walletInfo',JSON.stringify([])) 
         : JSON.parse(currentwalletInfo)
 
         setwalletInfo(currentwalletInfo)
+
+        let currentwalletAddress = localStorage.getItem('walletAddress')
+        currentwalletAddress = currentwalletAddress == null
+        ? localStorage.setItem('walletAddress',JSON.stringify(null)) 
+        : JSON.parse(currentwalletAddress)
+        setwalletAddress(currentwalletAddress)
+
 
         let currentTrackwalletInfo = localStorage.getItem('trackWalletInfo')
         currentTrackwalletInfo = currentTrackwalletInfo == [] || currentTrackwalletInfo == null 
@@ -54,7 +60,6 @@ export const LSContextProvider = ({children}) => {
         settrackWalletInfo(currentTrackwalletInfo)
 
         let currentTrackwalletAddress = localStorage.getItem('trackWalletAddress')
-        console.log(currentTrackwalletAddress);
         currentTrackwalletAddress = currentTrackwalletAddress == null
         ? localStorage.setItem('trackWalletAddress',JSON.stringify(null)) 
         : JSON.parse(currentTrackwalletAddress)
@@ -77,6 +82,11 @@ export const LSContextProvider = ({children}) => {
     useEffect(() => {
         localStorage.setItem('walletInfo',JSON.stringify(walletInfo))
     }, [walletInfo]);
+
+    useEffect(() => {
+        localStorage.setItem('walletAddress',JSON.stringify(walletAddress))
+    }, [walletAddress]);
+
     useEffect(() => {
         localStorage.setItem('trackWalletInfo',JSON.stringify(trackWalletInfo))
     }, [trackWalletInfo]);
