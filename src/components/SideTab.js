@@ -12,11 +12,7 @@ import { LSContext } from './Contexts/LSContext';
 
     const LSCon = useContext(LSContext)
 
-    const [Selected, setSelected] = useState(LSCon.selectedSideBarTab)
-
-
-    console.log('Selected Tab: ' + Selected);
-
+    const [Selected, setSelected] = useState(LSCon.selectedSideBarTab.replaceAll('"', ''))
 
 
     return (

@@ -12,7 +12,7 @@ export const LSContextProvider = ({children}) => {
     const [favourite, setfavourite] = useState([])
     const [deleted, setdeleted] = useState([])
     const [history, sethistory] = useState([])
-    const [selectedSideBarTab, setselectedSideBarTab] = useState(localStorage.getItem('selectedSideBarTab').replace('"', '') || "Trending")
+    const [selectedSideBarTab, setselectedSideBarTab] = useState(localStorage.getItem('selectedSideBarTab') != null ? localStorage.getItem('selectedSideBarTab') : "Trending")
 
     useEffect(() => {
         

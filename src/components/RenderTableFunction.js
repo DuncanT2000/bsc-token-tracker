@@ -18,7 +18,6 @@ const renderWalletTable = (LSCon, type, props) =>{
 
   
   const favouriteToken = (e) => {
-    console.log(e.target.id);
     const tokenDetails = JSON.parse(e.target.id);
     if (tokenDetails["address"] == "-") {
       tokenDetails["address"] = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
@@ -42,7 +41,6 @@ const renderWalletTable = (LSCon, type, props) =>{
   };
 
   const deleteToken = (e) => {
-    console.log(e.target.parentNode.id);
     if (e.target.parentNode.id == "") {
       return;
     }
@@ -52,7 +50,7 @@ const renderWalletTable = (LSCon, type, props) =>{
 
 
     if (type === 'personal') {
-      console.log('Running Personal');
+
       if (LSCon.walletInfo[0].balances.length === 0) {
         return (<div>
           <p>No Tokens Found</p>
@@ -91,18 +89,24 @@ const renderWalletTable = (LSCon, type, props) =>{
                 <Column
                   cellRenderer={(col) => {
                     const token = filteredTokens[col.rowIndex];
-    
+                    const tAddress = token.currency.address == "-" 
+                    ? "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" : token.currency.address
+
                     return <Link
                     style={{ marginLeft: "10px", color: "white" }}
-                    to={`${props.tokenpathprefix}${token.currency.address}`}>
-                    {token.currency.name}</Link>
+                    to={`${props.tokenpathprefix}${tAddress}`}>
+                    <div style={{width:'100%', color:'white'}}>
+                    <p style={{marginBottom:'0'}}>{token.currency.name}</p>
+                    <p style={{marginTop:'0',fontSize:'70%'}}>{token.currency.symbol}</p>
+                    </div></Link>
                   }}
                   disableSort={true}
                   width={300}
                   label="Token Name"
+                  dataKey={"currency"}
                 />
     
-                {/* TX id Col */}
+                {/* Balance */}
                 <Column
                   cellRenderer={(col) => {
                     const token = filteredTokens[col.rowIndex];
@@ -118,6 +122,7 @@ const renderWalletTable = (LSCon, type, props) =>{
                   disableSort={true}
                   width={300}
                   label="Balance"
+                  dataKey={"currency"}
                 />
     
                 {/* Like Button */}
@@ -174,6 +179,7 @@ const renderWalletTable = (LSCon, type, props) =>{
                   disableSort={true}
                   width={175}
                   label=""
+                  dataKey={"currency"}
                 />
     
                 {/* Delete Button */}
@@ -196,6 +202,7 @@ const renderWalletTable = (LSCon, type, props) =>{
                   disableSort={true}
                   width={200}
                   label=""
+                  dataKey={"currency"}
                 />
               </Table>
             )}
@@ -206,7 +213,6 @@ const renderWalletTable = (LSCon, type, props) =>{
     }
 
     if (type === 'track') {
-      console.log('Running Tracking');
       if (LSCon.trackWalletInfo[0].balances.length === 0) {
         return (<div>
           <p>No Tokens Found</p>
@@ -249,7 +255,10 @@ const renderWalletTable = (LSCon, type, props) =>{
                 return <Link
                 style={{ marginLeft: "10px", color: "white" }}
                 to={`${props.tokenpathprefix}${token.currency.address}`}>
-                {token.currency.name}</Link>
+                  <div style={{width:'100%', color:'white'}}>
+                    <p style={{marginBottom:'0'}}>{token.currency.name}</p>
+                    <p style={{marginTop:'0',fontSize:'70%'}}>{token.currency.symbol}</p>
+                    </div></Link>
               }}
               disableSort={true}
               width={300}

@@ -88,7 +88,8 @@ const TokenInfoBar = (props) => {
           </div>
           <div style={{ marginRight:40}}> 
             <p>Price: </p>
-            <p>{!isLoading ?  parseFloat(props.tokenDetails.TokenPrice).toFixed(6): 
+            <p>{!isLoading ?  
+            parseFloat(props.tokenDetails.TokenPrice).toFixed(12): 
             <CircularProgress color={'white'} size={20} disableShrink />}</p>
           </div>
           

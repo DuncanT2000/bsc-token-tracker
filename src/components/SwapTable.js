@@ -1,4 +1,4 @@
-import React, {useContext, useRef} from 'react'
+import React, {useContext, useRef, useEffect} from 'react'
 import '../index.css'
 import {Web3Context} from './/Contexts/Web3Context.js'
 
@@ -12,10 +12,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 */
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {List, 
+import {
   AutoSizer, 
-  CellMeasurer, 
-  CellMeasurerCache, 
   Table, 
   Column} from 'react-virtualized'
   import 'react-virtualized/styles.css'
@@ -26,13 +24,16 @@ const SwapTable =  (props) => {
     const swapWeb3Context = useContext(Web3Context)
     const web3 = swapWeb3Context.web3
 
-    if (typeof props.TokenDetails.lpaddress == 'undefined' || props.TokenDetails.lpaddress.length == 0) {
+
+    if (typeof props.TokenDetails.lpaddress == 'undefined' 
+    || props.TokenDetails.lpaddress.length == 0) {
       return(<div style={{color: 'white'}} ><p>Loading...</p></div>)
     }else{
 
+      
+
       return (
         <div style={{ 
-
           height: 'auto', 
           minHeight: '100%', backgroundColor:'#1B262C'}}>
           <AutoSizer>
@@ -511,155 +512,6 @@ const SwapTable =  (props) => {
       );
     
     }
-      
-      
-      
-    
-
-
-
-      
-      /*
-      return(<AutoSizer>
-          {({width,height})=>(
-          <List
-          width={width}
-          height={height}
-          rowHeight={cache.current.rowHeight}
-          deferredMeasurementCache={cache.current}
-          columnCount={2}
-          rowCount={props.swaps.length}
-          rowRenderer={({key,index,style,parent})=>{
-            const swap = props.swaps[index]
-            const d = new Date(0); 
-              d.setUTCSeconds(swap.blockData.timestamp);
-                const timestamp = `${d.getHours()< 10 ? "0"+d.getHours():d.getHours()}:${d.getMinutes()< 10 ? "0"+d.getMinutes():d.getMinutes()}:${d.getUTCSeconds()< 10 ? "0"+d.getUTCSeconds():d.getUTCSeconds()}`;
-                const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
-                const logs =  swap['decodeLogs']
-                const amount0In = logs['amount0In']
-                const amount0Out = logs['amount0Out']
-                const amount1In = logs['amount1In']
-                const amount1Out = logs['amount1Out']
-
-                const type = amount1Out == 0 ? 'BUY' : 'SELL'
-                const typecolor = type == 'BUY' ? '#7EF654': '#F65454'
-
-                const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
-                const usdAmount = type =='SELL' ? (props.bnbPrice * (amount1Out / `1${"0".repeat(18)}`)).toFixed(2): (props.bnbPrice * ( amount1In / `1${"0".repeat(18)}`)).toFixed(2)
-                const bnbAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
-
-            return <CellMeasurer 
-            key={key} 
-            cache={cache.current} 
-            parent={parent} 
-            columnIndex={0} 
-            rowIndex={index}> 
-            <div style={style} className="swap-row">
-              <div style={{display:'flex', flexDirection:'row', alignItems: 'center'}} >
-                  <p style={{padding:'5px'}}>{timestamp}</p>
-                  <p style={{padding:'5px'}}>{type}</p>
-                  <p style={{padding:'5px'}}>{tokenAmount}</p>
-                  <a style={{padding:'5px'}} href={txURL} target="_blank" >{swap.transactionHash.substring(0,5)}</a>
-              </div>
-                  
-            </div>
-            </CellMeasurer>
-          }}
-        />)}
-        
-        </AutoSizer>
-      )
-      
-      
-        return(<Paper>
-                 <TableContainer >
-                 <Table stickyHeader aria-label="sticky table">
-                 <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <StyledTableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}>
-                  {column.label}
-                </StyledTableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-          {props.swaps.length == 0 ? <CircularProgress size={20} disableShrink /> : ''}
-          {props.swaps.map((item, i) =>{
-              const d = new Date(0); 
-              d.setUTCSeconds(item.blockData.timestamp);
-                const timestamp = `${d.getHours()< 10 ? "0"+d.getHours():d.getHours()}:${d.getMinutes()< 10 ? "0"+d.getMinutes():d.getMinutes()}:${d.getUTCSeconds()< 10 ? "0"+d.getUTCSeconds():d.getUTCSeconds()}`;
-                const txURL = `https://bscscan.com/tx/${item.transactionHash}`
-                const logs =  item['decodeLogs']
-                const amount0In = logs['amount0In']
-                const amount0Out = logs['amount0Out']
-                const amount1In = logs['amount1In']
-                const amount1Out = logs['amount1Out']
-
-                const type = amount1Out == 0 ? 'BUY' : 'SELL'
-                const typecolor = type == 'BUY' ? '#7EF654': '#F65454'
-
-                const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
-                const usdAmount = type =='SELL' ? (props.bnbPrice * (amount1Out / `1${"0".repeat(18)}`)).toFixed(2): (props.bnbPrice * ( amount1In / `1${"0".repeat(18)}`)).toFixed(2)
-                const bnbAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
-
-            return (<StyledTableRow hover tabIndex={-1} key={i}>
-                <StyledTableCell 
-                  key={columns[0].id}
-                  align={columns[0].align}
-                  style={{ minWidth: columns[0].minWidth, color: typecolor }}>
-                  {timestamp}
-                </StyledTableCell>
-                <StyledTableCell 
-                  key={columns[1].id}
-                  align={columns[1].align}
-                  style={{ minWidth: columns[1].minWidth, color: typecolor }}>
-                  {type}
-                </StyledTableCell>
-                <StyledTableCell 
-                  key={columns[2].id}
-                  align={columns[2].align}
-                  style={{ minWidth: columns[2].minWidth, color: typecolor }}>
-                  {tokenAmount}
-                </StyledTableCell>
-                <StyledTableCell 
-                  key={columns[3].id}
-                  align={columns[3].align}
-                  style={{ minWidth: columns[3].minWidth, color: typecolor}}>
-                   ${usdAmount}
-                </StyledTableCell>
-                <StyledTableCell 
-                  key={columns[4].id}
-                  align={columns[4].align}
-                  style={{ minWidth: columns[4].minWidth, color: typecolor }}>
-                   { bnbAmount}
-                </StyledTableCell>
-                <StyledTableCell 
-                  key={columns[5].id}
-                  align={columns[5].align}
-                  style={{ minWidth: columns[5].minWidth, color: typecolor }}>
-                    ${(usdAmount / tokenAmount).toFixed(12)}
-                </StyledTableCell>
-                <StyledTableCell 
-                  key={columns[6].id}
-                  align={columns[6].align}
-                  style={{ minWidth: columns[6].minWidth, color: typecolor }}>
-                  <a className={"swap-table-link"} href={txURL} target="_blank">{item.transactionHash.substring(0, 8)}</a>
-                </StyledTableCell>
-              
-
-            </StyledTableRow>
-
-            )
-        })}  
-          </TableBody>
-                 </Table>
-                 </TableContainer>
-            </Paper>)
-            */
 }
 
 

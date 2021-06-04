@@ -1,6 +1,6 @@
 // eslint-disable-next-linelet BNBUSDPairv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[1].returnValues[0]
 
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext,useRef } from 'react'
 import '../App.css'
 import SwapTable from '../components/SwapTable';
 import TradingChart from '../components/TradingChart.js';
@@ -57,8 +57,12 @@ async function processSwaps(uswaps) {
     }
 
 
+
+
+
 const Token = (props) => {
 
+  const isMounted = useRef(true)
 
   const TokenLSContext = useContext(LSContext)
   const swapWeb3Context = useContext(Web3Context)
@@ -76,21 +80,32 @@ const Token = (props) => {
     const [noPairFound, setnoPairFound] = useState(false);
     const [displaySideBar, setdisplaySideBar] = useState(true);
   
+  useEffect(() => {
+    return () => {
+      isMounted.current = false
+    }
+  }, [])
+
 useEffect(() => {
-  if(!web3.utils.isAddress(props.match.params.tokenAddress)){
-    setinvalidTokenAddress(true)
+  if(!web3.utils.isAddress(props.match.params.tokenAddress )){
+    if (isMounted) {
+      setinvalidTokenAddress(true)
+    }
     return
   }else{
-    setinvalidTokenAddress(false)
+    if (isMounted) {
+      setinvalidTokenAddress(false)
+    }
+    
   }
 }, [props.match.params.tokenAddress]);
 
 useEffect(() => {
-  setswaps([])
+
 const initEffect = async () => {
 
   
-  const contractCallContext = [
+const contractCallContext = [
     {
         reference: 'pancakeContractv1',
         contractAddress: '0xbcfccbde45ce874adcb698cc183debcf17952812',
@@ -143,10 +158,10 @@ const tokenPairAddressArray = [
 {'ps':'busd1','address':tokenPairBUSDv1Address}, 
 {'ps':'busd2','address':tokenPairBUSDv2Address}]
 
-let filteredAddress = tokenPairAddressArray.filter(address =>  
-  address['address'] != '0x0000000000000000000000000000000000000000')
+let filteredAddress = tokenPairAddressArray.filter(address => address['address'] != '0x0000000000000000000000000000000000000000')
 
-  console.log(filteredAddress);
+
+
 
 const tokenorder = filteredAddress.map((address,i) =>{
   return {
@@ -161,7 +176,6 @@ const tokenorder = filteredAddress.map((address,i) =>{
 })
 
 const PairBalances = filteredAddress.map((address,i) =>{
-  console.log(address);
   const data = [{
     reference: 'tokenPairBalance' + address.ps.toString(),
     contractAddress: props.match.params.tokenAddress,
@@ -183,26 +197,10 @@ const PairBalances = filteredAddress.map((address,i) =>{
   ]
 },
 ]
-/*
-{
-  reference: 'BUSDPairBalance' + address.ps.toString(),
-  contractAddress: "0xe9e7cea3dedca5984780bafc599bd69add087d56",
-  abi: [{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount0","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1","type":"uint256"},{"indexed":true,"internalType":"address","name":"to","type":"address"}],"name":"Burn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount0","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount0In","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1In","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount0Out","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1Out","type":"uint256"},{"indexed":true,"internalType":"address","name":"to","type":"address"}],"name":"Swap","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint112","name":"reserve0","type":"uint112"},{"indexed":false,"internalType":"uint112","name":"reserve1","type":"uint112"}],"name":"Sync","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"constant":true,"inputs":[],"name":"DOMAIN_SEPARATOR","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"MINIMUM_LIQUIDITY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"PERMIT_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"to","type":"address"}],"name":"burn","outputs":[{"internalType":"uint256","name":"amount0","type":"uint256"},{"internalType":"uint256","name":"amount1","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"factory","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getReserves","outputs":[{"internalType":"uint112","name":"_reserve0","type":"uint112"},{"internalType":"uint112","name":"_reserve1","type":"uint112"},{"internalType":"uint32","name":"_blockTimestampLast","type":"uint32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"_token0","type":"address"},{"internalType":"address","name":"_token1","type":"address"}],"name":"initialize","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"kLast","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"to","type":"address"}],"name":"mint","outputs":[{"internalType":"uint256","name":"liquidity","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"nonces","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"permit","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"price0CumulativeLast","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"price1CumulativeLast","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"to","type":"address"}],"name":"skim","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"uint256","name":"amount0Out","type":"uint256"},{"internalType":"uint256","name":"amount1Out","type":"uint256"},{"internalType":"address","name":"to","type":"address"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"swap","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"sync","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"token0","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"token1","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}],
-  calls: [
-    { reference: 'getBUSDbalance', methodName: 'balanceOf', 
-    methodParameters: [address['address']] },
-    
-  ]
-},
-*/
 return data
-
 }
 
 )
-
-console.log(PairBalances.flat());
-
   
 const ReservesToken0CallContext = [
  ...tokenorder,
@@ -271,6 +269,7 @@ const Token0Results = filteredAddress.map((element,i) => {
   || token1 == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" ? 'BNB': 
   token0 == "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56" 
   || token1 == "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56" ? 'BUSD' : ''
+  
   return {
     'type': BNBorBUSD,
     'address':element.address,
@@ -288,14 +287,15 @@ let TokenMC;
 let TokenPrice;
 
 if(typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'undefined' && 
-typeof ReservesToken0Results.results.tokenPairBalancebnb2 == 'object'){
+typeof ReservesToken0Results.results.tokenPairBalancebnb2 == 'object')
+{
 
   let tokenBalanceBNBPairv2 = web3.utils.hexToNumberString(ReservesToken0Results.results.tokenPairBalancebnb2.callsReturnContext[0].returnValues[0].hex);
-let BNBBalanceBNBPairv2 = web3.utils.hexToNumberString(ReservesToken0Results.results.BNBPairBalancebnb2.callsReturnContext[0].returnValues[0].hex);;
+  let BNBBalanceBNBPairv2 = web3.utils.hexToNumberString(ReservesToken0Results.results.BNBPairBalancebnb2.callsReturnContext[0].returnValues[0].hex);;
 
-const v2Price = (BNBBalanceBNBPairv2 / `1${"0".repeat(18)}`) / (tokenBalanceBNBPairv2 / `1${"0".repeat(TokenDecimals)}`)
+  const v2Price = (BNBBalanceBNBPairv2 / `1${"0".repeat(18)}`) / (tokenBalanceBNBPairv2 / `1${"0".repeat(TokenDecimals)}`)
 
-TokenPrice = (bUsdBalance/bnbBalance) * v2Price
+  TokenPrice = (bUsdBalance/bnbBalance) * v2Price
 
 } 
 else if(typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object' 
@@ -327,19 +327,22 @@ else if (typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object'
   TokenPrice = (bUsdBalance/bnbBalance) * v2Price
   
 }else{
-  setnoPairFound(true)
-  settokenDetails({
-    TokenName,
-    TokenSymbol,
-    'TokenPrice':0,
-    TokenDecimals,
-    TokenSupply,
-    'TokenMC': 0,
-    'tokenAddress':props.match.params.tokenAddress,
-    'lpaddress':Token0Results
-  })
+
+if (isMounted) {
+  setlpAddress([{
+  [tokenPairBNBv1Address] : 'BNB',
+  [tokenPairBNBv2Address] : 'BNB',
+  [tokenPairBUSDv1Address] : 'BUSD',
+  [tokenPairBUSDv2Address] : 'BUSD'
+},Token0Results,{
+  'TokenPairBalancesCalls':PairBalances.flat()}])
+}
+
+
+
   return 
 }
+
 
 setnoPairFound(false)
 
@@ -348,7 +351,7 @@ setnoPairFound(false)
 TokenMC = parseInt((TokenSupply/ `1${"0".repeat(TokenDecimals)}`) * parseFloat(TokenPrice))
 
 
-
+if(isMounted){
 settokenDetails({
   TokenName,
   TokenSymbol,
@@ -366,11 +369,14 @@ const tokenHistory = {
   'TokenAddress': props.match.params.tokenAddress
 }
 
-if (!TokenLSContext.history.some(e => e.TokenAddress == tokenHistory.TokenAddress)) {
-  TokenLSContext.sethistory([ tokenHistory, ...TokenLSContext.history])
-}
 
-
+console.log([{
+  [tokenPairBNBv1Address] : 'BNB',
+  [tokenPairBNBv2Address] : 'BNB',
+  [tokenPairBUSDv1Address] : 'BUSD',
+  [tokenPairBUSDv2Address] : 'BUSD'
+},Token0Results,{
+  'TokenPairBalancesCalls':PairBalances.flat()}]);
 
 
 setlpAddress([{
@@ -381,14 +387,34 @@ setlpAddress([{
 },Token0Results,{
   'TokenPairBalancesCalls':PairBalances.flat()}])
 
+}
+
+
+
 
 }
 if(web3.utils.isAddress(props.match.params.tokenAddress)){
+  setswaps([])
+  setlpAddress([])
   initEffect()
 }
 
-}, [props.match.params.tokenAddress, ]);
 
+}, [props.match.params.tokenAddress]);
+
+useEffect(() => {
+  const tokenHistory = {
+    'TokenName':tokenDetails.TokenName,
+    'TokenSymbol':tokenDetails.TokenSymbol,
+    'TokenAddress': props.match.params.tokenAddress
+  }
+  // Check if Token is in History
+
+  if (!TokenLSContext.history.some(e => e.TokenAddress == tokenHistory.TokenAddress)) {
+    TokenLSContext.sethistory([ tokenHistory, ...TokenLSContext.history])
+  }
+
+}, [tokenDetails.tokenAddress])
 
 
 
@@ -414,24 +440,7 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
         }
           }, [props.match.params.tokenAddress,chartInterval])
 
-        useEffect(() => {
-          if (typeof data !== 'undefined') {
 
-           const formatedkline = data.ethereum.dexTrades.map((kline)=>{
-
-              return{
-                "time":new Date(kline.timeInterval.minute).getTime()/ 1000,
-                "open": swapWeb3Context.bnbPrice * kline.open_price,
-                "high": swapWeb3Context.bnbPrice * kline.maximum_price,
-                "low": swapWeb3Context.bnbPrice * kline.minimum_price,
-                "close": swapWeb3Context.bnbPrice * kline.close_price,
-                "volume":  kline.tradeAmount
-              }
-            })
-            
-            setcandleData(formatedkline)
-          } 
-        }, [data])
     
 
         useEffect(() => {
@@ -446,7 +455,10 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
             
             const results = await processSwaps(swapevents)
 
-            setswaps([...swaps,...results].reverse())
+            if (isMounted) {
+              setswaps([...swaps,...results].reverse())
+            }
+            
             
           }
           if (lpAddress.length > 0) {
@@ -490,44 +502,28 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
                   event['decodeLogs'] = decodeLogs
               })
 
+              if (isMounted) {
+                setswaps([...swapevents, ...swaps])
+                 const TokenPrice = await getTokenPrice(lpAddress, web3, multicall,TokenLSContext, tokenDetails, swapWeb3Context.bnbPrice)
+                const TokenMC = TokenPrice * (tokenDetails.TokenSupply / `1${"0".repeat(tokenDetails.TokenDecimals)}`)
 
-              setswaps([...swapevents, ...swaps])
+                settokenDetails({...tokenDetails,TokenPrice, TokenMC});
+              }
+              
 
-              const TokenPrice = await getTokenPrice(lpAddress, web3, multicall,TokenLSContext, tokenDetails, swapWeb3Context.bnbPrice)
-              const TokenMC = TokenPrice * (tokenDetails.TokenSupply / `1${"0".repeat(tokenDetails.TokenDecimals)}`)
-
-              settokenDetails({...tokenDetails,TokenPrice, TokenMC});
+              
 
             }
-
-          
-
-
           
           }
+
+
           if (lpAddress.length > 0) {
             initSwap()
           }
           
       }, [swapBlockContext.LatestBlock.number,
         props.match.params.tokenAddress])
-
-
-      useEffect(() => {
-
-        const initSwap = async ()=>{
-          
-          
-        }
-        if (lpAddress.length > 0) {
-          initSwap()
-        }
-        
-        return ()=> {return }
-
-    }, [lpAddress,swapBlockContext.LatestBlock.number,
-      props.match.params.tokenAddress])
-
 
 
 
@@ -540,7 +536,10 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
           {displaySideBar ?
           <MdPlayArrow style={{color:'white', fontSize: "1.5rem",transform: 'rotate(180deg)'}} onClick={(e)=>{setdisplaySideBar(s=> !s)}} />
           :
-          <MdPlayArrow style={{color:'white', fontSize: "1.5rem" }} onClick={(e)=>{setdisplaySideBar(s=> !s)}} />
+          <MdPlayArrow style={{color:'white', fontSize: "1.5rem" }} onClick={(e)=>{ 
+            if (isMounted) {
+            setdisplaySideBar(s=> !s)
+            } }} />
           }
           </div>
     
@@ -573,7 +572,9 @@ if(web3.utils.isAddress(props.match.params.tokenAddress)){
           </select> 
           
           <TradingChart candleDataArr={candleData} 
-          tokenAddress={props.match.params.tokenAddress}/>
+          tokenAddress={props.match.params.tokenAddress}
+          interval={chartInterval}
+          />
           <div className="token-swap-feed-container">
           
           <SwapTable swaps={swaps} TokenDetails={tokenDetails} 
