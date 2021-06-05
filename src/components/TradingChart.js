@@ -41,21 +41,23 @@ const TradingChart = (props) => {
       }
   })
   const getChartData = (from,to) => {
+    console.log(chart.timeScale().getVisibleRange());
     console.log(from);
     console.log(to);
-
   }
 
 const onVisibleLogicalRangeChanged = (newVisibleLogicalRange)=> {
   const barsInfo = candlestickSeries.barsInLogicalRange(newVisibleLogicalRange);
-  if (barsInfo !== null && barsInfo.barsBefore < -50) {
-    console.log(barsInfo);
+  
+
+  if (barsInfo !== null && barsInfo.barsBefore < 50) {
     var fromSeconds = barsInfo.from;
     var from = new Date(0);
     from.setUTCSeconds(fromSeconds);
-    var toSeconds = barsInfo.to;
+    var toSeconds = chart.timeScale().getVisibleRange().from;
     var to = new Date(0);
     to.setUTCSeconds(toSeconds);
+    getChartData(from,to)
   }
 }
 
@@ -63,11 +65,23 @@ const onVisibleLogicalRangeChanged = (newVisibleLogicalRange)=> {
 
   useEffect(() => {
     chart = createChart(tradingChart.current, { 
-      autoWidth:true,
-      autoHeight:true,
+      Width:500,
+      Height:500,
+      timeScale: {
+        rightOffset: 12,
+        barSpacing: 3,
+        lockVisibleTimeRangeOnResize: true,
+        rightBarStaysOnScroll: true,
+        borderVisible: false,
+        borderColor: '#fff000',
+        visible: true,
+        timeVisible: true,
+        secondsVisible: false,
+    },
      });
     candlestickSeries = chart.addCandlestickSeries();
 
+  
   
     chart.timeScale().subscribeVisibleLogicalRangeChange(onVisibleLogicalRangeChanged);
 
@@ -91,7 +105,6 @@ const onVisibleLogicalRangeChanged = (newVisibleLogicalRange)=> {
            "volume":  kline.tradeAmount
          }
        })
-      console.log(formatedkline);
       setcandleDataArr(formatedkline)
       }
 
@@ -102,7 +115,6 @@ const onVisibleLogicalRangeChanged = (newVisibleLogicalRange)=> {
     const init = async()=>{
       
       if (candleDataArr.length > 0) {
-        console.log(...candleDataArr);
         candlestickSeries.setData(candleDataArr)
         setisLoading(false)
       }else{
@@ -116,7 +128,7 @@ const onVisibleLogicalRangeChanged = (newVisibleLogicalRange)=> {
 
 
     return(<div>
-      {isLoading ==true ? <p>Loading Chart Data...</p> : <></>}
+      {isLoading ==true ? <p>Loading Char Data...</p> : <></>}
       <div className="trading-chart" ref={tradingChart}> </div>
       </div>)
 

@@ -18,6 +18,7 @@ import Web3 from 'web3'
 import ResizePanel from "react-resize-panel";
 import {MdPlayArrow} from 'react-icons/md'
 import getTokenPrice from '../components/getTokenPrice'
+import { Container} from '@material-ui/core';
 
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
@@ -72,7 +73,6 @@ const Token = (props) => {
   const swapBlockContext = useContext(BlockContext)
 
     const [swaps, setswaps] = useState([]);
-    const [candleData, setcandleData] = useState([]);
     const [chartInterval, setchartInterval] = useState(15);
     const [lpAddress, setlpAddress] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
@@ -104,7 +104,7 @@ useEffect(() => {
 
 const initEffect = async () => {
 
-  
+  // Convert into separate function
 const contractCallContext = [
     {
         reference: 'pancakeContractv1',
@@ -152,15 +152,9 @@ let tokenPairBUSDv2Address =pairNtokenResults.results.pancakeContractv2.callsRet
 let BNBUSDPairv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[1].returnValues[0]
 
 
-const tokenPairAddressArray = [
-  {'ps':'bnb1','address':tokenPairBNBv1Address},
-{'ps':'bnb2','address':tokenPairBNBv2Address}, 
-{'ps':'busd1','address':tokenPairBUSDv1Address}, 
-{'ps':'busd2','address':tokenPairBUSDv2Address}]
+const tokenPairAddressArray = [{'ps':'bnb1','address':tokenPairBNBv1Address},{'ps':'bnb2','address':tokenPairBNBv2Address}, {'ps':'busd1','address':tokenPairBUSDv1Address}, {'ps':'busd2','address':tokenPairBUSDv2Address}]
 
 let filteredAddress = tokenPairAddressArray.filter(address => address['address'] != '0x0000000000000000000000000000000000000000')
-
-
 
 
 const tokenorder = filteredAddress.map((address,i) =>{
@@ -396,7 +390,10 @@ setlpAddress([{
 if(web3.utils.isAddress(props.match.params.tokenAddress)){
   setswaps([])
   setlpAddress([])
+
   initEffect()
+
+  
 }
 
 
@@ -449,10 +446,12 @@ useEffect(() => {
             const swapevents = await web3.eth.getPastLogs({
               address: Object.keys(lpAddress[0]),
               topics: ["0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"],
-              fromBlock:swapBlockContext.LatestBlock.number - 4500,
+              fromBlock:swapBlockContext.LatestBlock.number - 1000,
               toBlock: 'latest'
             })
             
+            
+
             const results = await processSwaps(swapevents)
 
             if (isMounted) {
@@ -527,7 +526,8 @@ useEffect(() => {
 
 
 
-    return (<div className="token-main-container">
+    return (
+    <div className="token-main-container">
           {displaySideBar ?<ResizePanel direction="e" className="token-info-container" 
           style={{marginRight:'20px'}}>
           <SideTab pathprefix="./" />
@@ -542,39 +542,26 @@ useEffect(() => {
             } }} />
           }
           </div>
-    
+          <Container>
           <div className="token-chart-swap-container">
-          {invalidTokenAddress == true ? <div style={{margin: '5px', display:'flex', justifyContent:'center' }}>
-          <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>
-          : <></>}
-           {noPairFound == true ? <div 
-           style={{margin: '5px', display:'flex', justifyContent:'center' }}>
-          <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} 
-          severity="error">
-            No BNB Pair Found.
-          </Alert> 
-          </div>
-          : <></>}
+            {invalidTokenAddress == true ? <div style={{margin: '5px', display:'flex', justifyContent:'center' }}>
+            <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>
+            : <></>}
+            {noPairFound == true ? <div 
+            style={{margin: '5px', display:'flex', justifyContent:'center' }}>
+            <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} 
+            severity="error">
+              No BNB Pair Found.
+            </Alert> 
+            </div>
+            : <></>}
+          
           <TokenInfoBar 
           tokenDetails={tokenDetails}
           tokenAddress={props.match.params.tokenAddress}
           />
-          <select onChange={(e)=>{setchartInterval(e.target.value)}} name="chartInterval"  id="chartIntervalSelect">
-            <option value="1">1m</option>
-            <option value="5">5m</option>
-            <option value="10">10m</option>
-            <option defaultValue value="15">15m</option>
-            <option value="30">30m</option>
-            <option value="60">1h</option>
-            <option value="240">4h</option>
-            <option value="720">12h</option>
-            <option value="1440">24h</option>
-          </select> 
           
-          <TradingChart candleDataArr={candleData} 
-          tokenAddress={props.match.params.tokenAddress}
-          interval={chartInterval}
-          />
+      
           <div className="token-swap-feed-container">
           
           <SwapTable swaps={swaps} TokenDetails={tokenDetails} 
@@ -583,9 +570,8 @@ useEffect(() => {
           </div>
           
           </div>
-        
+          </Container>
         </div>
-    
     )
 }
 
