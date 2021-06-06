@@ -106,7 +106,7 @@ const WalletTracker = (props) => {
     let PTO
     let getBalance
 
-           if (LSCon.trackWalletAddress !== null) {
+    if (LSCon.trackWalletAddress !== null) {
 
       TTO = setTimeout(() => {
         updateWalletBalances(

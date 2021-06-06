@@ -19,6 +19,7 @@ import ResizePanel from "react-resize-panel";
 import {MdPlayArrow} from 'react-icons/md'
 import getTokenPrice from '../components/getTokenPrice'
 import { Container} from '@material-ui/core';
+import getTokenPairAddress from '../components/getTokenPairAddress';
 
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
@@ -73,6 +74,7 @@ const Token = (props) => {
   const swapBlockContext = useContext(BlockContext)
 
     const [swaps, setswaps] = useState([]);
+    const loadedswaps = useRef(false)
     const [chartInterval, setchartInterval] = useState(15);
     const [lpAddress, setlpAddress] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
@@ -105,54 +107,20 @@ useEffect(() => {
 const initEffect = async () => {
 
   // Convert into separate function
-const contractCallContext = [
-    {
-        reference: 'pancakeContractv1',
-        contractAddress: '0xbcfccbde45ce874adcb698cc183debcf17952812',
-        abi: [{"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"token0","type":"address"},{"indexed":true,"internalType":"address","name":"token1","type":"address"},{"indexed":false,"internalType":"address","name":"pair","type":"address"},{"indexed":false,"internalType":"uint256","name":"","type":"uint256"}],"name":"PairCreated","type":"event"},{"constant":true,"inputs":[],"name":"INIT_CODE_PAIR_HASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"allPairs","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"allPairsLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"tokenA","type":"address"},{"internalType":"address","name":"tokenB","type":"address"}],"name":"createPair","outputs":[{"internalType":"address","name":"pair","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"feeTo","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"feeToSetter","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"getPair","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"_feeTo","type":"address"}],"name":"setFeeTo","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"name":"setFeeToSetter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}],
-        calls: [
-          { reference: 'getPairCallv1', methodName: 'getPair', methodParameters: [props.match.params.tokenAddress,"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"] },
-          { reference: 'getPairBUSDCallv1', methodName: 'getPair', methodParameters: [props.match.params.tokenAddress,"0xe9e7cea3dedca5984780bafc599bd69add087d56"] }
-        ]
-    },
-    {
-        reference: 'pancakeContractv2',
-        contractAddress: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
-        abi: [{"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"token0","type":"address"},{"indexed":true,"internalType":"address","name":"token1","type":"address"},{"indexed":false,"internalType":"address","name":"pair","type":"address"},{"indexed":false,"internalType":"uint256","name":"","type":"uint256"}],"name":"PairCreated","type":"event"},{"constant":true,"inputs":[],"name":"INIT_CODE_PAIR_HASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"allPairs","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"allPairsLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"tokenA","type":"address"},{"internalType":"address","name":"tokenB","type":"address"}],"name":"createPair","outputs":[{"internalType":"address","name":"pair","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"feeTo","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"feeToSetter","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"getPair","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"_feeTo","type":"address"}],"name":"setFeeTo","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"name":"setFeeToSetter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}],
-        calls: [
-          { reference: 'getPairCallv2', methodName: 'getPair', 
-          methodParameters: [props.match.params.tokenAddress,"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"] },
-          { reference: 'getBNBUSDPairCallv2', methodName: 'getPair', 
-          methodParameters: ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c","0xe9e7cea3dedca5984780bafc599bd69add087d56"] },
-          { reference: 'getPairBUSDCallv2', methodName: 'getPair', methodParameters: [props.match.params.tokenAddress,"0xe9e7cea3dedca5984780bafc599bd69add087d56"] }
-        ]
-    },
+
+  const pairNtokenResults = await getTokenPairAddress(props.match.params.tokenAddress, multicall)
+
+  let tokenPairBNBv1Address =pairNtokenResults.results.pancakeContractv1.callsReturnContext[0].returnValues[0]
+  let tokenPairBNBv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[0].returnValues[0]
+  let tokenPairBUSDv1Address =pairNtokenResults.results.pancakeContractv1.callsReturnContext[1].returnValues[0]
+  let tokenPairBUSDv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[2].returnValues[0]
+  let BNBUSDPairv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[1].returnValues[0]
 
 
-    {
-      reference: 'TokenContract',
-      contractAddress: props.match.params.tokenAddress,
-      abi: [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[],"name":"_getBurnFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"_getMaxTxAmount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"_getTaxFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"burnFee","type":"uint256"}],"name":"_setBurnFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"taxFee","type":"uint256"}],"name":"_setTaxFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tAmount","type":"uint256"}],"name":"deliver","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"excludeAccount","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"includeAccount","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"isExcluded","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tAmount","type":"uint256"},{"internalType":"bool","name":"deductTransferFee","type":"bool"}],"name":"reflectionFromToken","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"rAmount","type":"uint256"}],"name":"tokenFromReflection","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalBurn","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalFees","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}],
-      calls: [
-        { reference: 'tokenName', methodName: 'name', methodParameters: [] },
-        { reference: 'tokenSymbol', methodName: 'symbol', methodParameters: [] },
-        { reference: 'tokenDecimals', methodName: 'decimals', methodParameters: [] },
-        { reference: 'tokenTS', methodName: 'totalSupply', methodParameters: [] },
-      ]
-  },
-];
-
-const pairNtokenResults = await multicall.call(contractCallContext);
-
-let tokenPairBNBv1Address =pairNtokenResults.results.pancakeContractv1.callsReturnContext[0].returnValues[0]
-let tokenPairBNBv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[0].returnValues[0]
-let tokenPairBUSDv1Address =pairNtokenResults.results.pancakeContractv1.callsReturnContext[1].returnValues[0]
-let tokenPairBUSDv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[2].returnValues[0]
-
-let BNBUSDPairv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[1].returnValues[0]
-
-
-const tokenPairAddressArray = [{'ps':'bnb1','address':tokenPairBNBv1Address},{'ps':'bnb2','address':tokenPairBNBv2Address}, {'ps':'busd1','address':tokenPairBUSDv1Address}, {'ps':'busd2','address':tokenPairBUSDv2Address}]
+const tokenPairAddressArray = [{'ps':'bnb1','address':tokenPairBNBv1Address},
+{'ps':'bnb2','address':tokenPairBNBv2Address}, 
+{'ps':'busd1','address':tokenPairBUSDv1Address}, 
+{'ps':'busd2','address':tokenPairBUSDv2Address}]
 
 let filteredAddress = tokenPairAddressArray.filter(address => address['address'] != '0x0000000000000000000000000000000000000000')
 
@@ -383,14 +351,10 @@ setlpAddress([{
 
 }
 
-
-
-
 }
 if(web3.utils.isAddress(props.match.params.tokenAddress)){
-  setswaps([])
   setlpAddress([])
-
+  setswaps([])
   initEffect()
 
   
@@ -443,19 +407,29 @@ useEffect(() => {
         useEffect(() => {
 
           const initSwap = async ()=>{
+            loadedswaps.current = false
             const swapevents = await web3.eth.getPastLogs({
               address: Object.keys(lpAddress[0]),
               topics: ["0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"],
-              fromBlock:swapBlockContext.LatestBlock.number - 1000,
+              fromBlock:swapBlockContext.LatestBlock.number - 4500,
               toBlock: 'latest'
             })
             
-            
 
-            const results = await processSwaps(swapevents)
+            if (swapevents.length > 400) {
+              const results = await processSwaps(swapevents.slice(swapevents.length - 400,swapevents.length))
 
             if (isMounted) {
               setswaps([...swaps,...results].reverse())
+              loadedswaps.current = true
+            }
+            }else{
+              const results = await processSwaps(swapevents)
+
+              if (isMounted) {
+                setswaps([...swaps,...results].reverse())
+                loadedswaps.current = true
+              }
             }
             
             
@@ -528,8 +502,7 @@ useEffect(() => {
 
     return (
     <div className="token-main-container">
-          {displaySideBar ?<ResizePanel direction="e" className="token-info-container" 
-          style={{marginRight:'20px'}}>
+          {displaySideBar ?<ResizePanel direction="e" className="token-info-container">
           <SideTab pathprefix="./" />
           </ResizePanel>: <></>}
           <div style={{width:'2%'}}>
@@ -543,8 +516,9 @@ useEffect(() => {
           }
           </div>
           <Container>
-          <div className="token-chart-swap-container">
-            {invalidTokenAddress == true ? <div style={{margin: '5px', display:'flex', justifyContent:'center' }}>
+          <div style={{display:'flex', flexDirection:'column'}} className="token-chart-swap-container">
+            {invalidTokenAddress == true ? <div style={{
+              margin: '5px', display:'flex', justifyContent:'center' }}>
             <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>
             : <></>}
             {noPairFound == true ? <div 
@@ -564,7 +538,7 @@ useEffect(() => {
       
           <div className="token-swap-feed-container">
           
-          <SwapTable swaps={swaps} TokenDetails={tokenDetails} 
+          <SwapTable loaded={loadedswaps.current} swaps={swaps} TokenDetails={tokenDetails} 
           bnbPrice={swapWeb3Context.bnbPrice}/> 
           
           </div>

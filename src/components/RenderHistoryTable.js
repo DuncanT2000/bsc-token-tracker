@@ -11,8 +11,7 @@ import {
 
 
 
-const renderHistoryTable = (LSCon) =>{
-
+const renderHistoryTable = (LSCon, prefix) =>{
 
       return (
         <div  style={{ height: 'auto', 
@@ -39,7 +38,7 @@ const renderHistoryTable = (LSCon) =>{
                     console.log(token.TokenName);
 
                     return  <Link 
-                    to={`./${token.TokenAddress}`}>
+                    to={`${prefix}${token.TokenAddress}`}>
                         <div style={{width:'100%', color:'white'}}>
                         <p style={{marginBottom:'0'}}>{token.TokenName}</p>
                         <p style={{marginTop:'0',fontSize:'70%'}}>{token.TokenSymbol}</p>

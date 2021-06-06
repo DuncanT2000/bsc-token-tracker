@@ -24,6 +24,9 @@ const SwapTable =  (props) => {
     const swapWeb3Context = useContext(Web3Context)
     const web3 = swapWeb3Context.web3
 
+    useEffect(() => {
+      console.log(props.swaps);
+    }, [props.swaps]);
 
     if (typeof props.TokenDetails.lpaddress == 'undefined' 
     || props.TokenDetails.lpaddress.length == 0) {
@@ -31,8 +34,8 @@ const SwapTable =  (props) => {
     }else{
 
       
-
-      return (
+      if (props.loaded) {
+        return (
         <div style={{ 
           height: 'auto', 
           minHeight: '100%', backgroundColor:'#1B262C'}}>
@@ -48,13 +51,11 @@ const SwapTable =  (props) => {
                 >
                 
                 {/* Time Column */}
-
                 <Column cellRenderer={(col)=>{
                 const swap = props.swaps[col.rowIndex]
                 const d = new Date(0); 
                 d.setUTCSeconds(swap.blockData.timestamp);
                 const timestamp = `${d.getHours()< 10 ? "0"+d.getHours():d.getHours()}:${d.getMinutes()< 10 ? "0"+d.getMinutes():d.getMinutes()}:${d.getUTCSeconds()< 10 ? "0"+d.getUTCSeconds():d.getUTCSeconds()}`;
-                
                 const tokenDetails = props.TokenDetails
                 const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
                   return element.address == swap.address} )
@@ -408,7 +409,7 @@ const SwapTable =  (props) => {
                 label="Amount(BNB)"
                 dataKey={'removed'}  />      
                          
-                {/* Amount USD */}
+                {/* Amount Per Token USD */}
 
                 <Column disableSort={true} 
                 cellRenderer={(col)=>{
@@ -430,11 +431,13 @@ const SwapTable =  (props) => {
                       const amount1Out = logs['amount1Out']
                       const type = amount1Out == 0 ? 'BUY' : 'SELL'
                       const bUSDAmount = type =='SELL' ? parseFloat(amount1Out / `1${"0".repeat(18)}`).toFixed(6): parseFloat(amount1In / `1${"0".repeat(18)}`).toFixed(6)
-                      const bnbAmount = parseFloat(bUSDAmount / props.bnbPrice).toFixed(2)
-                      const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
+                      const bnbAmount = parseFloat(bUSDAmount / props.bnbPrice).toFixed(18)
+                      const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(5)
+         
                       const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
                       const PPT =  USDAmount / tokenAmount
-                      return <span className={type}>${PPT}</span>
+                      var m = -Math.floor( Math.log10(PPT) + 1)     
+                      return <span className={type}>${isFinite(m) ? parseFloat(PPT).toFixed(m + 3): 0.00000}</span>
                     }
 
                 if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
@@ -449,7 +452,8 @@ const SwapTable =  (props) => {
                       const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
                       const tokenAmount = type =='SELL' ? amount1In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount1Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
                       const PPT =  USDAmount / tokenAmount
-                      return <span className={type}>${PPT}</span>
+                      var m = -Math.floor( Math.log10(PPT) + 1)
+                      return <span className={type}>${isFinite(m) ? parseFloat(PPT).toFixed(m + 3): 0.00000}</span>
                 }
                   }else{
                     if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
@@ -464,7 +468,9 @@ const SwapTable =  (props) => {
                       const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
 
                       const PPT =  USDAmount / tokenAmount
-                      return <span className={type}>${PPT.toFixed(4)}</span>
+                      var m = -Math.floor( Math.log10(PPT) + 1)
+
+                      return <span className={type}>${isFinite(m) ? parseFloat(PPT).toFixed(m + 3): 0.00000}</span>
                     }
 
                 if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
@@ -478,7 +484,8 @@ const SwapTable =  (props) => {
                   const USDAmount = parseFloat(props.bnbPrice * bnbAmount).toFixed(2)
                   const tokenAmount = type =='SELL' ? amount1In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount1Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
                   const PPT =  USDAmount / tokenAmount
-                  return <span className={type}>${PPT.toFixed(4)}</span>
+                  var m = -Math.floor( Math.log10(PPT) + 1)
+                  return <span className={type}>${isFinite(m) ? parseFloat(PPT).toFixed(m + 3): 0.00000}</span>
                 }
                   }
                   }
@@ -495,21 +502,65 @@ const SwapTable =  (props) => {
                          
 
 
-                {/* TX id Col */}
+                {/* TX id Col */}    
                 <Column 
                 cellRenderer={(col)=>{
-                const swap = props.swaps[col.rowIndex]
-                const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
-                return <a style={{color:'white'}} href={txURL} target="_blank">{swap.transactionHash.substring(0,6)}</a>
-                }} disableSort={true}  
-                width={300} label="Tx ID" 
-                dataKey={'transactionHash'}  />
-              
+
+                  const swap = props.swaps[col.rowIndex]
+                  const tokenDetails = props.TokenDetails
+                  const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
+                    return element.address == swap.address} )
+  
+                    if(filterLPAddress.length > 0){
+                      if (filterLPAddress[0].type == 'BUSD') {
+                      if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                        const swap = props.swaps[col.rowIndex]
+                        const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
+                        return <a style={{color:'white'}} href={txURL} target="_blank">{swap.transactionHash.substring(0,6)}</a>
+                      
+                        }
+  
+                  if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                    const swap = props.swaps[col.rowIndex]
+                     const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
+
+                    return <a style={{color:'white'}} href={txURL} target="_blank">{swap.transactionHash.substring(0,6)}</a>
+                
+                  }
+                    }else{
+                      if (filterLPAddress[0].token0.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                        const swap = props.swaps[col.rowIndex]
+                        const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
+                        return <a style={{color:'white'}} href={txURL} target="_blank">{swap.transactionHash.substring(0,6)}</a>
+                
+                      }
+  
+                  if (filterLPAddress[0].token1.toLowerCase() == tokenDetails.tokenAddress.toLowerCase()) {
+                    const swap = props.swaps[col.rowIndex]
+                    const txURL = `https://bscscan.com/tx/${swap.transactionHash}`
+
+                    return <a style={{color:'white'}} href={txURL} target="_blank">{swap.transactionHash.substring(0,6)}</a>
+                
+                  }
+                    }
+                    }
+
+              }} disableSort={true}  
+                width={300} 
+                label="Tx ID" 
+                dataKey={'transactionHash'}  />   
+                
+        
               </Table>
             )}
           </AutoSizer>
         </div>
       );
+      }else{
+        return(<div>Loading...</div>)
+      }
+
+      
     
     }
 }

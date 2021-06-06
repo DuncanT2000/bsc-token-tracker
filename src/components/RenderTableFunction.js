@@ -119,7 +119,6 @@ const renderWalletTable = (LSCon, type, props) =>{
                       )}`
                     ).toFixed(6);
                   }}
-                  disableSort={true}
                   width={300}
                   label="Balance"
                   dataKey={"currency"}
@@ -213,13 +212,16 @@ const renderWalletTable = (LSCon, type, props) =>{
     }
 
     if (type === 'track') {
+
+      
       if (LSCon.trackWalletInfo[0].balances.length === 0) {
         return (<div>
           <p>No Tokens Found</p>
           </div>)
       }
-          const filteredTokens = LSCon.trackWalletInfo[0].balances.filter(
-    (token) => {
+
+      const filteredTokens = LSCon.trackWalletInfo[0].balances.filter(
+      (token) => {
         const deleted = LSCon.deleted.map((d)=>{
             d = JSON.parse(d)
             return d.address
@@ -231,7 +233,10 @@ const renderWalletTable = (LSCon, type, props) =>{
 
 
   return (
-    <div  style={{ height: 'auto', 
+
+    <div style={{color: 'white'}}>
+      <p>Current Tracking: <a style={{color: 'white'}} href={`https://bscscan.com/address/${LSCon.trackWalletAddress}#tokentxns`}>{LSCon.trackWalletAddress.substring(LSCon.trackWalletAddress.length - 5, LSCon.trackWalletAddress.length )}</a></p>
+      <div  style={{ height: 'auto', 
     margin:'2%',
     minHeight: '60vh', 
     maxHeight: '100%',
@@ -359,6 +364,8 @@ const renderWalletTable = (LSCon, type, props) =>{
         )}
       </AutoSizer>
     </div>
+  </div>
+  
   )
     }
 

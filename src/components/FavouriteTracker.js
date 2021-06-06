@@ -39,7 +39,6 @@ const FavouriteTracker = (props) => {
                 <tbody>
                 <tr>
     <th>Token Name</th>
-    <th>Balance</th>
     <th></th>
    
   </tr>
@@ -51,9 +50,7 @@ const FavouriteTracker = (props) => {
                     <p style={{color:'white'}}>{favourite.name}</p>
                     </Link>
                     </td>
-                    <td>
-                        {console.log(favourite)}
-                    </td>
+      
                     <td>
                     <div id={"UNFAVOR"} onClick={unfavouriteToken}>
                      <MdFavorite id={`fav`} 

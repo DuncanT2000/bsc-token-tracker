@@ -15,7 +15,7 @@ const HistoryTracker = (props) => {
 
     return (
         <div style={{background:'#163F56', marginTop:'25px'}}>
-            {renderHistoryTable(LSCon)}
+            {renderHistoryTable(LSCon,props.tokenpathprefix)}
         </div>
 
     )
