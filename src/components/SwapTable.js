@@ -55,7 +55,7 @@ const SwapTable =  (props) => {
                 const swap = props.swaps[col.rowIndex]
                 const d = new Date(0); 
                 d.setUTCSeconds(swap.blockData.timestamp);
-                const timestamp = `${d.getHours()< 10 ? "0"+d.getHours():d.getHours()}:${d.getMinutes()< 10 ? "0"+d.getMinutes():d.getMinutes()}:${d.getUTCSeconds()< 10 ? "0"+d.getUTCSeconds():d.getUTCSeconds()}`;
+                const timestamp = `${d.getHours()< 10 ? "0"+d.getHours():d.getHours()}:${d.getMinutes()< 10 ? "0"+d.getMinutes():d.getMinutes()}:${d.getSeconds()< 10 ? "0"+d.getSeconds():d.getSeconds()}`;
                 const tokenDetails = props.TokenDetails
                 const filterLPAddress = tokenDetails.lpaddress.filter((element, index, array) => { 
                   return element.address == swap.address} )
