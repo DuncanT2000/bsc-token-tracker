@@ -35,7 +35,6 @@ const renderHistoryTable = (LSCon, prefix) =>{
                   cellRenderer={(col) => {
                     const token = LSCon.history[col.rowIndex];
                     
-                    console.log(token.TokenName);
 
                     return  <Link 
                     to={`${prefix}${token.TokenAddress}`}>

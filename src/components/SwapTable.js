@@ -25,7 +25,7 @@ const SwapTable =  (props) => {
     const web3 = swapWeb3Context.web3
 
     useEffect(() => {
-      console.log(props.swaps);
+      console.log(props.swaps.filter(s=> props.TokenDetails.lpaddress.map(e=> e.address).includes(s.address)));
     }, [props.swaps]);
 
     if (typeof props.TokenDetails.lpaddress == 'undefined' 
@@ -46,7 +46,7 @@ const SwapTable =  (props) => {
                 height={height}
                 headerHeight={45}
                 rowHeight={60}
-                rowCount={props.swaps.length}
+                rowCount={props.swaps.filter(s=> props.TokenDetails.lpaddress.map(e=> e.address).includes(s.address)).length}
                 rowGetter={({ index }) => props.swaps[index]}
                 >
                 
