@@ -16,7 +16,7 @@ const Home = () => {
           alignItems:'center',
           }}>
           <h1 style={{color:'white'}}>Home</h1>
-        <SideTab  pathprefix="./token/"/>
+        <SideTab  pathprefix="./tokens/"/>
         </div>
     )
 }

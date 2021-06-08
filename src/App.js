@@ -56,7 +56,7 @@ function App() {
       
 
      <Switch>
-     <Route path="/" component={Home}/>
+     <Route path="/" exact component={Home}/>
       <Route path="/tokens/:tokenAddress" exact component={Token}/>
       <Route path="/NewPairs" exact component={NewPSListings}/>
         </Switch>
