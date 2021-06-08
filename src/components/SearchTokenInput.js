@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 const SearchTokenInput = (props) => {
      const submitForm = (e)=> {
         e.preventDefault()
-        props.history.push(`/token/${props.tokenAddressInput}`); // <--- The page you want to redirect your user to.
+        props.history.push(`/tokens/${props.tokenAddressInput}`); // <--- The page you want to redirect your user to.
       }
     
         return (
