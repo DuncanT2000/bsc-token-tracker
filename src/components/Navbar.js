@@ -28,7 +28,8 @@ const Navbar = (props) => {
                 <h3>Diamond Charts</h3>
                 </div>
                 
-                <SearchTokenInput tokenAddressInput={props.tokenAddressInput} OntokenAddressInput={props.OntokenAddressInput}/><div style={{display: 'flex'}}>
+                <SearchTokenInput tokenAddressInput={props.tokenAddressInput} 
+                OntokenAddressInput={props.OntokenAddressInput}/><div style={{display: 'flex'}}>
                 <div style={{display: 'flex', alignItems: 'center' , marginRight:40}}>
                    <span style={{color: 'white'}}> BNB Price: ${web3Con.bnbPrice.toFixed(2)}</span>
                 </div>

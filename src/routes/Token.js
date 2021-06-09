@@ -12,7 +12,7 @@ import {Web3Context} from '../components/Contexts/Web3Context.js'
 import {BlockContext} from '../components/Contexts/useBlockContext.js'
 import {LSContext} from '../components/Contexts/LSContext.js'
 import SideTab from '../components/SideTab';
-import TokenInfoBar from '../components/TokenInfoBar';
+import TokenInfoBar from '../components/TokenInfoBar/TokenInfoBar';
 import {Alert} from '@material-ui/lab';
 import Web3 from 'web3'
 import ResizePanel from "react-resize-panel";
@@ -116,6 +116,9 @@ const initEffect = async () => {
   let tokenPairBUSDv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[2].returnValues[0]
   let BNBUSDPairv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[1].returnValues[0]
 
+  if(tokenPairBUSDv2Address == "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16"){
+    
+  }
 
 const tokenPairAddressArray = [{'ps':'bnb1','address':tokenPairBNBv1Address},
 {'ps':'bnb2','address':tokenPairBNBv2Address}, 
@@ -226,6 +229,8 @@ const Token0Results = filteredAddress.map((element,i) => {
   const token0 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[1].returnValues[0];
   const token1 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[2].returnValues[0];
   
+  console.log(element);
+
   const BNBorBUSD =   
   token0 == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" 
   || token1 == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" ? 'BNB': 
@@ -236,7 +241,8 @@ const Token0Results = filteredAddress.map((element,i) => {
     'type': BNBorBUSD,
     'address':element.address,
     token0,
-    token1
+    token1,
+    'psV':element.ps.substring(element.ps.length - 1 , element.ps.length)
   }
 });
 
@@ -290,15 +296,41 @@ else if (typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object'
   
 }else{
 
-if (isMounted) {
-  setlpAddress([{
-  [tokenPairBNBv1Address] : 'BNB',
-  [tokenPairBNBv2Address] : 'BNB',
-  [tokenPairBUSDv1Address] : 'BUSD',
-  [tokenPairBUSDv2Address] : 'BUSD'
-},Token0Results,{
-  'TokenPairBalancesCalls':PairBalances.flat()}])
-}
+  if (props.match.params.tokenAddress == "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"){
+    if (isMounted) {
+
+      const TSDetails = await fetch(`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(props.match.params.tokenAddress)}/info.json`)
+  let TSDetailsJSON
+  if (TSDetails.status == 200) {
+    TSDetailsJSON = await TSDetails.json()
+  }else{
+    TSDetailsJSON = {'website':''}
+  }
+
+      settokenDetails({
+        TokenName,
+        TokenSymbol,
+        'TokenPrice':bUsdBalance/bnbBalance,
+        TokenDecimals,
+        TokenSupply,
+        TokenMC,
+        'tokenAddress':props.match.params.tokenAddress,
+        'lpaddress':Token0Results,
+        TSDetailsJSON,
+      })
+
+      setlpAddress([{
+      [tokenPairBNBv1Address] : 'BNB',
+      [tokenPairBNBv2Address] : 'BNB',
+      [tokenPairBUSDv1Address] : 'BUSD',
+      [tokenPairBUSDv2Address] : 'BUSD'
+    },Token0Results,{
+      'TokenPairBalancesCalls':PairBalances.flat()}])
+    }
+
+  }
+
+
 
 
 
@@ -314,6 +346,16 @@ TokenMC = parseInt((TokenSupply/ `1${"0".repeat(TokenDecimals)}`) * parseFloat(T
 
 
 if(isMounted){
+
+  const TSDetails = await fetch(`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(props.match.params.tokenAddress)}/info.json`)
+  let TSDetailsJSON
+  if (TSDetails.status == 200) {
+    TSDetailsJSON = await TSDetails.json()
+  }else{
+    TSDetailsJSON = {'website':''}
+  }
+
+
 settokenDetails({
   TokenName,
   TokenSymbol,
@@ -322,7 +364,8 @@ settokenDetails({
   TokenSupply,
   TokenMC,
   'tokenAddress':props.match.params.tokenAddress,
-  'lpaddress':Token0Results
+  'lpaddress':Token0Results,
+  TSDetailsJSON,
 })
 
 const tokenHistory = {
@@ -414,11 +457,11 @@ useEffect(() => {
               fromBlock:swapBlockContext.LatestBlock.number - 4500,
               toBlock: 'latest'
             })
-            
+
 
             if (swapevents.length > 400) {
               const results = await processSwaps(swapevents.slice(swapevents.length - 400,swapevents.length))
-
+              console.log(results);
             if (isMounted) {
               setswaps([...swaps,...results].reverse())
               loadedswaps.current = true
@@ -484,8 +527,7 @@ useEffect(() => {
               }
               
 
-              
-
+      
             }
           
           }
