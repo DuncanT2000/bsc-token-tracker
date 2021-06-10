@@ -228,9 +228,6 @@ swapWeb3Context.setbnbPrice(bUsdBalance/bnbBalance)
 const Token0Results = filteredAddress.map((element,i) => {
   const token0 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[1].returnValues[0];
   const token1 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[2].returnValues[0];
-  
-  console.log(element);
-
   const BNBorBUSD =   
   token0 == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" 
   || token1 == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" ? 'BNB': 
@@ -245,7 +242,6 @@ const Token0Results = filteredAddress.map((element,i) => {
     'psV':element.ps.substring(element.ps.length - 1 , element.ps.length)
   }
 });
-
 
 const TokenName = ReservesToken0Results.results.tokenDetails.callsReturnContext[0].returnValues[0]
 const TokenSymbol = ReservesToken0Results.results.tokenDetails.callsReturnContext[1].returnValues[0]
@@ -296,8 +292,9 @@ else if (typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object'
   
 }else{
 
-  if (props.match.params.tokenAddress == "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"){
+  if (props.match.params.tokenAddress == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
     if (isMounted) {
+      console.log('Token is BNB');
 
       const TSDetails = await fetch(`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(props.match.params.tokenAddress)}/info.json`)
   let TSDetailsJSON
@@ -457,6 +454,8 @@ useEffect(() => {
               fromBlock:swapBlockContext.LatestBlock.number - 4500,
               toBlock: 'latest'
             })
+
+            console.log(swapevents);
 
 
             if (swapevents.length > 400) {

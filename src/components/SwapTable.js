@@ -25,11 +25,14 @@ const SwapTable =  (props) => {
     const web3 = swapWeb3Context.web3
 
 
+
+
     if (typeof props.TokenDetails.lpaddress == 'undefined' 
     || props.TokenDetails.lpaddress.length == 0) {
       return(<div style={{color: 'white'}} ><p>Loading...</p></div>)
     }else{
-      if(props.TokenDetails.tokenAddress =="0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"){
+     
+      if(props.TokenDetails.tokenAddress.toUpperCase() =="0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c".toUpperCase()){
         return (
           <div style={{ 
             height: 'auto', 
@@ -195,7 +198,6 @@ const SwapTable =  (props) => {
                     const amountUSD = type == 'SELL' ? amount1Out / `1${"0".repeat(18)}`  : amount1In / `1${"0".repeat(18)}`
 
                     const PPT = amountUSD / tokenAmount 
-
 
                     return <span className={type}>{PPT.toFixed(3)}</span> 
 
@@ -772,9 +774,9 @@ const SwapTable =  (props) => {
               </Table>
             )}
           </AutoSizer>
-        </div>
-      );
-      }else{
+        </div>);
+      }
+      else{
         return(<div>Loading...</div>)
       }
       }

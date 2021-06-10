@@ -4,6 +4,7 @@ import Tab from './Tab';
 import WalletTracker from './WalletTracker';
 import FavouriteTracker from './FavouriteTracker';
 import HistoryTracker from './HistoryTracker';
+import TrendingTab from './TrendingTab';
 import { LSContext } from './Contexts/LSContext';
 
 
@@ -21,7 +22,7 @@ import { LSContext } from './Contexts/LSContext';
           <TabNav tabs={['Trending','Wallet','Favourite','History']} 
           selected={Selected} setSelected={setSelected} >
             <Tab isSelected={Selected === 'Trending'}>
-                <p>This is the Trending</p>
+                <TrendingTab tokenpathprefix={props.pathprefix} />
             </Tab>
             <Tab isSelected={Selected === 'Wallet'}>
             <WalletTracker tokenpathprefix={props.pathprefix} />

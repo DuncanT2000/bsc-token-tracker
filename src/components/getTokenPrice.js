@@ -1,4 +1,5 @@
-export default async function getTokenPrice (lpAddress, web3, multicall,LSCon,TokenDetails, bnbPrice){
+export default async function getTokenPrice 
+(lpAddress, web3, multicall,LSCon,TokenDetails, bnbPrice){
 
 
     const ReservesToken0CallContext = [
@@ -10,8 +11,8 @@ export default async function getTokenPrice (lpAddress, web3, multicall,LSCon,To
 
        
 
-       if (TokenDetails.tokenAddress == "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c") {
-         console.log('This is BNB');
+       if (TokenDetails.tokenAddress.toUpperCase() == "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c".toUpperCase()) {
+         return bnbPrice
        } else {
        if(typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'undefined' && 
             typeof ReservesToken0Results.results.tokenPairBalancebnb2 == 'object'){
