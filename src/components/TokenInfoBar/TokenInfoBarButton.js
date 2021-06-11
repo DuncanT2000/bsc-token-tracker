@@ -8,10 +8,12 @@ const TokenInfoBarButton = (props) => {
 
 const styles = {
    button: {
-    height:'30%',
+       display:'inline-block',
+    minHeight:'35px',
     background:'rgba(50, 130, 184, 0.75)',
     color:'white', 
-    borderRadius:'12px',  padding:'5% 15%',
+    borderRadius:'12px',  
+    minWidth:'25%',
     border:'0px solid', 
     margin:'0px 0px 0px 10px',
     textDecoration: 'none',

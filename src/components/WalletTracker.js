@@ -54,6 +54,7 @@ const WalletTracker = (props) => {
 
   useEffect(() => {
     if (typeof data == "object") {
+      console.log(data);
      if (LSCon.trackWalletAddress == null) {
        LSCon.settrackWalletInfo(null);
         LSCon.setwalletInfo([data.ethereum.address[0]]);
@@ -78,6 +79,7 @@ const WalletTracker = (props) => {
   };
 
   const updateTokensInWallet = () => {
+    console.log('Fetching');
     refetch();
   };
 

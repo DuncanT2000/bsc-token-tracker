@@ -19,7 +19,8 @@ const TokenInfoBarItem = (props) => {
 
 const styles = {
     tokenInfoContainer:{
-      marginRight:'1rem'
+      whiteSpace: 'nowrap',
+      marginRight:'2%'
     }
   }
 

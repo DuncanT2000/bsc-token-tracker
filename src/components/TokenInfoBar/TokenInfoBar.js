@@ -5,9 +5,6 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import {Web3Context} from '../Contexts/Web3Context.js'
 import {LSContext} from '../Contexts/LSContext.js'
 import { MdFavoriteBorder, MdFavorite,MdLaunch } from "react-icons/md";
-import {Popover, Container} from '@material-ui/core';
-import { Link } from 'react-router-dom'
-import MouseOverIcon from '../MouseOverIcon'
 import TokenInfoBarItem from './TokenInfoBarItem.js';
 import TokenInfoBarButton from './TokenInfoBarButton';
 const TokenInfoBar = (props) => {
@@ -43,8 +40,6 @@ const TokenInfoBar = (props) => {
 
       const parsedTokenDetails = JSON.parse(e.target.id)
 
-      console.log(parsedTokenDetails);
-
       const tokenDetails = {
         'name': parsedTokenDetails.TokenName,
         'symbol': parsedTokenDetails.TokenSymbol,
@@ -65,11 +60,11 @@ const TokenInfoBar = (props) => {
 
 
     return ( 
-      <Container>
+
 
 
          <div style={{width:'100%',display:'flex', flex:1,flexDirection:'row', 
-          alignItems: 'center',marginLeft:'2vw', width:'fit-content'}}>
+          alignItems: 'center',marginLeft:'2vw'}}>
           
           <div style={styles.tokenInfoContainer}>
             <LazyLoadImage 
@@ -94,7 +89,7 @@ const TokenInfoBar = (props) => {
           </div>
                     
                     
-          <div style={{display:'flex',flexDirection:'row',alignItems: 'center'}}>
+         
           
             <div>
               {typeof props.tokenDetails.TSDetailsJSON === 'undefined' ?
@@ -106,31 +101,22 @@ const TokenInfoBar = (props) => {
              
               </div>
 
-            <div style={{display:'flex',flexDirection:'row'}} >
+            <div style={{display:"inline", width:'100%'}} >
               <TokenInfoBarButton text="Trade" 
               url={`https://exchange.pancakeswap.finance/#/swap?outputCurrency=${props.tokenAddress}`} />
               <TokenInfoBarButton text="BSC Scan" 
               url={`https://bscscan.com/address/${props.tokenAddress}`} />
-
-              
-
-      </div>
-
-
-              
+              </div>
           </div>
-          </div>
+          
            
-      
-      
-    </Container>
     )
 }
 
 
 const styles = {
   tokenInfoContainer:{
-    marginRight:'1rem'
+    marginRight:'2%'
   }
 }
 

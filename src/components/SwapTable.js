@@ -25,7 +25,7 @@ const SwapTable =  (props) => {
     const web3 = swapWeb3Context.web3
 
 
-
+    const colWid = 200
 
     if (typeof props.TokenDetails.lpaddress == 'undefined' 
     || props.TokenDetails.lpaddress.length == 0) {
@@ -91,7 +91,7 @@ const SwapTable =  (props) => {
 
                     return <span className={type}>{type}</span> 
 
-                  }} disableSort={true}  width={300} label="Type" 
+                  }} disableSort={true}  width={colWid} label="Type" 
                   dataKey="logIndex" />
                   
                     {/* Token Amount Column */}
@@ -116,7 +116,7 @@ const SwapTable =  (props) => {
                     return <span className={type}>{tokenAmount.toFixed(6)}</span> 
 
                   }} disableSort={true} 
-                  width={300} 
+                  width={colWid} 
                   label="Tokens" 
                   dataKey="tokensAmount" />
   
@@ -144,7 +144,7 @@ const SwapTable =  (props) => {
                   
                   }} 
                   disableSort={true}  
-                  width={300} 
+                  width={colWid} 
                   label="Amount(USD)" 
                   dataKey={'logIndex'}  />               
   
@@ -172,7 +172,7 @@ const SwapTable =  (props) => {
 
                   }} 
                   disableSort={true}  
-                  width={300} 
+                  width={colWid} 
                   label="Amount(BNB)"
                   dataKey={'removed'}  />      
                            
@@ -204,7 +204,7 @@ const SwapTable =  (props) => {
                   
                   }} 
                   disableSort={true}  
-                  width={300} 
+                  width={colWid} 
                   label="Price/Token" 
                   dataKey={'logIndex'}  />               
   
@@ -217,7 +217,7 @@ const SwapTable =  (props) => {
                         return <a style={{color:'white'}} href={txURL} target="_blank">{swap.transactionHash.substring(0,6)}</a>
                 
                       }} disableSort={true}  
-                  width={300} 
+                  width={colWid} 
                   label="Tx ID" 
                   dataKey={'transactionHash'}  />   
                   
@@ -343,7 +343,7 @@ const SwapTable =  (props) => {
 
                 
 
-                }} disableSort={true}  width={300} label="Type" 
+                }} disableSort={true}  width={colWid} label="Type" 
                 dataKey="logIndex" />
                 
                   {/* Token Amount Column */}
@@ -463,7 +463,7 @@ const SwapTable =  (props) => {
 
 
                 }} disableSort={true} 
-                width={300} 
+                width={colWid} 
                 label="Tokens" 
                 dataKey="tokensAmount" />
 
@@ -530,7 +530,7 @@ const SwapTable =  (props) => {
                 
                 }} 
                 disableSort={true}  
-                width={300} 
+                width={colWid} 
                 label="Amount(USD)" 
                 dataKey={'logIndex'}  />               
 
@@ -600,7 +600,7 @@ const SwapTable =  (props) => {
                 
                 }} 
                 disableSort={true}  
-                width={300} 
+                width={colWid} 
                 label="Amount(BNB)"
                 dataKey={'removed'}  />      
                          
@@ -717,7 +717,7 @@ const SwapTable =  (props) => {
                 
                 }} 
                 disableSort={true}  
-                width={300} 
+                width={colWid} 
                 label="Price/Token" 
                 dataKey={'logIndex'}  />               
 
@@ -766,7 +766,7 @@ const SwapTable =  (props) => {
                     }
 
               }} disableSort={true}  
-                width={300} 
+                width={colWid} 
                 label="Tx ID" 
                 dataKey={'transactionHash'}  />   
                 
