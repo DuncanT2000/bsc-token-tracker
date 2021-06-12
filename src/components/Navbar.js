@@ -17,34 +17,26 @@ const Navbar = (props) => {
 
     return (
         <div className="nav-bar">
-            <div style={{
-                    display:'flex', 
-                alignItems: 'center', 
-                marginLeft:'50px'}}>
-                <LazyLoadImage 
-                width={30}
-                height={30}
+            <div id="icon-container">
+                <img 
+                id="logo"
                 src={'../diamondLogo.png'}/>
-                <h3>Diamond Charts</h3>
+                <p id="site-title">Diamond Charts</p>
                 </div>
                 
                 <SearchTokenInput tokenAddressInput={props.tokenAddressInput} 
-                OntokenAddressInput={props.OntokenAddressInput}/><div style={{display: 'flex'}}>
-                <div style={{display: 'flex', alignItems: 'center' , marginRight:40}}>
+                OntokenAddressInput={props.OntokenAddressInput}/>
+       
+                <div id="bnb-Price-container">
                    <span style={{color: 'white'}}> BNB Price: ${web3Con.bnbPrice.toFixed(2)}</span>
                 </div>
             {web3Con.isWalletConnect == true ? <div style={{display: 'flex'}}>
-                <p style={{
-                    border: '1px solid',
-                    borderRadius:50, 
-                    padding:8,
-                    color:'white',
-                    marginRight:25}}>...
+                <p id="connect-address">...
                     {window.ethereum.selectedAddress.toString().substring(window.ethereum.selectedAddress.length - 6, window.ethereum.selectedAddress.length).toUpperCase()}
                     </p>
-                </div>  : <button style={{marginRight:15}} onClick={connectWallet} >Connect</button>} 
+                </div>  : <button id="connect-wallet-btn" onClick={connectWallet} >Connect</button>} 
             </div>
-        </div>
+        
     )
 }
 

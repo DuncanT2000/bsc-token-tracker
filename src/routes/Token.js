@@ -21,6 +21,7 @@ import getTokenPrice from '../components/getTokenPrice'
 import { Container} from '@material-ui/core';
 import getTokenPairAddress from '../components/getTokenPairAddress';
 
+
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
 

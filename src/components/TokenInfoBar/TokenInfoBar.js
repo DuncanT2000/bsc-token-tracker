@@ -61,16 +61,11 @@ const TokenInfoBar = (props) => {
 
     return ( 
 
-
-
-         <div style={{width:'100%',display:'flex',flexDirection:'row', 
+         <div style={{marginLeft:'10px', width:'100%',display:'flex',flexDirection:'row', 
           alignItems: 'center'}}>
           
-          <div style={styles.tokenInfoContainer}>
-            <LazyLoadImage 
-            placeholder={<div></div>}
-            height={50}
-            width={50}
+          <div id="tokenInfoContainer">
+            <img id="token-icon"
             src={ web3.utils.isAddress(props.tokenAddress) ? `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(props.tokenAddress)}/logo.png` : '' } />
           </div>
           <TokenInfoBarItem title="Name" isLoading={isLoading} content={props.tokenDetails.TokenName} />
@@ -79,12 +74,16 @@ const TokenInfoBar = (props) => {
           <TokenInfoBarItem title={`Token Supply`} isLoading={isLoading} isNumber={true} content={parseInt(props.tokenDetails.TokenSupply / `1${"0".repeat(props.tokenDetails.TokenDecimals)}`)} />
           <TokenInfoBarItem title={`Market Cap`} isLoading={isLoading} isNumber={true} isMoney={true} content={parseInt(props.tokenDetails.TokenMC)} />
 
-          <div style={styles.tokenInfoContainer}>
+          <div id="tokenInfoContainer" >
           <p> {!isLoading ? tokenInfoLSContext.favourite.some(function (el) { return el.address.toUpperCase() == props.tokenAddress.toUpperCase() }) 
-          ?  <MdFavorite onClick={unfavouriteToken} id={JSON.stringify({...props.tokenDetails})}  style={{ marginLeft:'10px',  color: "red", fontSize: "1.5em" }} />
-          : <MdFavoriteBorder id={JSON.stringify({...props.tokenDetails})} 
+          ?  <MdFavorite className="MdFavorite1" 
+          onClick={unfavouriteToken} 
+          id={JSON.stringify({...props.tokenDetails})}  
+          />
+          : <MdFavoriteBorder className="MdFavoriteBorder"
+           id={JSON.stringify({...props.tokenDetails})} 
           onClick={FavouriteToken}  
-          style={{marginLeft:'10px',  color: "white", fontSize: "1.5em" }} />: 
+         />: 
           <CircularProgress color='white' size={20} disableShrink />} </p>
           </div>
                     
@@ -95,13 +94,13 @@ const TokenInfoBar = (props) => {
               {typeof props.tokenDetails.TSDetailsJSON === 'undefined' ?
               <> </>
              : props.tokenDetails.TSDetailsJSON.website == '' ? <></> : <a target="_blank" href={props.tokenDetails.TSDetailsJSON.website} > 
-             <MdLaunch  style={{color: "white", fontSize: "1.3em" }}/>
+             <MdLaunch  id="mdLaunchIcon" />
              </a>
                   }
              
               </div>
 
-            <div style={{display:"inline", width:'40%'}} >
+            <div id="token-Info-Btn-container" >
               <TokenInfoBarButton text="Trade" 
               url={`https://exchange.pancakeswap.finance/#/swap?outputCurrency=${props.tokenAddress}`} />
               <TokenInfoBarButton text="BSC Scan" 
@@ -114,10 +113,5 @@ const TokenInfoBar = (props) => {
 }
 
 
-const styles = {
-  tokenInfoContainer:{
-    marginRight:'2%'
-  }
-}
 
 export default TokenInfoBar

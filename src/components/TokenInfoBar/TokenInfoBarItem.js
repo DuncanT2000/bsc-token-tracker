@@ -5,7 +5,7 @@ import MouseOverIcon from '../MouseOverIcon'
 
 const TokenInfoBarItem = (props) => {
     return (
-        <div style={styles.tokenInfoContainer}> 
+        <div id="tokenInfoContainer"> 
         <p>{props.title}: {props.isNumber ? !props.isLoading ? 
         <MouseOverIcon 
         number={isFinite(props.content) ?props.content : 0 } /> : 
@@ -17,11 +17,5 @@ const TokenInfoBarItem = (props) => {
     )
 }
 
-const styles = {
-    tokenInfoContainer:{
-      whiteSpace: 'nowrap',
-      marginRight:'2%'
-    }
-  }
 
 export default TokenInfoBarItem

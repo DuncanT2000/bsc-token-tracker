@@ -37,6 +37,21 @@ code {
   padding: 5px;
 }
 
+#icon-container{
+  display:'flex';
+  align-items: 'center'; 
+  margin-left:'50px';
+}
+#site-title{
+  color: white;
+  white-space: nowrap;
+}
+
+#logo{
+  width: 12px;
+  height: 12px;
+}
+
 .token-main-container{
   display: flex;
   width: 100%;
@@ -135,4 +150,261 @@ background-color: rgba(47, 52, 70, 0.8)
 }
 .SELL{
   color: #F65454 ;
+}
+
+.MdFavorite1{
+  margin-left:10px;  
+  color: red; 
+  font-size: 1.5em;
+}
+
+.MdFavoriteBorder{
+  margin-left:10px;  
+  color: white; font-size: 1.5em;
+}
+
+#mdLaunchIcon{
+  color: white; 
+  font-size: 1.3em;
+}
+
+.tokenInfobtn{
+  display: inline-block;
+  min-height:35px;
+  background:rgba(50, 130, 184, 0.75);
+  color:white;
+  border-radius:12px; 
+  min-width:25%;
+  border:'0px solid'; 
+  margin:'0px 0px 0px 10px';
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+
+@media only screen and (min-width:320px) and (max-width:480px){
+  .nav-bar{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1B262C;
+    height: 50px;
+    width:100vw;
+  }
+
+  
+  .nav-bar input{
+    border: 2px solid #fdfdfd;
+    max-width: 150px;
+
+    font-size: 8px;
+    background-color: #1e1f1e;
+    color: #fdfdfd;
+  }
+
+  #icon-container{
+    display:flex; 
+    align-items: center; 
+    margin-left:5px;
+    flex-direction:row;
+    margin-right: 5px;
+  }
+  
+  #site-title{
+    color: white;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  #logo{
+    width: 12px;
+    height: 12px;
+  }
+
+  #bnb-Price-container{
+    font-size: 8px;
+
+    align-items: center; 
+    margin-left: 5px;
+  }
+  #connect-address{
+      border: 1px solid;
+      border-radius:50; 
+      padding:8;
+      color:white;
+      margin-right:25;
+  }
+  #connect-wallet-btn{
+    font-size: 8px;
+    margin-right: 5px;
+  }
+
+  /* TokenInfoBar Mobile */
+
+  #token-icon{
+    width:25px;
+    height:25px;
+  }
+
+  #tokenInfoContainer{
+    white-space: 'nowrap';
+    margin-right:'2%';
+    font-size: 8px;
+  }
+
+  .MdFavorite1{
+    margin-left:10px;  
+    color: red; 
+    font-size: 15px;
+  }
+  .MdFavoriteBorder{
+    margin-left:10px;  color: white; font-size: 15px;
+  }
+  #mdLaunchIcon{
+    color: white; 
+    font-size: 15px;
+  }
+  #token-Info-Btn-container{
+    display:flex;
+    flex-direction: column; 
+    margin-left: 5px;
+    
+  }
+  .tokenInfobtn{
+    display: inline-block;
+    min-height:50%;
+    background:rgba(50, 130, 184, 0.75);
+    color:white;
+    border-radius:12px; 
+    min-width:25%;
+    border:'0px solid'; 
+    margin:'0px 0px 0px 10px';
+    text-decoration: none;
+    white-space: nowrap;
+    font-size: 8px;
+
+  }
+  .tokenInfobtn:nth-child(2){
+    margin-top: 5px;
+  }
+
+  /* TokenInfoBar Mobile End */
+
+
+}
+
+
+@media only screen and (min-width:480px) and (max-width:768px){
+  .nav-bar{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1B262C;
+    height: 50px;
+    width:100vw;
+  }
+
+  
+  .nav-bar input{
+    border: 2px solid #fdfdfd;
+    max-width: 150px;
+
+    font-size: 12px;
+    background-color: #1e1f1e;
+    color: #fdfdfd;
+  }
+
+  #icon-container{
+    display:flex; 
+    align-items: center; 
+    margin-left:5px;
+    flex-direction:row;
+    margin-right: 5px;
+  }
+  
+  #site-title{
+    color: white;
+    white-space: nowrap;
+    font-size: 15px;
+  }
+  #logo{
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+  }
+
+  #bnb-Price-container{
+    font-size: 12px;
+
+    align-items: center; 
+    margin-left: 5px;
+  }
+  #connect-address{
+      border: 1px solid;
+      border-radius:50px; 
+      padding:5px;
+      color:white;
+      font-size: 12px;
+      margin-right:15px;
+
+  }
+  #connect-wallet-btn{
+    font-size: 12px;
+    margin-right: 5px;
+  }
+
+  /* TokenInfoBar Tablet */
+
+  #token-icon{
+    width:25px;
+    height:25px;
+  }
+
+  #tokenInfoContainer{
+    white-space: nowrap;
+    margin-right:2%;
+    font-size: 13px;
+  }
+
+  .MdFavorite1{
+    margin-left:10px;  
+    color: red; 
+    font-size: 20px;
+  }
+  .MdFavoriteBorder{
+    margin-left:10px;  
+    color: white; 
+    font-size: 20px;
+  }
+  #mdLaunchIcon{
+    color: white; 
+    font-size: 20px;
+  }
+  #token-Info-Btn-container{
+    display:flex;
+    flex-direction: column; 
+    margin-left: 10px;
+    
+  }
+  .tokenInfobtn{
+    display: inline-block;
+    min-height:50%;
+    background:rgba(50, 130, 184, 0.75);
+    color:white;
+    border-radius:12px; 
+    min-width:25%;
+    border:'0px solid'; 
+    margin:'0px 0px 0px 10px';
+    text-decoration: none;
+    white-space: nowrap;
+    font-size: 13px;
+
+  }
+  .tokenInfobtn:nth-child(2){
+    margin-top: 10px;
+  }
+
+  /* TokenInfoBar Tablet End */
+
 }
