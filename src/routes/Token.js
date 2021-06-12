@@ -543,9 +543,9 @@ useEffect(() => {
 
     return (
     <div className="token-main-container">
-          {displaySideBar ?<ResizePanel direction="e" className="token-info-container">
+          {displaySideBar ?<div className="token-info-container">
           <SideTab pathprefix="./" />
-          </ResizePanel>: <></>}
+          </div>: <></>}
           <div style={{width:'2%'}}>
           {displaySideBar ?
           <MdPlayArrow style={{color:'white', fontSize: "1.5rem",transform: 'rotate(180deg)'}} onClick={(e)=>{setdisplaySideBar(s=> !s)}} />
@@ -556,8 +556,9 @@ useEffect(() => {
             } }} />
           }
           </div>
-          <Container>
-          <div style={{display:'flex', flexDirection:'column'}} className="token-chart-swap-container">
+
+         
+          <div className="token-chart-swap-container">
             {invalidTokenAddress == true ? <div style={{
               margin: '5px', display:'flex', justifyContent:'center' }}>
             <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>
@@ -583,9 +584,7 @@ useEffect(() => {
           bnbPrice={swapWeb3Context.bnbPrice}/> 
           
           </div>
-          
           </div>
-          </Container>
         </div>
     )
 }

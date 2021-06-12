@@ -63,8 +63,8 @@ const TokenInfoBar = (props) => {
 
 
 
-         <div style={{width:'100%',display:'flex', flex:1,flexDirection:'row', 
-          alignItems: 'center',marginLeft:'2vw'}}>
+         <div style={{width:'100%',display:'flex',flexDirection:'row', 
+          alignItems: 'center'}}>
           
           <div style={styles.tokenInfoContainer}>
             <LazyLoadImage 
@@ -101,7 +101,7 @@ const TokenInfoBar = (props) => {
              
               </div>
 
-            <div style={{display:"inline", width:'100%'}} >
+            <div style={{display:"inline", width:'40%'}} >
               <TokenInfoBarButton text="Trade" 
               url={`https://exchange.pancakeswap.finance/#/swap?outputCurrency=${props.tokenAddress}`} />
               <TokenInfoBarButton text="BSC Scan" 

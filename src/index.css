@@ -59,7 +59,11 @@ width: 99%;
   
   
   width: auto;
-  min-width: 25vw;
+  min-width: 28vw;
+}
+
+.token-main-container{
+  width: 99%;
 }
 
 .panel{
@@ -70,20 +74,16 @@ width: 99%;
   width: auto;
 }
 
-.ResizePanel-module_ResizeBarHorizontal__3TBZ5{
-  margin-left: 10px;
-  margin-right: 10px;
+
+.token-swap-feed-container{
+  width: 100%;
 }
 
-.ResizePanel-module_ResizeContent__1zLCK {
-  min-width: 25vw;
-  width:auto;
+.token-chart-swap-container{
+  display:'flex';
+  flex-direction:'column';
+  width:95%;
 }
-
-.upcoming-token-chart{
-  width: 20vw;
-}
-
 
 
 
