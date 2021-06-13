@@ -442,31 +442,31 @@ code {
 
   #tokenInfoContainer {
     white-space: nowrap;
-    margin-right: 2%;
-    font-size: 13px;
+    margin-right: 1%;
+    font-size: 1.9vw;
   }
 
   .MdFavorite1 {
-    margin-left: 10px;
+    margin-left: 3%;
     color: red;
     font-size: 20px;
   }
 
   .MdFavoriteBorder {
-    margin-left: 10px;
+    margin-left: 3%;
     color: white;
-    font-size: 20px;
+    font-size: 100%;
   }
 
   #mdLaunchIcon {
     color: white;
-    font-size: 20px;
+    font-size: 100%;
   }
 
   #token-Info-Btn-container {
     display: flex;
     flex-direction: column;
-    margin-left: 10px;
+    margin-left: 3%;
 
   }
 
@@ -478,10 +478,10 @@ code {
     border-radius: 12px;
     min-width: 25%;
     border: '0px solid';
-    margin: '0px 0px 0px 10px';
+    margin: '0px 0px 0px 1.9vw';
     text-decoration: none;
     white-space: nowrap;
-    font-size: 13px;
+    font-size: 1.8vw;
 
   }
 
