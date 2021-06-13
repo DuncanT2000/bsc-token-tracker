@@ -369,7 +369,7 @@ const SwapTable =  (props) => {
                       const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
 
                       return (<div className={type}>
-                        <p style={{fontSize:'1rem',
+                        <p style={{
                             marginBlockStart: '0',
                             marginBlockEnd: '0',
                             marginInlineStart: '0',
@@ -393,7 +393,7 @@ const SwapTable =  (props) => {
                   const tokenAmount = type =='SELL' ? amount1In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount1Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
 
                   return (<div className={type}>
-                    <p style={{fontSize:'1rem',
+                    <p style={{
                         marginBlockStart: '0',
                         marginBlockEnd: '0',
                         marginInlineStart: '0',
@@ -418,7 +418,7 @@ const SwapTable =  (props) => {
                       const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
 
                       return (<div className={type}>
-                        <p style={{fontSize:'1rem',
+                        <p style={{
                             marginBlockStart: '0',
                             marginBlockEnd: '0',
                             marginInlineStart: '0',
@@ -442,7 +442,7 @@ const SwapTable =  (props) => {
                       const tokenAmount = type =='SELL' ? amount1In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount1Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
                     
                       return (<div className={type}>
-                        <p style={{fontSize:'1rem',
+                        <p style={{
                             marginBlockStart: '0',
                             marginBlockEnd: '0',
                             marginInlineStart: '0',
