@@ -547,11 +547,11 @@ useEffect(() => {
           {displaySideBar ?<div className="token-info-container">
           <SideTab pathprefix="./" />
           </div>: <></>}
-          <div style={{width:'2%'}}>
+          <div id="open-close-SB-container">
           {displaySideBar ?
-          <MdPlayArrow style={{color:'white', fontSize: "1.5rem",transform: 'rotate(180deg)'}} onClick={(e)=>{setdisplaySideBar(s=> !s)}} />
+          <MdPlayArrow id="close-SideBar" onClick={(e)=>{setdisplaySideBar(s=> !s)}} />
           :
-          <MdPlayArrow style={{color:'white', fontSize: "1.5rem" }} onClick={(e)=>{ 
+          <MdPlayArrow id="open-SideBar" onClick={(e)=>{ 
             if (isMounted) {
             setdisplaySideBar(s=> !s)
             } }} />
@@ -559,7 +559,7 @@ useEffect(() => {
           </div>
 
          
-          <div className="token-chart-swap-container">
+          <div className={displaySideBar ? "SB-active" : 'token-chart-swap-container'}>
             {invalidTokenAddress == true ? <div style={{
               margin: '5px', display:'flex', justifyContent:'center' }}>
             <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>

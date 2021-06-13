@@ -7,7 +7,7 @@ const TabNav = (props) => {
         const LSCon = useContext(LSContext)
 
     return (
-        <div id="TabDiv" style={{width:'100%' ,minWidth:'25vw',  maxWidth:'40vw'}}>
+        <div id="TabDiv" >
      
             {
                 props.tabs.map((tab) =>{

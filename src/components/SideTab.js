@@ -17,8 +17,7 @@ import { LSContext } from './Contexts/LSContext';
 
 
     return (
-      <div id="STDiv" style={{width: '100%',minWidth:'25vw',maxWidth: '40vw', 
-      height: '100vh'}} className="panel sidebar">
+      <div id="STDiv" className="panel sidebar">
           <TabNav tabs={['Trending','Wallet','Favourite','History']} 
           selected={Selected} setSelected={setSelected} >
             <Tab isSelected={Selected === 'Trending'}>
