@@ -823,18 +823,18 @@ code {
   .MdFavorite1 {
     margin-left: 1vw;
     color: red;
-    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 20px);
   }
 
   .MdFavoriteBorder {
     margin-left: 1vw;
     color: white;
-    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 20px);
   }
 
   #mdLaunchIcon {
     color: white;
-    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 20px);
   }
 
   #token-Info-Btn-container {
@@ -915,7 +915,7 @@ code {
   }
 
   .token-info-container{
-    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 20px);
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 15px);
   }
 
 }
