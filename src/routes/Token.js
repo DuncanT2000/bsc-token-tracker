@@ -559,7 +559,7 @@ useEffect(() => {
           </div>
 
          
-          <div className={displaySideBar ? "SB-active" : 'token-chart-swap-container'}>
+          <div className={`token-chart-swap-container ${displaySideBar ? "SB-active" : ''}`}>
             {invalidTokenAddress == true ? <div style={{
               margin: '5px', display:'flex', justifyContent:'center' }}>
             <Alert style={{width: '50%',color:'rgb(179,24,5)', backgroundColor:'rgb(25,7,5)'}} severity="error">Please Enter a valid token address</Alert> </div>
@@ -574,6 +574,7 @@ useEffect(() => {
             : <></>}
           
           <TokenInfoBar 
+          displaySideBar={displaySideBar}
           tokenDetails={tokenDetails}
           tokenAddress={props.match.params.tokenAddress}
           />

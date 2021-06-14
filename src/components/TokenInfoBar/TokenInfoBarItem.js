@@ -5,7 +5,7 @@ import MouseOverIcon from '../MouseOverIcon'
 
 const TokenInfoBarItem = (props) => {
     return (
-        <div id="tokenInfoContainer"> 
+        <div id="tokenInfoContainer" className={props.displaySideBar ? 'small-font' : 'large-font'}> 
         <p>{props.title}: {props.isNumber ? !props.isLoading ? 
         <MouseOverIcon 
         number={isFinite(props.content) ?props.content : 0 } /> : 

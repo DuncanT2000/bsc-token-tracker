@@ -61,18 +61,28 @@ const TokenInfoBar = (props) => {
 
     return ( 
 
-         <div style={{marginLeft:'10px', width:'100%',display:'flex',flexDirection:'row', 
-          alignItems: 'center'}}>
+         <div  style={{marginLeft:'1vw', width:'100%',display:'flex',flexDirection:'row', 
+          alignItems: 'center', justifyContent: 'center'}}>
           
-          <div id="tokenInfoContainer">
+          <div id="tokenInfoContainer" className={props.displaySideBar ? 'small-font' : 'large-font'}>
             <img id="token-icon"
             src={ web3.utils.isAddress(props.tokenAddress) ? `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(props.tokenAddress)}/logo.png` : '' } />
           </div>
-          <TokenInfoBarItem title="Name" isLoading={isLoading} content={props.tokenDetails.TokenName} />
-          <TokenInfoBarItem title="Symbol" isLoading={isLoading} content={props.tokenDetails.TokenSymbol} />
-          <TokenInfoBarItem title="Price" isLoading={isLoading} content={parseFloat(props.tokenDetails.TokenPrice).toFixed(12)} />
-          <TokenInfoBarItem title={`Token Supply`} isLoading={isLoading} isNumber={true} content={parseInt(props.tokenDetails.TokenSupply / `1${"0".repeat(props.tokenDetails.TokenDecimals)}`)} />
-          <TokenInfoBarItem title={`Market Cap`} isLoading={isLoading} isNumber={true} isMoney={true} content={parseInt(props.tokenDetails.TokenMC)} />
+          <TokenInfoBarItem title="Name" 
+          isLoading={isLoading} 
+          content={props.tokenDetails.TokenName}
+          displaySideBar={props.displaySideBar}/>
+          <TokenInfoBarItem title="Symbol" isLoading={isLoading} 
+          content={props.tokenDetails.TokenSymbol} 
+          displaySideBar={props.displaySideBar} />
+          <TokenInfoBarItem title="Price" isLoading={isLoading} 
+          content={parseFloat(props.tokenDetails.TokenPrice).toFixed(12)} 
+          displaySideBar={props.displaySideBar}/>
+          <TokenInfoBarItem title={`Token Supply`} isLoading={isLoading} 
+          isNumber={true} content={parseInt(props.tokenDetails.TokenSupply / `1${"0".repeat(props.tokenDetails.TokenDecimals)}`)}
+          displaySideBar={props.displaySideBar} />
+          <TokenInfoBarItem title={`Market Cap`} isLoading={isLoading} isNumber={true} isMoney={true} content={parseInt(props.tokenDetails.TokenMC)} 
+          displaySideBar={props.displaySideBar}/>
 
           <div id="tokenInfoContainer" >
           <p> {!isLoading ? tokenInfoLSContext.favourite.some(function (el) { return el.address.toUpperCase() == props.tokenAddress.toUpperCase() }) 
@@ -90,10 +100,11 @@ const TokenInfoBar = (props) => {
                     
          
           
-            <div>
+            <div id="tokenInfoContainer">
               {typeof props.tokenDetails.TSDetailsJSON === 'undefined' ?
               <> </>
-             : props.tokenDetails.TSDetailsJSON.website == '' ? <></> : <a target="_blank" href={props.tokenDetails.TSDetailsJSON.website} > 
+             : props.tokenDetails.TSDetailsJSON.website == '' ? <></> : 
+             <a target="_blank" href={props.tokenDetails.TSDetailsJSON.website}> 
              <MdLaunch  id="mdLaunchIcon" />
              </a>
                   }
@@ -102,8 +113,10 @@ const TokenInfoBar = (props) => {
 
             <div id="token-Info-Btn-container" >
               <TokenInfoBarButton text="Trade" 
+              displaySideBar={props.displaySideBar}
               url={`https://exchange.pancakeswap.finance/#/swap?outputCurrency=${props.tokenAddress}`} />
               <TokenInfoBarButton text="BSC Scan" 
+              displaySideBar={props.displaySideBar}
               url={`https://bscscan.com/address/${props.tokenAddress}`} />
               </div>
           </div>
