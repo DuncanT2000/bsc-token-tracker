@@ -97,6 +97,7 @@ useEffect(() => {
     return
   }else{
     if (isMounted) {
+      setdisplaySideBar(false)
       setinvalidTokenAddress(false)
     }
     

@@ -1,9 +1,13 @@
+:root{
+  --tokenInfoFontSize-Tablet-low-desktop: 1.5vw;
+}
 body {
   margin: 0;
   font-family: 'Rubik', 'Roboto';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #163F56;
+  
 }
 
 code {
@@ -555,6 +559,7 @@ code {
 
 
 @media only screen and (min-width:769px) and (max-width:1024px) {
+
   .nav-bar {
     display: flex;
     flex-direction: row;
@@ -627,7 +632,7 @@ code {
   #tokenInfoContainer {
     white-space: nowrap;
     margin-right: 1%;
-    font-size: 1.5vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   #tokenInfoContainer:nth-child(7) {
@@ -643,12 +648,12 @@ code {
   .MdFavoriteBorder {
     margin-left: 1vw;
     color: white;
-    font-size: 1.9vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   #mdLaunchIcon {
     color: white;
-    font-size: 1.9vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   #token-Info-Btn-container {
@@ -669,7 +674,7 @@ code {
     margin: '0px 0px 0px 1.9vw';
     text-decoration: none;
     white-space: nowrap;
-    font-size: 1.5vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 13px);
   }
 
   .tokenInfobtn:nth-child(2) {
@@ -679,7 +684,7 @@ code {
   /* TokenInfoBar Tablet End */
 
   .token-swap-feed-container {
-    font-size: 1.4vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   /* SB Styling Tablet */
@@ -724,12 +729,8 @@ code {
   .small-font{
     font-size: 1.2vw !important;
   }
-  .large-font{
-    font-size: 1.8vw !important;
-  }
-
   .large-font-btn{
-    font-size: 1.3vw !important;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 13px);
   }
 
   .token-info-container{
@@ -739,6 +740,7 @@ code {
 }
 
 @media only screen and (min-width:1024px) {
+
   .nav-bar {
     display: flex;
     flex-direction: row;
@@ -752,8 +754,8 @@ code {
 
   .nav-bar input {
     border: 2px solid #fdfdfd;
-    max-width: 200px;
-    font-size: 1.3vw;
+    max-width: 250px;
+    font-size: clamp(12px,1.3vw, 16px);
     background-color: #1e1f1e;
     color: #fdfdfd;
   }
@@ -769,7 +771,7 @@ code {
   #site-title {
     color: white;
     white-space: nowrap;
-    font-size: 1.9vw;
+    font-size: clamp(12px,1.9vw, 25px);
   }
 
   #logo {
@@ -779,7 +781,7 @@ code {
   }
 
   #bnb-Price-container {
-    font-size: 1.2vw;
+    font-size: clamp(12px,1.2vw, 16px);
 
     align-items: center;
     margin-left: 5px;
@@ -790,13 +792,13 @@ code {
     border-radius: 50px;
     padding: 5px;
     color: white;
-    font-size: 12px;
+    font-size: clamp(12px,1.2vw, 16px);;
     margin-right: 15px;
 
   }
 
   #connect-wallet-btn {
-    font-size: 1.2vw;
+    font-size: clamp(12px,1.2vw, 16px);
     margin-right: 1vw;
   }
 
@@ -811,7 +813,7 @@ code {
   #tokenInfoContainer {
     white-space: nowrap;
     margin-right: 1%;
-    font-size: 1.5vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   #tokenInfoContainer:nth-child(7) {
@@ -819,26 +821,26 @@ code {
   }
 
   .MdFavorite1 {
-    margin-left: 3vw;
+    margin-left: 1vw;
     color: red;
-    font-size: 1.5vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   .MdFavoriteBorder {
-    margin-left: 3vw;
+    margin-left: 1vw;
     color: white;
-    font-size: 1.5vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   #mdLaunchIcon {
     color: white;
-    font-size: 1.5vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   #token-Info-Btn-container {
     display: flex;
     flex-direction: column;
-    margin-left: 2.2vw;
+    margin-left: 0.5vw;
 
   }
 
@@ -853,7 +855,7 @@ code {
     margin: '0px 0px 0px 1.9vw';
     text-decoration: none;
     white-space: nowrap;
-    font-size: 1.5vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 13px);
   }
 
   .tokenInfobtn:nth-child(2) {
@@ -863,7 +865,7 @@ code {
   /* TokenInfoBar Tablet End */
 
   .token-swap-feed-container {
-    font-size: 1.4vw;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   /* SB Styling Tablet */
@@ -906,14 +908,14 @@ code {
   }
 
   .small-font{
-    font-size: 1.2vw !important;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
-  .large-font{
-    font-size: 1.2vw !important;
+  .large-font-btn{
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
   }
 
   .token-info-container{
-    font-size: 1.3vw ;
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 20px);
   }
 
 }
