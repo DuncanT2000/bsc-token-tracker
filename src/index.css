@@ -103,6 +103,7 @@ code {
   display: 'flex';
   flex-direction: 'column';
   width: 95%;
+  justify-content: center;
 }
 
 
@@ -277,7 +278,7 @@ code {
   #tokenInfoContainer {
     white-space: nowrap;
     margin-right: 0.5vw;
-    font-size: 1.9vw;
+    font-size: clamp(8px, 1.9vw, 12px);;
   }
 
   #tokenInfoContainer:nth-child(7) {
@@ -321,7 +322,7 @@ code {
     margin: 0px 0px 0px 1.5vw;
     text-decoration: none;
     white-space: nowrap;
-    font-size: 1.9vw;
+    font-size: clamp(8px, 1.9vw, 10px);
   }
 
   .tokenInfobtn:nth-child(2) {
@@ -348,7 +349,8 @@ code {
  
 
   #open-close-SB-container{
-    width:3%;
+    width:2.5%;
+    margin-right: 2px;
   }
 
   #open-SideBar{
@@ -499,7 +501,7 @@ code {
     margin: '0px 0px 0px 1.9vw';
     text-decoration: none;
     white-space: nowrap;
-
+    font-size: clamp(8px, 1.9vw, 16px);
   }
 
   .tokenInfobtn:nth-child(2) {
@@ -670,6 +672,7 @@ code {
     color: white;
     border-radius: 12px;
     min-width: 25%;
+    padding:0px;
     border: '0px solid';
     margin: '0px 0px 0px 1.9vw';
     text-decoration: none;
@@ -850,12 +853,13 @@ code {
     background: rgba(50, 130, 184, 0.75);
     color: white;
     border-radius: 12px;
+    padding: 5px;
     min-width: 25%;
     border: '0px solid';
     margin: '0px 0px 0px 1.9vw';
     text-decoration: none;
     white-space: nowrap;
-    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 13px);
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 12px);
   }
 
   .tokenInfobtn:nth-child(2) {
@@ -866,6 +870,7 @@ code {
 
   .token-swap-feed-container {
     font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
+  
   }
 
   /* SB Styling Tablet */
@@ -908,10 +913,10 @@ code {
   }
 
   .small-font{
-    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
+    font-size: clamp(10px,1.3vw, 14px) !important;
   }
   .large-font-btn{
-    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px);
+    font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 16px) !important;
   }
 
   .token-info-container{

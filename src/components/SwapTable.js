@@ -632,8 +632,7 @@ const SwapTable =  (props) => {
          
                       const tokenAmount = type =='SELL' ? amount0In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount0Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
                       const PPT =  USDAmount / tokenAmount
-                      var m = -Math.floor( Math.log10(PPT) + 1)   
-                      console.log(m);  
+                      var m = -Math.floor( Math.log10(PPT) + 1)    
                       return <div> 
                   <p style={{
                     marginBlockStart: '0em',
@@ -657,7 +656,7 @@ const SwapTable =  (props) => {
                       const tokenAmount = type =='SELL' ? amount1In / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`:  amount1Out / `1${"0".repeat(props.TokenDetails.TokenDecimals)}`
                       const PPT =  USDAmount / tokenAmount
                       var m = -Math.floor( Math.log10(PPT) + 1)
-                      console.log(m);
+
                       return <div> <p style={{
                     marginBlockStart: '0em',
                     marginBlockEnd: '0'

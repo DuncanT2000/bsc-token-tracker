@@ -15,10 +15,8 @@ import SideTab from '../components/SideTab';
 import TokenInfoBar from '../components/TokenInfoBar/TokenInfoBar';
 import {Alert} from '@material-ui/lab';
 import Web3 from 'web3'
-import ResizePanel from "react-resize-panel";
 import {MdPlayArrow} from 'react-icons/md'
 import getTokenPrice from '../components/getTokenPrice'
-import { Container} from '@material-ui/core';
 import getTokenPairAddress from '../components/getTokenPairAddress';
 
 
@@ -70,13 +68,12 @@ const Token = (props) => {
   const TokenLSContext = useContext(LSContext)
   const swapWeb3Context = useContext(Web3Context)
   const web3 = swapWeb3Context.web3
-  
   const multicall = swapWeb3Context.multicall
   const swapBlockContext = useContext(BlockContext)
 
     const [swaps, setswaps] = useState([]);
     const loadedswaps = useRef(false)
-    const [chartInterval, setchartInterval] = useState(15);
+    const [chartInterval, setchartInterval] = useState(5);
     const [lpAddress, setlpAddress] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
     const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
@@ -420,28 +417,9 @@ useEffect(() => {
 }, [tokenDetails.tokenAddress])
 
 
-
-    const {error,loading,data,refetch} = useQuery(GET_CHART_DATA,{
-      variables:{
-        "baseCurrency": props.match.params.tokenAddress,
-        "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-        "since": "2021-05-29T23:00:00.000Z",
-        "till": "2021-05-31T22:00:00.000Z",
-        "window": chartInterval,
-        "exchangeAddresses": [
-          "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"
-        ],
-        "minTrade": 10
-      }
-  })
-
-
-    
-      useEffect(() => {
-        if(web3.utils.isAddress(props.match.params.tokenAddress)){
-          refetch()
-        }
-          }, [props.match.params.tokenAddress,chartInterval])
+    // 0xBCfCcbde45cE874adCB698cC183deBcF17952812 - Pancake V1
+    // 0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73 - Pancake V2
+    // Time Format - YYYY-MM-DDTHH:MM:SS.MMMZ
 
 
     
@@ -582,7 +560,11 @@ useEffect(() => {
           
       
           <div className="token-swap-feed-container">
-          
+          <TradingChart
+          bnbPrice={swapWeb3Context.bnbPrice} 
+          tokenAddress={props.match.params.tokenAddress}
+          chartInterval={chartInterval}
+          />
           <SwapTable loaded={loadedswaps.current} swaps={swaps} TokenDetails={tokenDetails} 
           bnbPrice={swapWeb3Context.bnbPrice}/> 
           

@@ -4,6 +4,7 @@ import {useQuery, gql} from '@apollo/client'
 import { GET_CHART_DATA } from './Queries';
 import {Web3Context} from './Contexts/Web3Context.js'
 import {LSContext} from './Contexts/LSContext.js'
+import {formatISO, subDays} from 'date-fns'
 
 let chart;
 let candlestickSeries= null;
@@ -21,35 +22,91 @@ const TradingChart = (props) => {
   const TCWeb3Context = useContext(Web3Context)
   const web3 = TCWeb3Context.web3
 
+  const coeff = 1000 * 60 * props.chartInterval;
+
+
+
   const [isLoading, setisLoading] = useState(true);
+  const [candleDataArr, setcandleDataArr] = useState([]);
+  const [since, setsince] = useState("");
+  const [till, settill] = useState("currentDate.toISOString()");
   
-  const [since, setsince] = useState("2021-05-29T23:00:00.000Z")
-  const [till, settill] = useState("2021-05-31T22:00:00.000Z")
-  const [candleDataArr, setcandleDataArr] = useState([])
+  useEffect(() => {
+    let currentDate = new Date()
+    currentDate.setUTCSeconds(0)
+    currentDate.setUTCMilliseconds(0)
+  
+    currentDate = new Date (Math.round(currentDate.getTime() / coeff) * coeff)
+  
+    
+    
+    const sinceDate = subDays(currentDate, 3)
+    sinceDate.setUTCSeconds(0)
+    sinceDate.setUTCMilliseconds(0)
+  
+    console.log('Since: ' + sinceDate);
+    console.log('Till: ' + currentDate);
+    setsince(sinceDate.toISOString())
+    settill(currentDate.toISOString())
+  }, []);
 
   const {error,loading,data,refetch} = useQuery(GET_CHART_DATA,{
-      variables:{
-        "baseCurrency": props.tokenAddress,
-        "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-        "since": since,
-        "till": till,
-        "window": props.interval,
-        "exchangeAddresses": [
-          "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"
-        ],
-        "minTrade": 10
-      }
-  })
+    variables:{
+      "baseCurrency": props.tokenAddress,
+      "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "since": since,
+      "till": till,
+      "window": props.chartInterval,
+      "exchangeAddresses": [
+        "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"
+      ],
+      "minTrade": 10
+    }
+})
+
+  
+useEffect(() => {
+  if(typeof data == 'object') {
+    
+     const filtercd = data.ethereum.dexTrades.map((kline)=>{
+        return {
+          'time':new Date(kline.timeInterval.minute).getTime()/1000,
+          'open': TCWeb3Context.bnbPrice * kline.open_price,
+          'close': TCWeb3Context.bnbPrice * kline.close_price,
+          'high': TCWeb3Context.bnbPrice * kline.maximum_price,
+          'low': TCWeb3Context.bnbPrice * kline.minimum_price
+        }
+     })
+     setcandleDataArr(filtercd)
+
+  }
+
+}, [data, TCWeb3Context.bnbPrice]);
+
   const getChartData = (from,to) => {
     console.log(chart.timeScale().getVisibleRange());
-    console.log(from);
-    console.log(to);
+    let TillDate = new Date(to)
+    TillDate.setUTCSeconds(0)
+  TillDate.setUTCMilliseconds(0)
+
+  TillDate = new Date (Math.round(TillDate.getTime() / coeff) * coeff)
+
+  let sinceDate = new Date(from)
+  sinceDate.setUTCSeconds(0)
+  sinceDate.setUTCMilliseconds(0)
+
+  sinceDate = new Date (Math.round(sinceDate.getTime() / coeff) * coeff)
+
+  console.log('Since: ' + sinceDate.toISOString());
+  console.log('Till: ' + TillDate.toISOString());
+
   }
+
+
 
 const onVisibleLogicalRangeChanged = (newVisibleLogicalRange)=> {
   const barsInfo = candlestickSeries.barsInLogicalRange(newVisibleLogicalRange);
-  
-
+  console.log('User is Moving Chart');
   if (barsInfo !== null && barsInfo.barsBefore < 50) {
     var fromSeconds = barsInfo.from;
     var from = new Date(0);
@@ -88,27 +145,11 @@ const onVisibleLogicalRangeChanged = (newVisibleLogicalRange)=> {
   }, []);
 
   useEffect(() => {
-    refetch()
-  }, [props.interval])
+    if(web3.utils.isAddress(props.tokenAddress)){
+      refetch()
+    }
+      }, [props.tokenAddress,props.chartInterval])
 
-  useEffect(() => {
-
-    if (typeof data !== 'undefined') {
-            
-      const formatedkline = data.ethereum.dexTrades.map((kline)=>{
-         return{
-           "time":new Date(kline.timeInterval.minute).getTime()/ 1000,
-           "open": TCWeb3Context.bnbPrice * kline.open_price,
-           "high": TCWeb3Context.bnbPrice * kline.maximum_price,
-           "low": TCWeb3Context.bnbPrice * kline.minimum_price,
-           "close": TCWeb3Context.bnbPrice * kline.close_price,
-           "volume":  kline.tradeAmount
-         }
-       })
-      setcandleDataArr(formatedkline)
-      }
-
-  }, [data]);
 
   useEffect(() => {
     
@@ -118,7 +159,7 @@ const onVisibleLogicalRangeChanged = (newVisibleLogicalRange)=> {
         candlestickSeries.setData(candleDataArr)
         setisLoading(false)
       }else{
-
+        setisLoading(true)
       }
       
       
@@ -127,10 +168,10 @@ const onVisibleLogicalRangeChanged = (newVisibleLogicalRange)=> {
   }, [candleDataArr])
 
 
-    return(<div>
-      {isLoading ==true ? <p>Loading Char Data...</p> : <></>}
+    return(<React.Fragment>
+      {isLoading == true ? <p>Loading Chart Data...</p> : <></>}
       <div className="trading-chart" ref={tradingChart}> </div>
-      </div>)
+      </React.Fragment>)
 
   
     
