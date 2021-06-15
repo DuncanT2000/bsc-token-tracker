@@ -18,6 +18,7 @@ import { ApolloProvider,
   from } from '@apollo/client';
 import {onError} from '@apollo/client/link/error'
 import NewPSListings from './routes/NewPSListings';
+require('dotenv').config()
 
 const errorLink = onError(({graphqlErrors})=>{
   if (graphqlErrors) {
@@ -28,10 +29,14 @@ const errorLink = onError(({graphqlErrors})=>{
 
 })
 
+
+
+console.log(process.env);
+
 const link = from([
   errorLink,
   new HttpLink({ uri:"https://graphql.bitquery.io",
-  headers:{'X-API-KEY':'BQYojbUdmxerh78eSw3RzeEk1buvH4xl'} }),
+  headers:{'X-API-KEY':process.env.REACT_APP_BQAPI} }),
 ])
 
 const client = new ApolloClient({
