@@ -4,8 +4,7 @@ import React, { useEffect, useState, useContext,useRef } from 'react'
 import '../App.css'
 import SwapTable from '../components/SwapTable';
 import TradingChart from '../components/TradingChart.js';
-
-
+import TradingChartContainer from '../components/TradingChartContainer.js';
 import {useQuery, gql} from '@apollo/client'
 import { GET_CHART_DATA } from '../components/Queries';
 import {Web3Context} from '../components/Contexts/Web3Context.js'
@@ -73,7 +72,7 @@ const Token = (props) => {
 
     const [swaps, setswaps] = useState([]);
     const loadedswaps = useRef(false)
-    const [chartInterval, setchartInterval] = useState(5);
+    const [chartInterval, setchartInterval] = useState(30);
     const [lpAddress, setlpAddress] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
     const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
@@ -560,11 +559,21 @@ useEffect(() => {
           
       
           <div className="token-swap-feed-container">
-          <TradingChart
-          bnbPrice={swapWeb3Context.bnbPrice} 
-          tokenAddress={props.match.params.tokenAddress}
-          chartInterval={chartInterval}
-          />
+          <select onChange={(e)=>{setchartInterval(parseInt(e.target.value))}} name="chartInterval" id="chartInterval">
+              <option value="1">1m</option>
+              <option value="5">5m</option>
+              <option value="10">10m</option>
+              <option value="15">15m</option>
+              <option value="30">30m</option>
+              <option value="60">1h</option>
+              <option value="300">5h</option>
+              <option value="1440">24h</option>
+          </select> 
+          {/* <TradingChart bnbPrice={swapWeb3Context.bnbPrice}  tokenAddress={props.match.params.tokenAddress} chartInterval={chartInterval}/> */}
+          <TradingChartContainer 
+          bnbPrice={swapWeb3Context.bnbPrice}  
+          tokenAddress={props.match.params.tokenAddress} 
+          chartInterval={chartInterval} />
           <SwapTable loaded={loadedswaps.current} swaps={swaps} TokenDetails={tokenDetails} 
           bnbPrice={swapWeb3Context.bnbPrice}/> 
           

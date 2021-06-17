@@ -25,13 +25,8 @@ const WalletTracker = (props) => {
   const LSCon = useContext(LSContext);
   const [trackwalletContainerStatus, settrackwalletContainerStatus] = useState(false);
   
-  const runQuery =
-      (LSCon.walletInfo != null &&
-        LSCon.walletInfo[0].address == web3con.account) ||
-      (LSCon.trackWalletInfo != null && LSCon.trackWalletAddress != null)
-        ? true
-        : false;
-  const [isloadingWalletData, setisloadingWalletData] = useState(!runQuery);
+
+  const [isloadingWalletData, setisloadingWalletData] = useState(true);
 
 
 
@@ -44,19 +39,21 @@ const WalletTracker = (props) => {
       ? web3con.account
       : "";
 
+      console.log('Wallet Address is: ' + walletAddress);
+
   const { error, loading, data, refetch } = useQuery(GET_WALLET_TOKEN, {
     variables: {
       network: "bsc",
       address: walletAddress,
     },
-    skip: runQuery,
-  });
+   });
 
   useEffect(() => {
     if (typeof data == "object") {
       console.log(data);
      if (LSCon.trackWalletAddress == null) {
-       LSCon.settrackWalletInfo(null);
+        LSCon.settrackWalletInfo(null);
+        LSCon.setwalletAddress(web3con.account)
         LSCon.setwalletInfo([data.ethereum.address[0]]);
         setisloadingWalletData(false)
       } else if (LSCon.trackWalletAddress != null) {

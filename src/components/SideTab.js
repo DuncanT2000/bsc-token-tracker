@@ -13,7 +13,7 @@ import { LSContext } from './Contexts/LSContext';
 
     const LSCon = useContext(LSContext)
 
-    const [Selected, setSelected] = useState(LSCon.selectedSideBarTab.replaceAll('"', ''))
+    const [Selected, setSelected] = useState( LSCon.selectedSideBarTab != undefined ? LSCon.selectedSideBarTab.replaceAll('"', ''): "Trending")
 
 
     return (

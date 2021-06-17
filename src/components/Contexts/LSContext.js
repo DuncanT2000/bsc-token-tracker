@@ -12,7 +12,7 @@ export const LSContextProvider = ({children}) => {
     const [favourite, setfavourite] = useState([])
     const [deleted, setdeleted] = useState([])
     const [history, sethistory] = useState([])
-    const [selectedSideBarTab, setselectedSideBarTab] = useState(localStorage.getItem('selectedSideBarTab') != null ? localStorage.getItem('selectedSideBarTab') : "Trending")
+    const [selectedSideBarTab, setselectedSideBarTab] = useState(localStorage.getItem('selectedSideBarTab') != null && localStorage.getItem('selectedSideBarTab') != undefined  ? localStorage.getItem('selectedSideBarTab') : "Trending")
 
     useEffect(() => {
         
@@ -108,6 +108,8 @@ export const LSContextProvider = ({children}) => {
         settrackWalletInfo,
         trackWalletAddress,
         settrackWalletAddress,
+        walletAddress,
+        setwalletAddress,
         favourite,
         setfavourite,
         deleted,

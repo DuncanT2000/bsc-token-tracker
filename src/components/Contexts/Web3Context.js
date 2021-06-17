@@ -40,11 +40,14 @@ export const Web3ContextProvider = ({children}) => {
       if (typeof window.ethereum !== 'undefined') {
         const accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
         if(typeof accounts[0] == 'string'){
-          if(window.ethereum.chainId == '0x38'){
+          if(window.ethereum.chainId == '0x38' && isMounted.current){
           setisWalletConnect(true)
           setAccount(window.ethereum.selectedAddress)
           }else{
-            setisWalletConnect(false)
+            if (isMounted.current) {
+              setisWalletConnect(false)
+            }
+            
           }
           
           window.ethereum.on('chainChanged', (chainId) => {
@@ -100,7 +103,7 @@ export const Web3ContextProvider = ({children}) => {
       
     useEffect(() => {
       const getBNBPrice = async ()=>{
-        if (isMounted){
+        if (isMounted.current){
 
         const bnbCall = [
           {

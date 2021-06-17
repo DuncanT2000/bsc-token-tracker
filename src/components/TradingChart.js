@@ -54,10 +54,8 @@ const TradingChart = (props) => {
       let currentDate = new Date()
       currentDate.setUTCSeconds(0)
       currentDate.setUTCMilliseconds(0)
-
+      
       currentDate = new Date(Math.round(currentDate.getTime() / coeff) * coeff)
-
-
 
       const sinceDate = subDays(currentDate, 3)
       sinceDate.setUTCSeconds(0)
@@ -138,6 +136,9 @@ const TradingChart = (props) => {
         var toSeconds = chart.timeScale().getVisibleRange().from;
         var to = new Date(0);
         to.setUTCSeconds(toSeconds);
+        console.log(chart.timeScale().getVisibleRange());
+        console.log(chart.timeScale().getVisibleLogicalRange());
+        
         getChartData(from, to)
       }
     }
@@ -178,6 +179,7 @@ const TradingChart = (props) => {
           },
       },
       });
+      
       candlestickSeries = chart.addCandlestickSeries();
 
 
@@ -187,10 +189,8 @@ const TradingChart = (props) => {
     }, []);
 
     useEffect(() => {
-      if (web3.utils.isAddress(props.tokenAddress)) {
         refetch()
-      }
-    }, [props.tokenAddress, props.chartInterval])
+    }, [props.tokenAddress, props.chartInterval, ])
 
 
     useEffect(() => {
@@ -210,7 +210,8 @@ const TradingChart = (props) => {
     }, [candleDataArr])
 
 
-    return ( <React.Fragment> {isLoading ? <p> Loading Chart Data... </p> : <></ >
+    return ( <React.Fragment> 
+      {isLoading ? <p> Loading Chart Data... </p> : <></ >
       } <div className = "trading-chart"
       ref = {
         tradingChart
