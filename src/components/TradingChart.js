@@ -25,6 +25,8 @@ import {
   subDays
 } from 'date-fns'
 
+
+
 let chart;
 let candlestickSeries = null;
 
@@ -47,6 +49,7 @@ const TradingChart = (props) => {
 
     const [isLoading, setisLoading] = useState(true);
     const [candleDataArr, setcandleDataArr] = useState([]);
+    const [SelectedExchanges, setSelectedExchanges] = useState([]);
     const [since, setsince] = useState("");
     const [till, settill] = useState("currentDate.toISOString()");
 
@@ -79,13 +82,10 @@ const TradingChart = (props) => {
         "since": since,
         "till": till,
         "window": props.chartInterval,
-        "exchangeAddresses": [
-          "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"
-        ],
+        "exchangeAddresses": SelectedExchanges,
         "minTrade": 10
       }
     })
-
 
     useEffect(() => {
       if (typeof data == 'object') {
@@ -99,7 +99,7 @@ const TradingChart = (props) => {
             'low': TCWeb3Context.bnbPrice * kline.minimum_price
           }
         })
-        setcandleDataArr(filtercd)
+        setcandleDataArr([...filtercd])
 
       }
 
@@ -119,8 +119,10 @@ const TradingChart = (props) => {
 
       sinceDate = new Date(Math.round(sinceDate.getTime() / coeff) * coeff)
 
+      sinceDate = subDays(TillDate, 1)
       console.log('Since: ' + sinceDate.toISOString());
       console.log('Till: ' + TillDate.toISOString());
+      
 
     }
 
@@ -189,9 +191,26 @@ const TradingChart = (props) => {
     }, []);
 
     useEffect(() => {
-        refetch()
-    }, [props.tokenAddress, props.chartInterval, ])
+      let currentDate = new Date()
+      currentDate.setUTCSeconds(0)
+      currentDate.setUTCMilliseconds(0)
+      
+      currentDate = new Date(Math.round(currentDate.getTime() / coeff) * coeff)
 
+      const sinceDate = subDays(currentDate, 3)
+      sinceDate.setUTCSeconds(0)
+      sinceDate.setUTCMilliseconds(0)
+
+      console.log('Since: ' + sinceDate);
+      console.log('Till: ' + currentDate);
+      setsince(sinceDate.toISOString())
+      settill(currentDate.toISOString())
+        refetch()
+    }, [props.tokenAddress, props.chartInterval, SelectedExchanges])
+
+    useEffect(() => {
+      setSelectedExchanges([...props.SelectedExchanges])
+  }, [props.SelectedExchanges])
 
     useEffect(() => {
 

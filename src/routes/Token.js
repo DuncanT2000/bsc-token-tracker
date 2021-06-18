@@ -17,7 +17,7 @@ import Web3 from 'web3'
 import {MdPlayArrow} from 'react-icons/md'
 import getTokenPrice from '../components/getTokenPrice'
 import getTokenPairAddress from '../components/getTokenPairAddress';
-
+import { Multiselect } from 'multiselect-react-dropdown';
 
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
@@ -63,7 +63,7 @@ async function processSwaps(uswaps) {
 const Token = (props) => {
 
   const isMounted = useRef(true)
-
+  const refetchChart = useRef(false)
   const TokenLSContext = useContext(LSContext)
   const swapWeb3Context = useContext(Web3Context)
   const web3 = swapWeb3Context.web3
@@ -74,6 +74,8 @@ const Token = (props) => {
     const loadedswaps = useRef(false)
     const [chartInterval, setchartInterval] = useState(30);
     const [lpAddress, setlpAddress] = useState([]);
+    const [SelectedDropExchanges, setSelectedDropExchanges] = useState([]);
+    const [ExchangesSelected, setExchangesSelected] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
     const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
     const [noPairFound, setnoPairFound] = useState(false);
@@ -519,6 +521,14 @@ useEffect(() => {
         props.match.params.tokenAddress])
 
 
+        const onSelect = (selectedList, selectedItem) =>{
+          setSelectedDropExchanges(selectedList)
+          setExchangesSelected(selectedList.map((e)=>e.value))
+        }
+        const onRemove = (selectedList, removedItem) =>{
+          setSelectedDropExchanges(selectedList)
+          setExchangesSelected(selectedList.map((e)=>e.value))
+        }
 
     return (
     <div className="token-main-container">
@@ -559,21 +569,38 @@ useEffect(() => {
           
       
           <div className="token-swap-feed-container">
-          <select onChange={(e)=>{setchartInterval(parseInt(e.target.value))}} name="chartInterval" id="chartInterval">
-              <option value="1">1m</option>
-              <option value="5">5m</option>
-              <option value="10">10m</option>
-              <option value="15">15m</option>
-              <option value="30">30m</option>
-              <option value="60">1h</option>
-              <option value="300">5h</option>
-              <option value="1440">24h</option>
-          </select> 
-          {/* <TradingChart bnbPrice={swapWeb3Context.bnbPrice}  tokenAddress={props.match.params.tokenAddress} chartInterval={chartInterval}/> */}
-          <TradingChartContainer 
-          bnbPrice={swapWeb3Context.bnbPrice}  
+            <div className="chart-option-bar">
+            <Multiselect
+              options={[
+                { id: 1, value: "0xBCfCcbde45cE874adCB698cC183deBcF17952812", name:"PsV1" },
+                { id: 2, value: "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73" , name:"PsV2" },
+              ]}
+              labelledBy="Select Exchanges"
+              selectedValues={SelectedDropExchanges}
+              onSelect={onSelect}
+              onRemove={onRemove}    
+              displayValue="name"
+              style={{
+                width:'25%'
+              }}
+              />
+                <select id="selectInterval" onChange={(e)=>{setchartInterval(parseInt(e.target.value))}} name="chartInterval" id="chartInterval">
+                    <option value="1">1m</option>
+                    <option value="5">5m</option>
+                    <option value="10">10m</option>
+                    <option value="15">15m</option>
+                    <option value="30">30m</option>
+                    <option value="60">1h</option>
+                    <option value="300">5h</option>
+                    <option value="1440">24h</option>
+                </select> 
+            </div>
+          <TradingChart SelectedExchanges={ExchangesSelected} bnbPrice={swapWeb3Context.bnbPrice}  
           tokenAddress={props.match.params.tokenAddress} 
-          chartInterval={chartInterval} />
+          chartInterval={chartInterval} refetchData={refetchChart.current} />
+          {/*
+          <TradingChartContainer bnbPrice={swapWeb3Context.bnbPrice}  tokenAddress={props.match.params.tokenAddress} chartInterval={chartInterval} /> 
+          */}
           <SwapTable loaded={loadedswaps.current} swaps={swaps} TokenDetails={tokenDetails} 
           bnbPrice={swapWeb3Context.bnbPrice}/> 
           
