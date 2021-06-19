@@ -68,7 +68,7 @@ const TradingChart = (props) => {
       console.log('Till: ' + currentDate);
       setsince(sinceDate.toISOString())
       settill(currentDate.toISOString())
-    }, []);
+    }, [props.tokenAddress]);
 
     const {
       error,
@@ -79,6 +79,23 @@ const TradingChart = (props) => {
       variables: {
         "baseCurrency": props.tokenAddress,
         "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "since": since,
+        "till": till,
+        "window": props.chartInterval,
+        "exchangeAddresses": SelectedExchanges,
+        "minTrade": 10
+      }
+    })
+
+    const {
+      BNBUSDerror,
+      BNBUSDloading,
+      BNBUSDdata,
+      BNBUSDrefetch
+    } = useQuery(GET_CHART_DATA, {
+      variables: {
+        "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
         "since": since,
         "till": till,
         "window": props.chartInterval,
@@ -99,6 +116,7 @@ const TradingChart = (props) => {
             'low': TCWeb3Context.bnbPrice * kline.minimum_price
           }
         })
+        console.log(filtercd)
         setcandleDataArr([...filtercd])
 
       }
@@ -180,10 +198,21 @@ const TradingChart = (props) => {
               visible: true,
           },
       },
+      
       });
       
+
       candlestickSeries = chart.addCandlestickSeries();
 
+      candlestickSeries.applyOptions({
+        priceFormat: {
+            type: 'custom',
+            minMove: 0.02,
+            formatter: (price) => {
+              var m = -Math.floor( Math.log10(price) + 1)
+              return '$' + price.toFixed(m + 4)},
+        },
+    });
 
 
       chart.timeScale().subscribeVisibleLogicalRangeChange(onVisibleLogicalRangeChanged);

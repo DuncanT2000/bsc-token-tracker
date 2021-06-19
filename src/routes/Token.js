@@ -595,9 +595,11 @@ useEffect(() => {
                     <option value="1440">24h</option>
                 </select> 
             </div>
+             
           <TradingChart SelectedExchanges={ExchangesSelected} bnbPrice={swapWeb3Context.bnbPrice}  
           tokenAddress={props.match.params.tokenAddress} 
           chartInterval={chartInterval} refetchData={refetchChart.current} />
+          
           {/*
           <TradingChartContainer bnbPrice={swapWeb3Context.bnbPrice}  tokenAddress={props.match.params.tokenAddress} chartInterval={chartInterval} /> 
           */}
