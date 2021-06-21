@@ -87,12 +87,7 @@ const TradingChart = (props) => {
       }
     })
 
-    const {
-      BNBUSDerror,
-      BNBUSDloading,
-      BNBUSDdata,
-      BNBUSDrefetch
-    } = useQuery(GET_CHART_DATA, {
+    const BNBUSD = useQuery(GET_CHART_DATA, {
       variables: {
         "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
         "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
@@ -105,26 +100,25 @@ const TradingChart = (props) => {
     })
 
     useEffect(() => {
-      if (typeof data == 'object') {
+      
+      if (typeof data == 'object' &&  typeof BNBUSD.data == 'object') {
 
-        const filtercd = data.ethereum.dexTrades.map((kline) => {
+        const filtercd = data.ethereum.dexTrades.map((kline, i) => {
           return {
             'time': new Date(kline.timeInterval.minute).getTime() / 1000,
-            'open': TCWeb3Context.bnbPrice * kline.open_price,
-            'close': TCWeb3Context.bnbPrice * kline.close_price,
-            'high': TCWeb3Context.bnbPrice * kline.maximum_price,
-            'low': TCWeb3Context.bnbPrice * kline.minimum_price
+            'open': BNBUSD.data.ethereum.dexTrades[i].open_price * kline.open_price,
+            'close': BNBUSD.data.ethereum.dexTrades[i].close_price * kline.close_price,
+            'high': BNBUSD.data.ethereum.dexTrades[i].maximum_price * kline.maximum_price,
+            'low': BNBUSD.data.ethereum.dexTrades[i].minimum_price * kline.minimum_price
           }
         })
-        console.log(filtercd)
         setcandleDataArr([...filtercd])
 
       }
 
-    }, [data, TCWeb3Context.bnbPrice]);
+    }, [data,BNBUSD.data, TCWeb3Context.bnbPrice]);
 
     const getChartData = (from, to) => {
-      console.log(chart.timeScale().getVisibleRange());
       let TillDate = new Date(to)
       TillDate.setUTCSeconds(0)
       TillDate.setUTCMilliseconds(0)
@@ -138,8 +132,7 @@ const TradingChart = (props) => {
       sinceDate = new Date(Math.round(sinceDate.getTime() / coeff) * coeff)
 
       sinceDate = subDays(TillDate, 1)
-      console.log('Since: ' + sinceDate.toISOString());
-      console.log('Till: ' + TillDate.toISOString());
+
       
 
     }
@@ -207,10 +200,10 @@ const TradingChart = (props) => {
       candlestickSeries.applyOptions({
         priceFormat: {
             type: 'custom',
-            minMove: 0.02,
             formatter: (price) => {
               var m = -Math.floor( Math.log10(price) + 1)
-              return '$' + price.toFixed(m + 4)},
+              return '$' + price.toFixed(m + 4)
+            }
         },
     });
 
@@ -230,11 +223,11 @@ const TradingChart = (props) => {
       sinceDate.setUTCSeconds(0)
       sinceDate.setUTCMilliseconds(0)
 
-      console.log('Since: ' + sinceDate);
-      console.log('Till: ' + currentDate);
+      console.log('Since: ' + sinceDate.toISOString());
+      console.log('Till: ' + currentDate.toISOString());
       setsince(sinceDate.toISOString())
       settill(currentDate.toISOString())
-        refetch()
+      refetch()
     }, [props.tokenAddress, props.chartInterval, SelectedExchanges])
 
     useEffect(() => {

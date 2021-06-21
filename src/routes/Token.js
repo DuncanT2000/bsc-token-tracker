@@ -74,13 +74,14 @@ const Token = (props) => {
     const loadedswaps = useRef(false)
     const [chartInterval, setchartInterval] = useState(30);
     const [lpAddress, setlpAddress] = useState([]);
-    const [SelectedDropExchanges, setSelectedDropExchanges] = useState([]);
+    
     const [ExchangesSelected, setExchangesSelected] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
     const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
     const [noPairFound, setnoPairFound] = useState(false);
     const [displaySideBar, setdisplaySideBar] = useState(true);
-  
+    
+    const [SelectedDropExchanges, setSelectedDropExchanges] = useState([]);
   useEffect(() => {
     return () => {
       isMounted.current = false

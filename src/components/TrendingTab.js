@@ -18,16 +18,20 @@ const TrendingTab = (props) => {
    
   </tr>
         <tr> 
-        <td>
-                    <Link style={{color:'white'}} 
-                    to={`${props.tokenpathprefix}0x7083609fce4d1d8dc0c979aab8c869ea2c873402`}> 
-                    <p style={{color:'white'}}>PolkaDot</p>
-                    </Link>
-                    </td>
-        <td>
-        
-        </td>
-
+            <td>
+            <Link style={{color:'white'}} 
+            to={`${props.tokenpathprefix}0x7083609fce4d1d8dc0c979aab8c869ea2c873402`}> 
+                <p style={{color:'white'}}>PolkaDot</p>
+            </Link>
+            </td>
+        </tr>
+        <tr> 
+            <td>
+            <Link style={{color:'white'}} 
+            to={`${props.tokenpathprefix}0xb27adaffb9fea1801459a1a81b17218288c097cc`}> 
+                <p style={{color:'white'}}>PooCoin</p>
+            </Link>
+            </td>
         </tr>
             </tbody>
             </table>
