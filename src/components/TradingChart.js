@@ -191,6 +191,9 @@ const TradingChart = (props) => {
               visible: true,
           },
       },
+      crosshair:{
+        mode:0
+      }
       
       });
       

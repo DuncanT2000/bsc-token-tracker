@@ -3,10 +3,6 @@
 import React, { useEffect, useState, useContext,useRef } from 'react'
 import '../App.css'
 import SwapTable from '../components/SwapTable';
-import TradingChart from '../components/TradingChart.js';
-import TradingChartContainer from '../components/TradingChartContainer.js';
-import {useQuery, gql} from '@apollo/client'
-import { GET_CHART_DATA } from '../components/Queries';
 import {Web3Context} from '../components/Contexts/Web3Context.js'
 import {BlockContext} from '../components/Contexts/useBlockContext.js'
 import {LSContext} from '../components/Contexts/LSContext.js'
@@ -18,7 +14,8 @@ import {MdPlayArrow} from 'react-icons/md'
 import getTokenPrice from '../components/getTokenPrice'
 import getTokenPairAddress from '../components/getTokenPairAddress';
 import { Multiselect } from 'multiselect-react-dropdown';
-
+import {TVChartContainer} from '../components/TVChartContainer/index';
+import _ from 'lodash';
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
 
@@ -72,7 +69,6 @@ const Token = (props) => {
 
     const [swaps, setswaps] = useState([]);
     const loadedswaps = useRef(false)
-    const [chartInterval, setchartInterval] = useState(30);
     const [lpAddress, setlpAddress] = useState([]);
     
     const [ExchangesSelected, setExchangesSelected] = useState([]);
@@ -116,6 +112,7 @@ const initEffect = async () => {
   let tokenPairBUSDv1Address =pairNtokenResults.results.pancakeContractv1.callsReturnContext[1].returnValues[0]
   let tokenPairBUSDv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[2].returnValues[0]
   let BNBUSDPairv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[1].returnValues[0]
+
 
   if(tokenPairBUSDv2Address == "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16"){
     
@@ -294,11 +291,12 @@ else if (typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object'
 }else{
 
   if (props.match.params.tokenAddress == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
-    if (isMounted) {
-      console.log('Token is BNB');
+    if (isMounted.current) {
+      console.log('Token is BNB')
 
       const TSDetails = await fetch(`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${web3.utils.toChecksumAddress(props.match.params.tokenAddress)}/info.json`)
-  let TSDetailsJSON
+      let TSDetailsJSON
+      
   if (TSDetails.status == 200) {
     TSDetailsJSON = await TSDetails.json()
   }else{
@@ -327,10 +325,6 @@ else if (typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object'
     }
 
   }
-
-
-
-
 
   return 
 }
@@ -585,22 +579,31 @@ useEffect(() => {
                 width:'25%'
               }}
               />
-                <select id="selectInterval" onChange={(e)=>{setchartInterval(parseInt(e.target.value))}} name="chartInterval" id="chartInterval">
-                    <option value="1">1m</option>
-                    <option value="5">5m</option>
-                    <option value="10">10m</option>
-                    <option value="15">15m</option>
-                    <option value="30">30m</option>
-                    <option value="60">1h</option>
-                    <option value="300">5h</option>
-                    <option value="1440">24h</option>
-                </select> 
+
             </div>
-             
+            {typeof tokenDetails.tokenAddress == 'string'  ?
+            <TVChartContainer 
+            ExchangesSelected={ExchangesSelected}
+            tokenDetails={tokenDetails}
+            containerId= 'tv_chart_container'
+		        libraryPath= '/charting_library/'
+            chartsStorageUrl= 'https://saveload.tradingview.com'
+            chartsStorageApiVersion= '1.1'
+            clientId= 'tradingview.com'
+            userId= 'public_user_id'
+            fullscreen= {false}
+            autosize= {true}
+            studiesOverrides= {{}}
+            
+            />:
+            <> </>
+            }
+            
+             {/*
           <TradingChart SelectedExchanges={ExchangesSelected} bnbPrice={swapWeb3Context.bnbPrice}  
           tokenAddress={props.match.params.tokenAddress} 
           chartInterval={chartInterval} refetchData={refetchChart.current} />
-          
+          */}
           {/*
           <TradingChartContainer bnbPrice={swapWeb3Context.bnbPrice}  tokenAddress={props.match.params.tokenAddress} chartInterval={chartInterval} /> 
           */}
