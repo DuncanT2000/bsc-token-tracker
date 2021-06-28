@@ -28,15 +28,35 @@ export default {
       const parsedTokenInfo = JSON.parse(symbol)
         console.log('[resolveSymbol]: Method call', parsedTokenInfo.TokenSymbol);
         
-        const symbolInfo = {
-            ticker: parsedTokenInfo.TokenName,
-            name: parsedTokenInfo.TokenSymbol,
+        if (parsedTokenInfo.tokenAddress == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
+          const symbolInfo = {
+            ticker: `${parsedTokenInfo.TokenSymbol}/USD`,
+            name: `${parsedTokenInfo.TokenSymbol}/USD`,
             tokenAddress:parsedTokenInfo.tokenAddress,
-            description: '',
             type: 'crypto',
             session: '24x7',
             timezone: 'Etc/UTC',
-            minmov: 1,
+            exchange:'Test Exchange',
+            has_intraday: true,
+            has_no_volume: true,
+            minmov: 0,
+            has_weekly_and_monthly: true,
+            supported_resolutions: configurationData.supported_resolutions,
+            currency_code:'USD',
+            exchanges:[...parsedTokenInfo.exchanges]
+        };
+        console.log('[resolveSymbol]: Symbol resolved', parsedTokenInfo.TokenSymbol);
+        onSymbolResolvedCallback(symbolInfo);
+        }else{
+          const symbolInfo = {
+            ticker: `${parsedTokenInfo.TokenSymbol}/BNB`,
+            name: `${parsedTokenInfo.TokenSymbol}/BNB`,
+            tokenAddress:parsedTokenInfo.tokenAddress,
+            type: 'crypto',
+            session: '24x7',
+            timezone: 'Etc/UTC',
+            exchange:'diamondcharts.app',
+            minmov: 0,
             has_intraday: true,
             has_no_volume: true,
             has_weekly_and_monthly: true,
@@ -44,13 +64,18 @@ export default {
             volume_precision: 2,
             exchanges:[...parsedTokenInfo.exchanges]
         };
-
-        console.log('[resolveSymbol]: Symbol resolved', 'DOT');
+        console.log('[resolveSymbol]: Symbol resolved', parsedTokenInfo.TokenSymbol);
         onSymbolResolvedCallback(symbolInfo);
+        }
+
+        
+
+       
     },
     getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
         const { from, to, firstDataRequest } = periodParams;
         console.log(symbolInfo);
+        console.log("is First request: " + firstDataRequest);
         let interval;
             switch(resolution) {
                 case '1':
@@ -102,7 +127,7 @@ export default {
                   },
                   headers: {
                       "Content-Type": "application/json",
-                      "X-API-KEY": "BQYwEholP8rzpCidmKzempTEEuF0WCwZ"
+                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
                     }
                 })
           
@@ -125,7 +150,7 @@ export default {
                     },
                     headers: {
                       "Content-Type": "application/json",
-                      "X-API-KEY": "BQYwEholP8rzpCidmKzempTEEuF0WCwZ"
+                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
                     }
                   })
           
@@ -168,7 +193,7 @@ export default {
                     },
                     headers: {
                       "Content-Type": "application/json",
-                      "X-API-KEY": "BQYwEholP8rzpCidmKzempTEEuF0WCwZ"
+                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
                     }
                   })
           
@@ -212,7 +237,7 @@ export default {
                   },
                   headers: {
                       "Content-Type": "application/json",
-                      "X-API-KEY": "BQYwEholP8rzpCidmKzempTEEuF0WCwZ"
+                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
                     }
                 })
           
@@ -235,7 +260,7 @@ export default {
                     },
                     headers: {
                       "Content-Type": "application/json",
-                      "X-API-KEY": "BQYwEholP8rzpCidmKzempTEEuF0WCwZ"
+                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
                     }
                   })
           
@@ -260,7 +285,7 @@ export default {
 
               }else{
 
-                console.log('Chart is BNB-BUSD');
+                console.log('First Chart is BNB-BUSD');
           
                 let bars = []
         
@@ -278,11 +303,11 @@ export default {
                     },
                     headers: {
                       "Content-Type": "application/json",
-                      "X-API-KEY": "BQYwEholP8rzpCidmKzempTEEuF0WCwZ"
+                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
                     }
                   })
           
-
+                  
               
                   if (typeof res.data.data.ethereum.dexTrades == 'object') {
                     bars = res.data.data.ethereum.dexTrades.map((el,i) => {
@@ -323,4 +348,8 @@ export default {
     unsubscribeBars: (subscriberUID) => {
         console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
     },
+    getMarks: (symbolInfo, from, to, onDataCallback, resolution)=> {
+      console.log(symbolInfo);
+  },
+
 };
