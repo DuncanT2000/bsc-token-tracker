@@ -52,13 +52,13 @@ export default {
             type: 'crypto',
             session: '24x7',
             timezone: 'Etc/UTC',
-            exchange:'Test Exchange',
+            exchange:'diamondcharts.app',
+            minmov: 1,
             has_intraday: true,
             has_no_volume: true,
-            minmov: 0,
             has_weekly_and_monthly: true,
             supported_resolutions: configurationData.supported_resolutions,
-            currency_code:'USD',
+            volume_precision: 2,
             exchanges:[...parsedTokenInfo.exchanges]
         };
         console.log('[resolveSymbol]: Symbol resolved', parsedTokenInfo.TokenSymbol);
