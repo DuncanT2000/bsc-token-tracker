@@ -91,8 +91,6 @@ export default {
     },
     getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
         const { from, to, firstDataRequest } = periodParams;
-        console.log(symbolInfo);
-        console.log("is First request: " + firstDataRequest);
         let interval;
             switch(resolution) {
                 case '1':
@@ -138,14 +136,14 @@ export default {
                     "baseCurrency": symbolInfo.tokenAddress,
                     "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
                     "since": new Date(from * 1000).toISOString(),
-                    "till": new Date(to * 1000).toISOString(),
+                    "till": new Date(lastBarsCache.get('bars')[0].time).toISOString(),
                     "window": Number(resolution),
                     "exchangeAddresses": symbolInfo.exchanges,
                     "minTrade": 10
                   }
                 })
           
-                let bars = []
+                let bars = [];
           
 
 
@@ -181,7 +179,9 @@ export default {
                 
 
                 if (bars.length) {
+                  lastBarsCache.set('bars', bars)
                   onHistoryCallback(bars, { noData: false })
+                  
                 } else {
                   onHistoryCallback(bars, { noData: true })
                 }
@@ -189,7 +189,10 @@ export default {
               }else{
 
                 console.log('Chart is BNB-BUSD');
-          
+                
+                console.log('last bar:');
+                console.log( new Date(lastBarsCache.get('bars')[0].time).toISOString());
+
                 let bars = []
         
                 const res = await client.query({
@@ -198,7 +201,7 @@ export default {
                     "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
                     "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
                     "since": new Date(from * 1000).toISOString(),
-                    "till": new Date(to * 1000).toISOString(),
+                    "till": new Date(lastBarsCache.get('bars')[0].time).toISOString(),
                     "window": Number(resolution),
                     "exchangeAddresses": symbolInfo.exchanges,
                     "minTrade": 10
@@ -219,6 +222,7 @@ export default {
                   }
                 
                 if (bars.length) {
+                  lastBarsCache.set('bars', bars)
                   onHistoryCallback(bars, { noData: false })
                 } else {
                   onHistoryCallback(bars, { noData: true })
@@ -226,7 +230,9 @@ export default {
 
               }
 
-            }else{
+            }
+            // The else statement will run if its the first request
+            else{
 
               if (symbolInfo.tokenAddress != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
 
@@ -281,6 +287,7 @@ export default {
                 }
 
                 if (bars.length) {
+                  lastBarsCache.set('bars',bars)
                   onHistoryCallback(bars, { noData: false })
                 } else {
                   onHistoryCallback(bars, { noData: true })
@@ -307,9 +314,6 @@ export default {
                     }
                   })
 
-          
-                  
-              
                   if (typeof res.data.ethereum.dexTrades == 'object') {
                     bars = res.data.ethereum.dexTrades.map((el,i) => {
                       return ({
@@ -322,6 +326,7 @@ export default {
                   }
                 
                 if (bars.length) {
+                  lastBarsCache.set('bars',bars)
                   onHistoryCallback(bars, { noData: false })
                 } else {
                   onHistoryCallback(bars, { noData: true })
