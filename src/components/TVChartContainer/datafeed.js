@@ -5,6 +5,21 @@ import { makeApiRequest } from './helper.js';
   import axios from 'axios'
   import * as Constants from '../Queries';
 
+  import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { logDOM } from '@testing-library/react';
+
+  const cache = new InMemoryCache();
+
+  const client = new ApolloClient({
+  cache: cache,
+  uri: 'https://graphql.bitquery.io',
+  headers:{'X-API-KEY':process.env.REACT_APP_BQAPI},
+  name: 'chart-client',
+  version: '1.3',
+  queryDeduplication: false,
+  })
+
+
   const lastBarsCache = new Map();
 
 const configurationData = {
@@ -33,6 +48,7 @@ export default {
             ticker: `${parsedTokenInfo.TokenSymbol}/USD`,
             name: `${parsedTokenInfo.TokenSymbol}/USD`,
             tokenAddress:parsedTokenInfo.tokenAddress,
+            description:`${parsedTokenInfo.TokenSymbol}/USD`,
             type: 'crypto',
             session: '24x7',
             timezone: 'Etc/UTC',
@@ -52,11 +68,12 @@ export default {
             ticker: `${parsedTokenInfo.TokenSymbol}/BNB`,
             name: `${parsedTokenInfo.TokenSymbol}/BNB`,
             tokenAddress:parsedTokenInfo.tokenAddress,
+            description:`${parsedTokenInfo.TokenSymbol}/BNB`,
             type: 'crypto',
             session: '24x7',
             timezone: 'Etc/UTC',
             exchange:'diamondcharts.app',
-            minmov: 0,
+            minmov: 1,
             has_intraday: true,
             has_no_volume: true,
             has_weekly_and_monthly: true,
@@ -112,11 +129,12 @@ export default {
             if (!firstDataRequest){
               if (symbolInfo.tokenAddress != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
 
-                const response = await axios.post(
-                  Constants.GRAPHQL_API, {
+
+
+
+                const response = await client.query({
                   query: Constants.GET_CHART_DATA,
-                  variables: 
-                  {
+                  variables:{
                     "baseCurrency": symbolInfo.tokenAddress,
                     "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
                     "since": new Date(from * 1000).toISOString(),
@@ -124,22 +142,19 @@ export default {
                     "window": Number(resolution),
                     "exchangeAddresses": symbolInfo.exchanges,
                     "minTrade": 10
-                  },
-                  headers: {
-                      "Content-Type": "application/json",
-                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
-                    }
+                  }
                 })
           
                 let bars = []
           
-                if (typeof response.data.data.ethereum == 'object' && response.data.data.ethereum.dexTrades.length > 0) {
+
+
+                if (typeof response.data.ethereum == 'object' && response.data.ethereum.dexTrades.length > 0) {
                   // get WBNB to BUSD price
-          
-                  const res = await axios.post(
-                    Constants.GRAPHQL_API, {
+                  console.log('Token klines were fetched, now getting BNB price')
+                  const res = await client.query({
                     query: Constants.GET_CHART_DATA,
-                    variables: {
+                    variables:{
                       "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
                       "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
                       "since": new Date(from * 1000).toISOString(),
@@ -147,26 +162,24 @@ export default {
                       "window": Number(resolution),
                       "exchangeAddresses": symbolInfo.exchanges,
                       "minTrade": 10
-                    },
-                    headers: {
-                      "Content-Type": "application/json",
-                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
                     }
                   })
           
 
               
-                  if (typeof res.data.data.ethereum.dexTrades == 'object') {
-                    bars = response.data.data.ethereum.dexTrades.map((el,i) => {
+                  if (typeof res.data.ethereum.dexTrades == 'object') {
+                    bars = response.data.ethereum.dexTrades.map((el,i) => {
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
-                      low: el.minimum_price * res.data.data.ethereum.dexTrades[i].quotePrice,
-                      high: el.maximum_price * res.data.data.ethereum.dexTrades[i].quotePrice,
-                      open: Number(el.open_price) * res.data.data.ethereum.dexTrades[i].open_price, 
-                      close: Number(el.close_price) * res.data.data.ethereum.dexTrades[i].close_price, 
+                      low: el.minimum_price * res.data.ethereum.dexTrades[i].quotePrice,
+                      high: el.maximum_price * res.data.ethereum.dexTrades[i].quotePrice,
+                      open: Number(el.open_price) * res.data.ethereum.dexTrades[i].open_price, 
+                      close: Number(el.close_price) * res.data.ethereum.dexTrades[i].close_price, 
                     })})
                   }
                 }
+                
+
                 if (bars.length) {
                   onHistoryCallback(bars, { noData: false })
                 } else {
@@ -179,28 +192,23 @@ export default {
           
                 let bars = []
         
-                  const res = await axios.post(
-                    Constants.GRAPHQL_API, {
-                    query: Constants.GET_CHART_DATA,
-                    variables: {
-                      "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-                      "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
-                      "since": new Date(from * 1000).toISOString(),
-                      "till": new Date(to * 1000).toISOString(),
-                      "window": Number(resolution),
-                      "exchangeAddresses": symbolInfo.exchanges,
-                      "minTrade": 10
-                    },
-                    headers: {
-                      "Content-Type": "application/json",
-                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
-                    }
-                  })
+                const res = await client.query({
+                  query: Constants.GET_CHART_DATA,
+                  variables:{
+                    "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+                    "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+                    "since": new Date(from * 1000).toISOString(),
+                    "till": new Date(to * 1000).toISOString(),
+                    "window": Number(resolution),
+                    "exchangeAddresses": symbolInfo.exchanges,
+                    "minTrade": 10
+                  }
+                })
           
 
               
-                  if (typeof res.data.data.ethereum.dexTrades == 'object') {
-                    bars = res.data.data.ethereum.dexTrades.map((el,i) => {
+                  if (typeof res.data.ethereum.dexTrades == 'object') {
+                    bars = res.data.ethereum.dexTrades.map((el,i) => {
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
                       low: el.minimum_price,
@@ -222,11 +230,9 @@ export default {
 
               if (symbolInfo.tokenAddress != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
 
-                const response = await axios.post(
-                  Constants.GRAPHQL_API, {
+                const response = await client.query({
                   query: Constants.GET_CHART_DATA,
-                  variables: 
-                  {
+                  variables:{
                     "baseCurrency": symbolInfo.tokenAddress,
                     "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
                     "since": new Date(from * 1000).toISOString(),
@@ -234,22 +240,20 @@ export default {
                     "window": Number(resolution),
                     "exchangeAddresses": symbolInfo.exchanges,
                     "minTrade": 10
-                  },
-                  headers: {
-                      "Content-Type": "application/json",
-                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
-                    }
+                  }
                 })
-          
+
+                console.log(response.data);
+
                 let bars = []
           
-                if (typeof response.data.data.ethereum == 'object' && response.data.data.ethereum.dexTrades.length > 0) {
+
+                if (typeof response.data.ethereum == 'object' && response.data.ethereum.dexTrades.length > 0) {
                   // get WBNB to BUSD price
-          
-                  const res = await axios.post(
-                    Constants.GRAPHQL_API, {
+                  console.log('Token klines were fetched, now getting BNB price')
+                  const res = await client.query({
                     query: Constants.GET_CHART_DATA,
-                    variables: {
+                    variables:{
                       "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
                       "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
                       "since": new Date(from * 1000).toISOString(),
@@ -257,26 +261,25 @@ export default {
                       "window": Number(resolution),
                       "exchangeAddresses": symbolInfo.exchanges,
                       "minTrade": 10
-                    },
-                    headers: {
-                      "Content-Type": "application/json",
-                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
                     }
                   })
           
 
               
-                  if (typeof res.data.data.ethereum.dexTrades == 'object') {
-                    bars = response.data.data.ethereum.dexTrades.map((el,i) => {
+                  if (typeof res.data.ethereum.dexTrades == 'object') {
+                    bars = response.data.ethereum.dexTrades.map((el,i) => {
+                      
+  
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
-                      low: el.minimum_price * res.data.data.ethereum.dexTrades[i].quotePrice,
-                      high: el.maximum_price * res.data.data.ethereum.dexTrades[i].quotePrice,
-                      open: Number(el.open_price) * res.data.data.ethereum.dexTrades[i].open_price, 
-                      close: Number(el.close_price) * res.data.data.ethereum.dexTrades[i].close_price, 
+                      low: el.minimum_price * res.data.ethereum.dexTrades[i].quotePrice,
+                      high: el.maximum_price * res.data.ethereum.dexTrades[i].quotePrice,
+                      open: Number(el.open_price) * res.data.ethereum.dexTrades[i].open_price, 
+                      close: Number(el.close_price) * res.data.ethereum.dexTrades[i].close_price, 
                     })})
                   }
                 }
+
                 if (bars.length) {
                   onHistoryCallback(bars, { noData: false })
                 } else {
@@ -289,10 +292,11 @@ export default {
           
                 let bars = []
         
-                  const res = await axios.post(
-                    Constants.GRAPHQL_API, {
+              
+
+                  const res = await client.query({
                     query: Constants.GET_CHART_DATA,
-                    variables: {
+                    variables:{
                       "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
                       "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
                       "since": new Date(from * 1000).toISOString(),
@@ -300,17 +304,14 @@ export default {
                       "window": Number(resolution),
                       "exchangeAddresses": symbolInfo.exchanges,
                       "minTrade": 10
-                    },
-                    headers: {
-                      "Content-Type": "application/json",
-                      "X-API-KEY": "BQYjIUatq3759TQYfHEEoOcbmPPYaS8Z"
                     }
                   })
+
           
                   
               
-                  if (typeof res.data.data.ethereum.dexTrades == 'object') {
-                    bars = res.data.data.ethereum.dexTrades.map((el,i) => {
+                  if (typeof res.data.ethereum.dexTrades == 'object') {
+                    bars = res.data.ethereum.dexTrades.map((el,i) => {
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
                       low: el.minimum_price,

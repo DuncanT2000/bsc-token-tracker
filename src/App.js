@@ -30,9 +30,6 @@ const errorLink = onError(({graphqlErrors})=>{
 })
 
 
-
-console.log(process.env);
-
 const link = from([
   errorLink,
   new HttpLink({ uri:"https://graphql.bitquery.io",
