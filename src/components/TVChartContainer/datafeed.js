@@ -161,6 +161,9 @@ export default {
                   }
                 })
           
+                console.log(response.data.ethereum.dexTrades[0]);
+
+
                 if (typeof response.data.ethereum == 'object' && response.data.ethereum.dexTrades.length > 0) {
                   // get WBNB to BUSD price
                   console.log('Token klines were fetched, now getting BNB price')
@@ -179,15 +182,20 @@ export default {
           
 
                   if (typeof res.data.ethereum.dexTrades == 'object') {
-                    bars = response.data.ethereum.dexTrades.map((el,i) => {
-                      return ({
+                    response.data.ethereum.dexTrades.forEach((el, i) => {
+                      if ( new Date(el.timeInterval.minute).getTime() > from && new Date(el.timeInterval.minute).getTime() < new Date(lastBarsCache.get('bars')[1].time).getTime()) {
+                        bars = [...bars,{
                       time: new Date(el.timeInterval.minute).getTime(), 
                       low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
                       high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
                       open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
                       close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
-                    })})
+                    }]
+                      }
+                    });
+                    
                   }
+                  
                 }
                 
 
@@ -248,6 +256,7 @@ export default {
                   }
                 })
 
+                console.log(response.data.ethereum.dexTrades[0]);
 
                 if (typeof response.data.ethereum == 'object' && response.data.ethereum.dexTrades.length > 0) {
                   // get WBNB to BUSD price
@@ -278,6 +287,7 @@ export default {
                       high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
                       open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
                       close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
+                      volume: el.tradeAmount,
                     })})
 
                   }
@@ -315,6 +325,7 @@ export default {
                       high: el.maximum_price,
                       open: Number(el.open_price) , 
                       close: Number(el.close_price), 
+                      volume: el.tradeAmount,
                     })})
                   }
                 

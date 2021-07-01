@@ -235,23 +235,39 @@ const bUsdBalance = web3.utils.hexToNumberString(ReservesToken0Results.results.b
 
 
 swapWeb3Context.setbnbPrice(bUsdBalance/bnbBalance)
- 
+console.log(filteredAddress);
 const Token0Results = filteredAddress.map((element,i) => {
   const token0 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[1].returnValues[0];
-  const token1 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[2].returnValues[0];
+  const token1 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[2].returnValues[0]
+  
 
-  const BNBorBUSD =   
+  if (filteredAddress[0].address == "0x1B96B92314C44b159149f7E0303511fB2Fc4774f" && filteredAddress[1].address == "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16") {
+    const token0 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[1].returnValues[0];
+  const token1 = ReservesToken0Results.results['tokenPair'+i].callsReturnContext[2].returnValues[0]
+  
+
+    return {
+      'typeAddress': filteredAddress[i].address,
+      'type': 'BNB',
+      'address':element.address,
+      token0,
+      token1,
+      'BalanceOfPair':1,
+      'psV':element.ps.substring(element.ps.length - 1 , element.ps.length)
+    }
+    
+  }else{
+    const BNBorBUSD =   
   token0 == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" 
   || token1 == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" ? 'BNB': 
   token0 == "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56" 
   || token1 == "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56" ? 'BUSD' : ''
+  console.log(BNBorBUSD);
   const BalanceOfPair = BNBorBUSD == 'BNB' 
   ? 
   new bigDecimal((web3.utils.hexToNumberString(ReservesToken0Results.results[`${BNBorBUSD}PairBalance${BNBorBUSD.toLowerCase()+element.ps.substring(element.ps.length - 1 , element.ps.length)}`].callsReturnContext[0].returnValues[0].hex) / `1${"0".repeat(18)}`) * (bUsdBalance/bnbBalance)).getValue()
   : new bigDecimal((web3.utils.hexToNumberString(ReservesToken0Results.results[`${BNBorBUSD}PairBalance${BNBorBUSD.toLowerCase()+element.ps.substring(element.ps.length - 1 , element.ps.length)}`].callsReturnContext[0].returnValues[0].hex) / `1${"0".repeat(18)}`)).getValue()
   
-
-  console.log(BalanceOfPair);
 
   return {
     'typeAddress': BNBorBUSD == 'BNB' ?"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c":"0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
@@ -262,6 +278,9 @@ const Token0Results = filteredAddress.map((element,i) => {
     'BalanceOfPair':parseFloat(BalanceOfPair),
     'psV':element.ps.substring(element.ps.length - 1 , element.ps.length)
   }
+  }
+
+  
 });
 
 const TokenName = ReservesToken0Results.results.tokenDetails.callsReturnContext[0].returnValues[0]
