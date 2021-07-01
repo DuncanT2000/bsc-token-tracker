@@ -45,6 +45,7 @@ export default {
 
         const parsedTokenInfo = JSON.parse(symbol)
         console.log('[resolveSymbol]: Method call', parsedTokenInfo.TokenSymbol);
+        console.log(parsedTokenInfo);
         let symbolInfo;
         if (parsedTokenInfo.tokenAddress == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
           symbolInfo = {
@@ -67,6 +68,10 @@ export default {
             exchanges:[...parsedTokenInfo.exchanges]
         }
         }else{
+          var m = -Math.floor( Math.log10(new bigDecimal(parsedTokenInfo.TokenPrice).getValue()) + 1)
+          const max = parsedTokenInfo.lpaddress.reduce(function(prev, current) {
+            return (prev.BalanceOfPair > current.BalanceOfPair) ? prev : current
+        }) //returns object
           symbolInfo = {
             ticker: `${parsedTokenInfo.TokenSymbol}/BNB`,
             name: `${parsedTokenInfo.TokenSymbol}/BNB`,
@@ -77,8 +82,10 @@ export default {
             timezone: 'Etc/UTC',
             exchange:'diamondcharts.app',
             minmov: 1,
-            pricescale: 1000000000000,     
+            largestLP:max,
+            pricescale: parseInt(`1${"0".repeat(m+ 4)}`),     
             has_intraday: true,
+            has_weekly_and_monthly: true,
             has_no_volume: true,
             currency_code:'USD',
             supported_resolutions: configurationData.supported_resolutions,
@@ -88,7 +95,9 @@ export default {
         
         }
         console.log('[resolveSymbol]: Symbol resolved', parsedTokenInfo.TokenSymbol);
+        setTimeout(() => {
         onSymbolResolvedCallback(symbolInfo);
+        }, 0);
       }catch(e){
         console.log(e);
       }
@@ -99,9 +108,10 @@ export default {
        
     },
     getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
+
         const { from, to, firstDataRequest } = periodParams;
         let interval;
-            switch(resolution) {
+        switch(resolution) {
                 case '1':
                     interval = 1
                   break;
@@ -129,7 +139,7 @@ export default {
                 default:
                     interval = 15
               }
-        console.log('[getBars]: Method call', interval, new Date(from), new Date(to));
+        console.log('[getBars]: Method call', interval, new Date(0).setUTCSeconds(from), new Date(0).setUTCSeconds(to));
 
         try {
       
@@ -142,7 +152,7 @@ export default {
                   query: Constants.GET_CHART_DATA,
                   variables:{
                     "baseCurrency": symbolInfo.tokenAddress,
-                    "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+                    "quoteCurrency": symbolInfo.largestLP.typeAddress,
                     "since": new Date(from * 1000).toISOString(),
                     "till": new Date(lastBarsCache.get('bars')[0].time).toISOString(),
                     "window": Number(interval),
@@ -229,7 +239,7 @@ export default {
                   query: Constants.GET_CHART_DATA,
                   variables:{
                     "baseCurrency": symbolInfo.tokenAddress,
-                    "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+                    "quoteCurrency": symbolInfo.largestLP.typeAddress,
                     "since": new Date(from * 1000).toISOString(),
                     "till": new Date(to * 1000).toISOString(),
                     "window": Number(interval),
@@ -258,21 +268,23 @@ export default {
 
               
                   if (typeof res.data.ethereum.dexTrades == 'object') {
-
+                    console.log('From: ' + from);
+                    console.log('To: ' + to);
+                    
                     bars = response.data.ethereum.dexTrades.map((el,i) => {
-                      
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
                       low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
                       high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
                       open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
-                      close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(), 
+                      close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
                     })})
+
                   }
 
                   console.log('Bars have been created');
 
-                  console.log(bars);
+              
 
                 }
 
@@ -294,6 +306,8 @@ export default {
                   })
 
                   if (typeof res.data.ethereum.dexTrades == 'object') {
+                    console.log('From: ' + from);
+                    console.log('To: ' + to);
                     bars = res.data.ethereum.dexTrades.map((el,i) => {
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
@@ -308,7 +322,8 @@ export default {
 
 
             }
-            
+      
+            console.log(bars);
       
             if (bars.length) {
               lastBarsCache.set('bars', bars)

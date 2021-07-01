@@ -70,14 +70,6 @@ export const TVChartContainer = (props) => {
 					interval.current = interval
 				}
 			);
-			
-			tvWidget.activeChart().onDataLoaded().subscribe(null,
-				() => {
-					console.log('Data loaded');
-					tvWidget.mainSeriesPriceFormatter()._pricescale = 10 ^ 20
-					console.log(tvWidget.mainSeriesPriceFormatter());
-				}
-			);
 
 		
 		});
