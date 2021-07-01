@@ -5,99 +5,93 @@ export const LSContext = createContext([])
 
 export const LSContextProvider = ({children}) => {
 
-    const [walletAddress, setwalletAddress] = useState(null)
-    const [walletInfo, setwalletInfo] = useState(null)
-    const [trackWalletInfo, settrackWalletInfo] = useState(null)
-    const [trackWalletAddress, settrackWalletAddress] = useState(null)
-    const [favourite, setfavourite] = useState([])
-    const [deleted, setdeleted] = useState([])
-    const [history, sethistory] = useState([])
+    const [walletAddress, setwalletAddress] = useState(JSON.parse(localStorage.getItem('walletAddress')) == null ? null :JSON.parse(localStorage.getItem('walletAddress')))
+    const [walletInfo, setwalletInfo] = useState(JSON.parse(localStorage.getItem('walletInfo')) == null ? null :JSON.parse(localStorage.getItem('walletInfo')))
+    const [trackWalletInfo, settrackWalletInfo] = useState(JSON.parse(localStorage.getItem('trackWalletInfo')) == null ? null :JSON.parse(localStorage.getItem('trackWalletInfo')))
+    const [trackWalletAddress, settrackWalletAddress] = useState(JSON.parse(localStorage.getItem('trackWalletAddress')) == null ? null :JSON.parse(localStorage.getItem('trackWalletAddress')))
+    const [favourite, setfavourite] = useState(JSON.parse(localStorage.getItem('favourite')) == null ? [] :JSON.parse(localStorage.getItem('favourite')))
+    const [deleted, setdeleted] = useState(JSON.parse(localStorage.getItem('deleted')) == null ? [] : JSON.parse(localStorage.getItem('deleted')))
+    const [history, sethistory] = useState(JSON.parse(localStorage.getItem('history')) == null ? [] : JSON.parse(localStorage.getItem('history')))
     const [selectedSideBarTab, setselectedSideBarTab] = useState(localStorage.getItem('selectedSideBarTab') != null && localStorage.getItem('selectedSideBarTab') != undefined  ? localStorage.getItem('selectedSideBarTab') : "Trending")
 
-    useEffect(() => {
-        
-        let currentDeleted = localStorage.getItem('deleted')
-        currentDeleted = currentDeleted == null ? localStorage.setItem('deleted',JSON.stringify([])) : JSON.parse(currentDeleted)
-        setdeleted(currentDeleted)
-        
-        let currentfavourite = localStorage.getItem('favourite')
-        currentfavourite = currentfavourite == null ? localStorage.setItem('favourite',JSON.stringify([])) : JSON.parse(currentfavourite)
-        setfavourite(currentfavourite)
-        
-        let currenthistory = localStorage.getItem('history')
-        currenthistory = currenthistory == null 
-        ? localStorage.setItem('history',JSON.stringify([])) 
-        : JSON.parse(currenthistory)
-
-        sethistory(currenthistory)
-
-        let currentselectedSideBar = localStorage.getItem('selectedSideBarTab')
-        currentselectedSideBar = currentselectedSideBar == null 
-        ? localStorage.setItem('selectedSideBarTab',JSON.stringify('Trending')) 
-        : JSON.parse(currentselectedSideBar)
-
-        setselectedSideBarTab(currentselectedSideBar)
-
-
-        let currentwalletInfo = localStorage.getItem('walletInfo')
-        currentwalletInfo = currentwalletInfo == [] || currentwalletInfo == null 
-        ? localStorage.setItem('walletInfo',JSON.stringify([])) 
-        : JSON.parse(currentwalletInfo)
-
-        setwalletInfo(currentwalletInfo)
-
-        let currentwalletAddress = localStorage.getItem('walletAddress')
-        currentwalletAddress = currentwalletAddress == null
-        ? localStorage.setItem('walletAddress',JSON.stringify(null)) 
-        : JSON.parse(currentwalletAddress)
-        setwalletAddress(currentwalletAddress)
-
-
-        let currentTrackwalletInfo = localStorage.getItem('trackWalletInfo')
-        currentTrackwalletInfo = currentTrackwalletInfo == [] || currentTrackwalletInfo == null 
-        ? localStorage.setItem('trackWalletInfo',JSON.stringify(null)) 
-        : JSON.parse(currentTrackwalletInfo)
-        settrackWalletInfo(currentTrackwalletInfo)
-
-        let currentTrackwalletAddress = localStorage.getItem('trackWalletAddress')
-        currentTrackwalletAddress = currentTrackwalletAddress == null
-        ? localStorage.setItem('trackWalletAddress',JSON.stringify(null)) 
-        : JSON.parse(currentTrackwalletAddress)
-        settrackWalletAddress(currentTrackwalletAddress)
-
-    }, [])
 
     useEffect(() => {
-        localStorage.setItem('favourite',JSON.stringify(favourite))
+        let currentfavourite = JSON.parse(localStorage.getItem('favourite'))
+        console.log("Favourites: ");
+        console.log(currentfavourite == null);
+        currentfavourite = currentfavourite == null
+        ? localStorage.setItem('favourite',JSON.stringify([]))
+        : localStorage.setItem('favourite',JSON.stringify(favourite))
     }, [favourite]);
 
     useEffect(() => {
+        let currentDeleted = JSON.parse(localStorage.getItem('deleted'))
+        console.log("Deleted: ");
+        console.log(currentDeleted);
+        currentDeleted = typeof currentDeleted == 'object'
+        ? 
         localStorage.setItem('deleted',JSON.stringify(deleted))
+        : localStorage.setItem('deleted',JSON.stringify(deleted))
     }, [deleted]);
 
     useEffect(() => {
-        localStorage.setItem('history',JSON.stringify(history))
+        let currenthistory = JSON.parse(localStorage.getItem('history'))
+        console.log("History: ");
+        console.log(currenthistory);
+        currenthistory = typeof currenthistory == 'object'
+        ? localStorage.setItem('history',JSON.stringify(history))
+        : localStorage.setItem('history',JSON.stringify(history))
+        
     }, [history]);
     
     useEffect(() => {
-        localStorage.setItem('walletInfo',JSON.stringify(walletInfo))
+        let currentwalletInfo = JSON.parse(localStorage.getItem('walletInfo'))
+        console.log("WalletInfo: ");
+        console.log(currentwalletInfo);
+        currentwalletInfo = typeof currentwalletInfo == 'object' 
+        ? localStorage.setItem('walletInfo',JSON.stringify(walletInfo))
+        : localStorage.setItem('walletInfo',JSON.stringify(walletInfo))
+        
     }, [walletInfo]);
 
     useEffect(() => {
-        localStorage.setItem('walletAddress',JSON.stringify(walletAddress))
+        let currentwalletAddress = JSON.parse(localStorage.getItem('walletAddress'))
+        console.log("walletAddress: ");
+        console.log(currentwalletAddress);
+        currentwalletAddress = typeof currentwalletAddress == 'object' 
+        ? localStorage.setItem('walletAddress',JSON.stringify(walletAddress))
+        : localStorage.setItem('walletAddress',JSON.stringify(walletAddress))
+        
     }, [walletAddress]);
 
     useEffect(() => {
-        localStorage.setItem('trackWalletInfo',JSON.stringify(trackWalletInfo))
+        let currentTrackwalletInfo = JSON.parse(localStorage.getItem('trackWalletInfo'))
+        console.log("trackWalletInfo: ");
+        console.log(currentTrackwalletInfo);
+        currentTrackwalletInfo = typeof currentTrackwalletInfo == 'object'
+        ? localStorage.setItem('trackWalletInfo',JSON.stringify(trackWalletInfo))
+        : localStorage.setItem('trackWalletInfo',JSON.stringify(trackWalletInfo))
+        
     }, [trackWalletInfo]);
 
     useEffect(() => {
-        localStorage.setItem('trackWalletAddress',JSON.stringify(trackWalletAddress))
+        let currentTrackwalletAddress = JSON.parse(localStorage.getItem('trackWalletAddress'))
+        console.log("trackWalletAddress: ");
+        console.log(currentTrackwalletAddress);
+        currentTrackwalletAddress = typeof currentTrackwalletAddress == 'object' 
+        ? localStorage.setItem('trackWalletAddress',JSON.stringify(trackWalletAddress))
+        : localStorage.setItem('trackWalletAddress',JSON.stringify(trackWalletAddress))
+        
     }, [trackWalletAddress]);
 
     useEffect(() => {
-        console.log(selectedSideBarTab);
-        localStorage.setItem('selectedSideBarTab',JSON.stringify(selectedSideBarTab))
+        let currentselectedSideBar = JSON.parse(localStorage.getItem('selectedSideBarTab'))
+        console.log("selectedSideBarTab: ");
+        console.log(currentselectedSideBar);
+        currentselectedSideBar = typeof currentselectedSideBar == 'object' 
+        ? localStorage.setItem('selectedSideBarTab',JSON.stringify(selectedSideBarTab))
+        : localStorage.setItem('selectedSideBarTab',JSON.stringify(selectedSideBarTab))
+        
     }, [selectedSideBarTab]);
 
 

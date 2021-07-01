@@ -1,6 +1,6 @@
 import {gql} from '@apollo/client'
 
-export const GRAPHQL_API = 'https://graphql.bitquery.io';
+export const GRAPHQL_API = 'https://www.graphql.bitquery.io';
 
 export const GET_WALLET_TOKEN = gql`
 query GetWalletTokens($network: EthereumNetwork!, $address: String!) {

@@ -57,10 +57,6 @@ export const TVChartContainer = (props) => {
 				(interval, timeframeObj) => {
 					tvWidget.chart().setResolution(interval)
 					interval.current = interval
-					timeframeObj.timeframe = { 
-						from: new Date('2015-01-01').getTime() / 1000,
-					to: new Date('2017-01-01').getTime() / 1000, type: "time-range" }
-
 				}
 			);
 			
