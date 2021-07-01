@@ -47,12 +47,23 @@ export const TVChartContainer = (props) => {
 			autosize: props.autosize,
 			studies_overrides: props.studiesOverrides,
 			theme:'Dark',
+			overrides: {
+				"paneProperties.background": "#131722",
+				"paneProperties.vertGridProperties.color": "#363c4e",
+				"paneProperties.horzGridProperties.color": "#363c4e",
+				"symbolWatermarkProperties.transparency": 90,
+				"scalesProperties.textColor" : "#AAA",
+				"mainSeriesProperties.candleStyle.wickUpColor": '#336854',
+				"mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
+			   }
 		};
 
 		const tvWidgetConst = new widget(widgetOptions);
 		tvWidget = tvWidgetConst;
 		
 		tvWidget.onChartReady(() => {
+			
+			
 			tvWidget.activeChart().onIntervalChanged().subscribe(null,
 				(interval, timeframeObj) => {
 					tvWidget.chart().setResolution(interval)
@@ -60,6 +71,14 @@ export const TVChartContainer = (props) => {
 				}
 			);
 			
+			tvWidget.activeChart().onDataLoaded().subscribe(null,
+				() => {
+					console.log('Data loaded');
+					tvWidget.mainSeriesPriceFormatter()._pricescale = 10 ^ 20
+					console.log(tvWidget.mainSeriesPriceFormatter());
+				}
+			);
+
 		
 		});
 		return () => {

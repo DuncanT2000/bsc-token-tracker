@@ -256,14 +256,16 @@ const renderWalletTable = (LSCon, type, props) =>{
             <Column
               cellRenderer={(col) => {
                 const token = filteredTokens[col.rowIndex];
+                const tAddress = token.currency.address == "-" 
+                ? "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" : token.currency.address
 
                 return <Link
                 style={{ marginLeft: "10px", color: "white" }}
-                to={`${props.tokenpathprefix}${token.currency.address}`}>
-                  <div style={{width:'100%', color:'white'}}>
-                    <p style={{marginBottom:'0'}}>{token.currency.name}</p>
-                    <p style={{marginTop:'0',fontSize:'70%'}}>{token.currency.symbol}</p>
-                    </div></Link>
+                to={`${props.tokenpathprefix}${tAddress}`}>
+                <div style={{width:'100%', color:'white'}}>
+                <p style={{marginBottom:'0'}}>{token.currency.name}</p>
+                <p style={{marginTop:'0',fontSize:'70%'}}>{token.currency.symbol}</p>
+                </div></Link>
               }}
               disableSort={true}
               width={300}

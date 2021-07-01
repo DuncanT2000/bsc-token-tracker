@@ -7,6 +7,7 @@ import { makeApiRequest } from './helper.js';
 
   import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { logDOM } from '@testing-library/react';
+var bigDecimal = require('js-big-decimal');
 
   const cache = new InMemoryCache();
 
@@ -24,7 +25,7 @@ import { logDOM } from '@testing-library/react';
 
 const configurationData = {
     supported_resolutions: 
-    ['1', '5', '15', '30', '60','1D', '1W'],
+    ['1', '5','10', '15', '30', '60','1D', '1W'],
     supports_search: false,
    
    }
@@ -40,11 +41,13 @@ export default {
         onSymbolResolvedCallback,
         onResolveErrorCallback
     ) => {
-      const parsedTokenInfo = JSON.parse(symbol)
+      try{
+
+        const parsedTokenInfo = JSON.parse(symbol)
         console.log('[resolveSymbol]: Method call', parsedTokenInfo.TokenSymbol);
-        
+        let symbolInfo;
         if (parsedTokenInfo.tokenAddress == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
-          const symbolInfo = {
+          symbolInfo = {
             ticker: `${parsedTokenInfo.TokenSymbol}/USD`,
             name: `${parsedTokenInfo.TokenSymbol}/USD`,
             tokenAddress:parsedTokenInfo.tokenAddress,
@@ -53,18 +56,18 @@ export default {
             session: '24x7',
             timezone: 'Etc/UTC',
             exchange:'diamondcharts.app',
-            minmov: 1,
             has_intraday: true,
+            has_ticks: true,
+            minmov: 1,
+            pricescale: 100,
             has_no_volume: true,
             has_weekly_and_monthly: true,
             supported_resolutions: configurationData.supported_resolutions,
             volume_precision: 2,
             exchanges:[...parsedTokenInfo.exchanges]
-        };
-        console.log('[resolveSymbol]: Symbol resolved', parsedTokenInfo.TokenSymbol);
-        onSymbolResolvedCallback(symbolInfo);
+        }
         }else{
-          const symbolInfo = {
+          symbolInfo = {
             ticker: `${parsedTokenInfo.TokenSymbol}/BNB`,
             name: `${parsedTokenInfo.TokenSymbol}/BNB`,
             tokenAddress:parsedTokenInfo.tokenAddress,
@@ -74,16 +77,22 @@ export default {
             timezone: 'Etc/UTC',
             exchange:'diamondcharts.app',
             minmov: 1,
+            pricescale: 1000000000000,     
             has_intraday: true,
             has_no_volume: true,
-            has_weekly_and_monthly: true,
+            currency_code:'USD',
             supported_resolutions: configurationData.supported_resolutions,
             volume_precision: 2,
             exchanges:[...parsedTokenInfo.exchanges]
         };
+        
+        }
         console.log('[resolveSymbol]: Symbol resolved', parsedTokenInfo.TokenSymbol);
         onSymbolResolvedCallback(symbolInfo);
-        }
+      }catch(e){
+        console.log(e);
+      }
+
 
         
 
@@ -102,6 +111,9 @@ export default {
                 case '15':
                     interval = 15
                   break;
+                case '10':
+                    interval = 10
+                break;
                 case '30':
                     interval = 30
                   break;
@@ -120,15 +132,11 @@ export default {
         console.log('[getBars]: Method call', interval, new Date(from), new Date(to));
 
         try {
-
-            if (resolution === '1D') resolution = 1440
-            if (resolution === '1W') resolution = 10080
       
+            let bars = [];
+
             if (!firstDataRequest){
               if (symbolInfo.tokenAddress != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
-
-
-
 
                 const response = await client.query({
                   query: Constants.GET_CHART_DATA,
@@ -137,16 +145,12 @@ export default {
                     "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
                     "since": new Date(from * 1000).toISOString(),
                     "till": new Date(lastBarsCache.get('bars')[0].time).toISOString(),
-                    "window": Number(resolution),
+                    "window": Number(interval),
                     "exchangeAddresses": symbolInfo.exchanges,
                     "minTrade": 10
                   }
                 })
           
-                let bars = [];
-          
-
-
                 if (typeof response.data.ethereum == 'object' && response.data.ethereum.dexTrades.length > 0) {
                   // get WBNB to BUSD price
                   console.log('Token klines were fetched, now getting BNB price')
@@ -157,43 +161,31 @@ export default {
                       "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
                       "since": new Date(from * 1000).toISOString(),
                       "till": new Date(to * 1000).toISOString(),
-                      "window": Number(resolution),
+                      "window": Number(interval),
                       "exchangeAddresses": symbolInfo.exchanges,
                       "minTrade": 10
                     }
                   })
           
 
-              
                   if (typeof res.data.ethereum.dexTrades == 'object') {
                     bars = response.data.ethereum.dexTrades.map((el,i) => {
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
-                      low: el.minimum_price * res.data.ethereum.dexTrades[i].quotePrice,
-                      high: el.maximum_price * res.data.ethereum.dexTrades[i].quotePrice,
-                      open: Number(el.open_price) * res.data.ethereum.dexTrades[i].open_price, 
-                      close: Number(el.close_price) * res.data.ethereum.dexTrades[i].close_price, 
+                      low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                      high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                      open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
+                      close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
                     })})
                   }
                 }
                 
 
-                if (bars.length) {
-                  lastBarsCache.set('bars', bars)
-                  onHistoryCallback(bars, { noData: false })
-                  
-                } else {
-                  onHistoryCallback(bars, { noData: true })
-                }
-
               }else{
-
                 console.log('Chart is BNB-BUSD');
                 
                 console.log('last bar:');
                 console.log( new Date(lastBarsCache.get('bars')[0].time).toISOString());
-
-                let bars = []
         
                 const res = await client.query({
                   query: Constants.GET_CHART_DATA,
@@ -221,12 +213,7 @@ export default {
                     })})
                   }
                 
-                if (bars.length) {
-                  lastBarsCache.set('bars', bars)
-                  onHistoryCallback(bars, { noData: false })
-                } else {
-                  onHistoryCallback(bars, { noData: true })
-                }
+              
 
               }
 
@@ -236,6 +223,8 @@ export default {
 
               if (symbolInfo.tokenAddress != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
 
+                console.log(`Getting ${symbolInfo.name} Candles`);
+
                 const response = await client.query({
                   query: Constants.GET_CHART_DATA,
                   variables:{
@@ -243,16 +232,12 @@ export default {
                     "quoteCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
                     "since": new Date(from * 1000).toISOString(),
                     "till": new Date(to * 1000).toISOString(),
-                    "window": Number(resolution),
+                    "window": Number(interval),
                     "exchangeAddresses": symbolInfo.exchanges,
                     "minTrade": 10
                   }
                 })
 
-                console.log(response.data);
-
-                let bars = []
-          
 
                 if (typeof response.data.ethereum == 'object' && response.data.ethereum.dexTrades.length > 0) {
                   // get WBNB to BUSD price
@@ -264,7 +249,7 @@ export default {
                       "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
                       "since": new Date(from * 1000).toISOString(),
                       "till": new Date(to * 1000).toISOString(),
-                      "window": Number(resolution),
+                      "window": Number(interval),
                       "exchangeAddresses": symbolInfo.exchanges,
                       "minTrade": 10
                     }
@@ -273,34 +258,28 @@ export default {
 
               
                   if (typeof res.data.ethereum.dexTrades == 'object') {
+
                     bars = response.data.ethereum.dexTrades.map((el,i) => {
                       
-  
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
-                      low: el.minimum_price * res.data.ethereum.dexTrades[i].quotePrice,
-                      high: el.maximum_price * res.data.ethereum.dexTrades[i].quotePrice,
-                      open: Number(el.open_price) * res.data.ethereum.dexTrades[i].open_price, 
-                      close: Number(el.close_price) * res.data.ethereum.dexTrades[i].close_price, 
+                      low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                      high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                      open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
+                      close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(), 
                     })})
                   }
-                }
 
-                if (bars.length) {
-                  lastBarsCache.set('bars',bars)
-                  onHistoryCallback(bars, { noData: false })
-                } else {
-                  onHistoryCallback(bars, { noData: true })
+                  console.log('Bars have been created');
+
+                  console.log(bars);
+
                 }
 
               }else{
 
                 console.log('First Chart is BNB-BUSD');
           
-                let bars = []
-        
-              
-
                   const res = await client.query({
                     query: Constants.GET_CHART_DATA,
                     variables:{
@@ -308,7 +287,7 @@ export default {
                       "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
                       "since": new Date(from * 1000).toISOString(),
                       "till": new Date(to * 1000).toISOString(),
-                      "window": Number(resolution),
+                      "window": Number(interval),
                       "exchangeAddresses": symbolInfo.exchanges,
                       "minTrade": 10
                     }
@@ -325,20 +304,19 @@ export default {
                     })})
                   }
                 
-                if (bars.length) {
-                  lastBarsCache.set('bars',bars)
-                  onHistoryCallback(bars, { noData: false })
-                } else {
-                  onHistoryCallback(bars, { noData: true })
-                }
-
               }
 
-             
 
             }
             
       
+            if (bars.length) {
+              lastBarsCache.set('bars', bars)
+              onHistoryCallback(bars, { noData: false })
+            } else {
+              onHistoryCallback(bars, { noData: true })
+            }
+
       
             
           } catch (err) {
