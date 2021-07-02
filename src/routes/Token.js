@@ -15,6 +15,7 @@ import getTokenPrice from '../components/getTokenPrice'
 import getTokenPairAddress from '../components/getTokenPairAddress';
 import {TVChartContainer} from '../components/TVChartContainer/index';
 import _ from 'lodash';
+import RightSidebar from '../components/RightSidebar/RightSidebar';
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
 var bigDecimal = require('js-big-decimal');
@@ -330,7 +331,7 @@ else if (typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object'
   
 }else{
 
-  if (props.match.params.tokenAddress.toLowerCase() == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
+  if (props.match.params.tokenAddress.toLowerCase() == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
     if (isMounted.current) {
       console.log('Token is BNB')
 
@@ -612,6 +613,7 @@ useEffect(() => {
           
           </div>
           </div>
+        <RightSidebar />
         </div>
     )
 }

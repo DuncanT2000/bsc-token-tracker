@@ -59,7 +59,7 @@ export default {
             exchange:'diamondcharts.app',
             has_intraday: true,
             has_ticks: true,
-            minmov: 1,
+            minmov: 2,
             pricescale: 100,
             has_no_volume: false,
             has_weekly_and_monthly: true,
@@ -239,7 +239,7 @@ export default {
                           close: new bigDecimal(new bigDecimal(el.close_price).getValue() * result[i].close_price).getValue(),  
                           volume: el.tradeAmount,
                         })
-                        
+
                     }
 
                       

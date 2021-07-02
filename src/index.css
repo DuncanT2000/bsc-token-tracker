@@ -203,6 +203,12 @@ code {
   height: 100vh;
 }
 
+#RightSBContainer{
+  width: 100%;
+  max-width: 250px;
+  height: 100vh;
+}
+
 .trading-chart{
   display: flex;
   justify-content: center;
