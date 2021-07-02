@@ -191,9 +191,21 @@ const SwapTable =  (props) => {
 
                     const PPT = amountUSD / tokenAmount 
 
-                    return <span className={type}>{PPT.toFixed(3)}</span> 
+                    return(
+                      <div> 
+                  <p style={{
+                    marginBlockStart: '0em',
+                    marginBlockEnd: '0'
 
-                  
+                  }} className={type}>{PPT.toFixed(3)}</p>
+                  <small className={type}>psV{filterLPAddress[0].psV}</small>
+                  </div> 
+                    )
+
+                    return <div>
+                    <span className={type}>{PPT.toFixed(3)} </span> 
+                    <small className={type}>psV{filterLPAddress[0].psV}</small>
+                    </div>
                   }} 
                   disableSort={true}  
                   width={colWid} 
