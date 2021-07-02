@@ -182,17 +182,58 @@ export default {
           
 
                   if (typeof res.data.ethereum.dexTrades == 'object') {
-                    response.data.ethereum.dexTrades.forEach((el, i) => {
-                      if ( new Date(el.timeInterval.minute).getTime() > from && new Date(el.timeInterval.minute).getTime() < new Date(lastBarsCache.get('bars')[1].time).getTime()) {
-                        bars = [...bars,{
-                      time: new Date(el.timeInterval.minute).getTime(), 
-                      low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
-                      high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
-                      open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
-                      close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
-                    }]
+                   
+                    bars = response.data.ethereum.dexTrades.map((el,i) => {
+                      
+                      if(symbolInfo.largestLP.typeAddress.toLowerCase() == "0xe9e7cea3dedca5984780bafc599bd69add087d56"){
+                        console.log('BUSD was detected as largest LP');
+                        if(i == 0){
+                          return ({
+                            time: new Date(el.timeInterval.minute).getTime(), 
+                            low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() ).getValue(),
+                            high: new bigDecimal(new bigDecimal(el.maximum_price).getValue()).getValue(),
+                            open: new bigDecimal(new bigDecimal(el.open_price).getValue()).getValue(), 
+                            close: new bigDecimal(new bigDecimal(el.close_price).getValue()).getValue(),  
+                            volume: el.tradeAmount,
+                          })
+                        }
+  
+                        
+                        return ({
+                        time: new Date(el.timeInterval.minute).getTime(), 
+                        low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() ).getValue(),
+                        high: new bigDecimal(new bigDecimal(el.maximum_price).getValue()).getValue(),
+                        open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue()).getValue(), 
+                        close: new bigDecimal(new bigDecimal(el.close_price).getValue()).getValue(),  
+                        volume: el.tradeAmount,
+                      })
                       }
-                    });
+                      else{
+                        if(i == 0){
+                            return ({
+                              time: new Date(el.timeInterval.minute).getTime(), 
+                              low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                              high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                              open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
+                              close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
+                              volume: el.tradeAmount,
+                            })
+                        }
+
+                      
+                        return ({
+                          time: new Date(el.timeInterval.minute).getTime(), 
+                          low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                          high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                          open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue() * res.data.ethereum.dexTrades[i-1]['close_price']).getValue(), 
+                          close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
+                          volume: el.tradeAmount,
+                        })
+                    }
+
+                      
+                  
+                  })
                     
                   }
                   
@@ -200,10 +241,7 @@ export default {
                 
 
               }else{
-                console.log('Chart is BNB-BUSD');
                 
-                console.log('last bar:');
-                console.log( new Date(lastBarsCache.get('bars')[0].time).toISOString());
         
                 const res = await client.query({
                   query: Constants.GET_CHART_DATA,
@@ -222,13 +260,25 @@ export default {
               
                   if (typeof res.data.ethereum.dexTrades == 'object') {
                     bars = res.data.ethereum.dexTrades.map((el,i) => {
+                      if(i == 0){
+                        return ({
+                          time: new Date(el.timeInterval.minute).getTime(), 
+                          low: el.minimum_price,
+                          high: el.maximum_price,
+                          open: el.open_price , 
+                          close: Number(el.close_price), 
+                          volume: el.tradeAmount,
+                        })
+                      }
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
                       low: el.minimum_price,
                       high: el.maximum_price,
-                      open: Number(el.open_price) , 
+                      open: res.data.ethereum.dexTrades[i-1]['close_price'] , 
                       close: Number(el.close_price), 
-                    })})
+                      volume: el.tradeAmount,
+                    })
+                  })
                   }
                 
               
@@ -241,7 +291,6 @@ export default {
 
               if (symbolInfo.tokenAddress != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
 
-                console.log(`Getting ${symbolInfo.name} Candles`);
 
                 const response = await client.query({
                   query: Constants.GET_CHART_DATA,
@@ -256,11 +305,9 @@ export default {
                   }
                 })
 
-                console.log(response.data.ethereum.dexTrades[0]);
 
                 if (typeof response.data.ethereum == 'object' && response.data.ethereum.dexTrades.length > 0) {
                   // get WBNB to BUSD price
-                  console.log('Token klines were fetched, now getting BNB price')
                   const res = await client.query({
                     query: Constants.GET_CHART_DATA,
                     variables:{
@@ -277,22 +324,60 @@ export default {
 
               
                   if (typeof res.data.ethereum.dexTrades == 'object') {
-                    console.log('From: ' + from);
-                    console.log('To: ' + to);
+
                     
                     bars = response.data.ethereum.dexTrades.map((el,i) => {
-                      return ({
-                      time: new Date(el.timeInterval.minute).getTime(), 
-                      low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
-                      high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
-                      open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
-                      close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
-                      volume: el.tradeAmount,
-                    })})
+                      if(symbolInfo.largestLP.typeAddress.toLowerCase() == "0xe9e7cea3dedca5984780bafc599bd69add087d56"){
+                        if(i == 0){
+                          return ({
+                            time: new Date(el.timeInterval.minute).getTime(), 
+                            low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() ).getValue(),
+                            high: new bigDecimal(new bigDecimal(el.maximum_price).getValue()).getValue(),
+                            open: new bigDecimal(new bigDecimal(el.open_price).getValue()).getValue(), 
+                            close: new bigDecimal(new bigDecimal(el.close_price).getValue()).getValue(),  
+                            volume: el.tradeAmount,
+                          })
+                        }
+  
+                        
+                        return ({
+                        time: new Date(el.timeInterval.minute).getTime(), 
+                        low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() ).getValue(),
+                        high: new bigDecimal(new bigDecimal(el.maximum_price).getValue()).getValue(),
+                        open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue()).getValue(), 
+                        close: new bigDecimal(new bigDecimal(el.close_price).getValue()).getValue(),  
+                        volume: el.tradeAmount,
+                      })
+                      }
+                      else{
+                        if(i == 0){
+                            return ({
+                              time: new Date(el.timeInterval.minute).getTime(), 
+                              low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                              high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                              open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
+                              close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
+                              volume: el.tradeAmount,
+                            })
+                        }
+
+                      
+                        return ({
+                          time: new Date(el.timeInterval.minute).getTime(), 
+                          low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                          high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                          open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue() * res.data.ethereum.dexTrades[i-1]['close_price']).getValue(), 
+                          close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
+                          volume: el.tradeAmount,
+                        })
+                    }
+
+                      
+                  
+                  })
 
                   }
 
-                  console.log('Bars have been created');
 
               
 
@@ -300,7 +385,6 @@ export default {
 
               }else{
 
-                console.log('First Chart is BNB-BUSD');
           
                   const res = await client.query({
                     query: Constants.GET_CHART_DATA,
@@ -316,17 +400,27 @@ export default {
                   })
 
                   if (typeof res.data.ethereum.dexTrades == 'object') {
-                    console.log('From: ' + from);
-                    console.log('To: ' + to);
+
                     bars = res.data.ethereum.dexTrades.map((el,i) => {
+                      if(i == 0){
+                        return ({
+                          time: new Date(el.timeInterval.minute).getTime(), 
+                          low: el.minimum_price,
+                          high: el.maximum_price,
+                          open: el.open_price , 
+                          close: Number(el.close_price), 
+                          volume: el.tradeAmount,
+                        })
+                      }
                       return ({
                       time: new Date(el.timeInterval.minute).getTime(), 
                       low: el.minimum_price,
                       high: el.maximum_price,
-                      open: Number(el.open_price) , 
+                      open: res.data.ethereum.dexTrades[i-1]['close_price'] , 
                       close: Number(el.close_price), 
                       volume: el.tradeAmount,
-                    })})
+                    })
+                  })
                   }
                 
               }
@@ -334,7 +428,6 @@ export default {
 
             }
       
-            console.log(bars);
       
             if (bars.length) {
               lastBarsCache.set('bars', bars)
