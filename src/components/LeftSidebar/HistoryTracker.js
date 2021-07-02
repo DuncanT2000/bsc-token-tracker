@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
-import {Web3Context} from './Contexts/Web3Context'
-import {LSContext} from './Contexts/LSContext'
+import {Web3Context} from '../Contexts/Web3Context'
+import {LSContext} from '../Contexts/LSContext'
 import { Link } from 'react-router-dom'
 import renderHistoryTable from './RenderHistoryTable'
 

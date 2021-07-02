@@ -47,7 +47,7 @@ export default {
         console.log('[resolveSymbol]: Method call', parsedTokenInfo.TokenSymbol);
         console.log(parsedTokenInfo);
         let symbolInfo;
-        if (parsedTokenInfo.tokenAddress == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
+        if (parsedTokenInfo.tokenAddress.toLowerCase() == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
           symbolInfo = {
             ticker: `${parsedTokenInfo.TokenSymbol}/USD`,
             name: `${parsedTokenInfo.TokenSymbol}/USD`,
@@ -61,7 +61,7 @@ export default {
             has_ticks: true,
             minmov: 1,
             pricescale: 100,
-            has_no_volume: true,
+            has_no_volume: false,
             has_weekly_and_monthly: true,
             supported_resolutions: configurationData.supported_resolutions,
             volume_precision: 2,
@@ -72,11 +72,12 @@ export default {
           const max = parsedTokenInfo.lpaddress.reduce(function(prev, current) {
             return (prev.BalanceOfPair > current.BalanceOfPair) ? prev : current
         }) //returns object
+        console.log(max);
           symbolInfo = {
-            ticker: `${parsedTokenInfo.TokenSymbol}/BNB`,
-            name: `${parsedTokenInfo.TokenSymbol}/BNB`,
+            ticker: `${parsedTokenInfo.TokenSymbol}/${max.type}`,
+            name: `${parsedTokenInfo.TokenSymbol}/${max.type}`,
             tokenAddress:parsedTokenInfo.tokenAddress,
-            description:`${parsedTokenInfo.TokenSymbol}/BNB`,
+            description:`${parsedTokenInfo.TokenSymbol}/${max.type}`,
             type: 'crypto',
             session: '24x7',
             timezone: 'Etc/UTC',
@@ -146,7 +147,7 @@ export default {
             let bars = [];
 
             if (!firstDataRequest){
-              if (symbolInfo.tokenAddress != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
+              if (symbolInfo.tokenAddress.toLowerCase() != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
 
                 const response = await client.query({
                   query: Constants.GET_CHART_DATA,
@@ -289,7 +290,7 @@ export default {
             // The else statement will run if its the first request
             else{
 
-              if (symbolInfo.tokenAddress != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
+              if (symbolInfo.tokenAddress.toLowerCase() != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
 
 
                 const response = await client.query({

@@ -1,8 +1,9 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './index.css';
 import { widget } from '../../charting_library';
 
 import datafeed from './datafeed'
+import { Multiselect } from 'multiselect-react-dropdown';
 
 let tvWidget;
 
@@ -14,18 +15,19 @@ function getLanguageFromURL() {
 
 export const TVChartContainer = (props) => {
 	
-	useMemo(() => {}, datafeed)
-
+	const [SelectedDropExchanges, setSelectedDropExchanges] = useState([]);
+    const [ExchangesSelected, setExchangesSelected] = useState([]);
+	const [rendercount, setrendercount] = useState(1);
 	const interval = useRef(localStorage.getItem('tradingview.chart.lastUsedTimeBasedResolution') || '15')
 	
 
 	useEffect(() => {
 		const exchanges = []
-		props.ExchangesSelected.length == 0 
+		ExchangesSelected.length == 0 
 		? 
 		exchanges.push("0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73")
 		:
-		exchanges.push(...props.ExchangesSelected)
+		exchanges.push(...ExchangesSelected)
 		console.log(exchanges);
 		const chartDetails = {...props.tokenDetails, exchanges: exchanges}
 		const widgetOptions = {
@@ -79,14 +81,43 @@ export const TVChartContainer = (props) => {
 				tvWidget = null;
 			}
 		}
-	}, [props.tokenDetails.tokenAddress, props.ExchangesSelected])
+	}, [props.tokenDetails.tokenAddress, ExchangesSelected, rendercount])
 
+	const onSelect = (selectedList, selectedItem) =>{
+		setSelectedDropExchanges(selectedList)
+		setExchangesSelected(selectedList.map((e)=>e.value))
+	  }
+	  const onRemove = (selectedList, removedItem) =>{
+		setSelectedDropExchanges(selectedList)
+		setExchangesSelected(selectedList.map((e)=>e.value))
+	  }
 
 	return (
+		<div className="chart-container">
+
+
+		<div className="chart-option-bar">
+			<button onClick={()=>setrendercount(p=> p+1)}>Reload!</button>
+		<Multiselect
+              options={[
+                { id: 1, value: "0xBCfCcbde45cE874adCB698cC183deBcF17952812", name:"PsV1" },
+                { id: 2, value: "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73" , name:"PsV2" },
+              ]}
+              labelledBy="Select Exchanges"
+              selectedValues={SelectedDropExchanges}
+              onSelect={onSelect}
+              onRemove={onRemove}    
+              displayValue="name"
+              style={{
+                width:'25%'
+              }}
+              />
+		</div>
 		<div
 		id={ props.containerId }
 		className={ 'TVChartContainer' }
 		/>
+		</div>
 	)
 }
 

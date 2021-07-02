@@ -1,5 +1,5 @@
 import React from 'react'
-import SideTab from '../components/SideTab.js';
+import SideTab from '../components/LeftSidebar/SideTab';
 import {Circle2} from 'react-preloaders';
 //0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c - BNB
 //0xe9e7cea3dedca5984780bafc599bd69add087d56 - BUSD

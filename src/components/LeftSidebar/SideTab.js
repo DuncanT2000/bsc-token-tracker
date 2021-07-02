@@ -5,7 +5,7 @@ import WalletTracker from './WalletTracker';
 import FavouriteTracker from './FavouriteTracker';
 import HistoryTracker from './HistoryTracker';
 import TrendingTab from './TrendingTab';
-import { LSContext } from './Contexts/LSContext';
+import { LSContext } from '../Contexts/LSContext';
 
 
   

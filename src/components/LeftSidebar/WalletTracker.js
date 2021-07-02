@@ -1,20 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Web3Context } from "./Contexts/Web3Context";
-import { LSContext } from "./Contexts/LSContext";
+import { Web3Context } from "../Contexts/Web3Context";
+import { LSContext } from "../Contexts/LSContext";
 import { useQuery } from "@apollo/client";
-import { GET_WALLET_TOKEN } from "./Queries";
-import { Link } from "react-router-dom";
-import { MdDelete, MdFavoriteBorder, MdFavorite } from "react-icons/md";
+import { GET_WALLET_TOKEN } from "../Queries";
 
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import {
-  List,
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-  Table,
-  Column,
-} from "react-virtualized";
 
 import renderWalletTable from './RenderTableFunction'
 import updateWalletBalances from './UpdateWalletBalances'

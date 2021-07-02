@@ -6,14 +6,13 @@ import SwapTable from '../components/SwapTable';
 import {Web3Context} from '../components/Contexts/Web3Context.js'
 import {BlockContext} from '../components/Contexts/useBlockContext.js'
 import {LSContext} from '../components/Contexts/LSContext.js'
-import SideTab from '../components/SideTab';
+import SideTab from '../components/LeftSidebar/SideTab';
 import TokenInfoBar from '../components/TokenInfoBar/TokenInfoBar';
 import {Alert} from '@material-ui/lab';
 import Web3 from 'web3'
 import {MdPlayArrow} from 'react-icons/md'
 import getTokenPrice from '../components/getTokenPrice'
 import getTokenPairAddress from '../components/getTokenPairAddress';
-import { Multiselect } from 'multiselect-react-dropdown';
 import {TVChartContainer} from '../components/TVChartContainer/index';
 import _ from 'lodash';
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
@@ -71,13 +70,12 @@ const Token = (props) => {
     const loadedswaps = useRef(false)
     const [lpAddress, setlpAddress] = useState([]);
     
-    const [ExchangesSelected, setExchangesSelected] = useState([]);
     const [tokenDetails, settokenDetails] = useState({});
     const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
     const [noPairFound, setnoPairFound] = useState(false);
     const [displaySideBar, setdisplaySideBar] = useState(true);
     
-    const [SelectedDropExchanges, setSelectedDropExchanges] = useState([]);
+  
   useEffect(() => {
     return () => {
       isMounted.current = false
@@ -332,7 +330,7 @@ else if (typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object'
   
 }else{
 
-  if (props.match.params.tokenAddress == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
+  if (props.match.params.tokenAddress.toLowerCase() == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
     if (isMounted.current) {
       console.log('Token is BNB')
 
@@ -550,14 +548,7 @@ useEffect(() => {
         props.match.params.tokenAddress])
 
 
-        const onSelect = (selectedList, selectedItem) =>{
-          setSelectedDropExchanges(selectedList)
-          setExchangesSelected(selectedList.map((e)=>e.value))
-        }
-        const onRemove = (selectedList, removedItem) =>{
-          setSelectedDropExchanges(selectedList)
-          setExchangesSelected(selectedList.map((e)=>e.value))
-        }
+        
 
     return (
     <div className="token-main-container">
@@ -598,26 +589,9 @@ useEffect(() => {
           
       
           <div className="token-swap-feed-container">
-            <div className="chart-option-bar">
-            <Multiselect
-              options={[
-                { id: 1, value: "0xBCfCcbde45cE874adCB698cC183deBcF17952812", name:"PsV1" },
-                { id: 2, value: "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73" , name:"PsV2" },
-              ]}
-              labelledBy="Select Exchanges"
-              selectedValues={SelectedDropExchanges}
-              onSelect={onSelect}
-              onRemove={onRemove}    
-              displayValue="name"
-              style={{
-                width:'25%'
-              }}
-              />
-
-            </div>
+            
             {typeof tokenDetails.tokenAddress == 'string'  ?
             <TVChartContainer 
-            ExchangesSelected={ExchangesSelected}
             tokenDetails={tokenDetails}
             containerId= 'tv_chart_container'
 		        libraryPath= '/charting_library/'
@@ -633,14 +607,6 @@ useEffect(() => {
             <> </>
             }
             
-             {/*
-          <TradingChart SelectedExchanges={ExchangesSelected} bnbPrice={swapWeb3Context.bnbPrice}  
-          tokenAddress={props.match.params.tokenAddress} 
-          chartInterval={chartInterval} refetchData={refetchChart.current} />
-          */}
-          {/*
-          <TradingChartContainer bnbPrice={swapWeb3Context.bnbPrice}  tokenAddress={props.match.params.tokenAddress} chartInterval={chartInterval} /> 
-          */}
           <SwapTable loaded={loadedswaps.current} swaps={swaps} TokenDetails={tokenDetails} 
           bnbPrice={swapWeb3Context.bnbPrice}/> 
           

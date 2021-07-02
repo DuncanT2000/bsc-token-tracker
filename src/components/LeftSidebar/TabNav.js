@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
 
-import { LSContext } from './Contexts/LSContext';
+import { LSContext } from '../Contexts/LSContext';
 
 const TabNav = (props) => {
 
