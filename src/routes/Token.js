@@ -331,7 +331,7 @@ else if (typeof ReservesToken0Results.results.tokenPairBalancebnb1 == 'object'
   
 }else{
 
-  if (props.match.params.tokenAddress.toLowerCase() == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"){
+  if (props.match.params.tokenAddress.toLowerCase() == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
     if (isMounted.current) {
       console.log('Token is BNB')
 
