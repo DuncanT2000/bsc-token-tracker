@@ -62,7 +62,7 @@ const TokenInfoBar = (props) => {
     return ( 
 
          <div  style={{marginLeft:'1vw', width:'100%',display:'flex',flexDirection:'row', 
-          alignItems: 'center', justifyContent: 'center'}}>
+          alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
           
           <div id="tokenInfoContainer" className={props.displaySideBar ? 'small-font' : 'large-font'}>
             <img id="token-icon"

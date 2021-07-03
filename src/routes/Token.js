@@ -76,6 +76,7 @@ const Token = (props) => {
     const [noPairFound, setnoPairFound] = useState(false);
     const [displaySideBar, setdisplaySideBar] = useState(true);
     
+
   
   useEffect(() => {
     return () => {
@@ -84,13 +85,14 @@ const Token = (props) => {
   }, [])
 
 useEffect(() => {
-  if(!web3.utils.isAddress(props.match.params.tokenAddress )){
+  if(!web3.utils.isAddress(props.match.params.tokenAddress)){
     if (isMounted) {
       setinvalidTokenAddress(true)
     }
     return
   }else{
     if (isMounted) {
+      props.match.params.tokenAddress = web3.utils.toChecksumAddress(props.match.params.tokenAddress)
       setdisplaySideBar(false)
       setinvalidTokenAddress(false)
     }

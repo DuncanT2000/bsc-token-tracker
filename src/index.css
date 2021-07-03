@@ -206,6 +206,7 @@ code {
 #RightSBContainer{
   width: 100%;
   max-width: 250px;
+  background-color: red;
   height: 100vh;
 }
 
