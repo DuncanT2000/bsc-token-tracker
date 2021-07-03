@@ -19,7 +19,8 @@ export const TVChartContainer = (props) => {
     const [ExchangesSelected, setExchangesSelected] = useState([]);
 	const [rendercount, setrendercount] = useState(1);
 	const interval = useRef(localStorage.getItem('tradingview.chart.lastUsedTimeBasedResolution') || '15')
-	
+	const allSwaps = useRef([])
+	const filtedSwaps = useRef([])
 
 	useEffect(() => {
 		const exchanges = []
@@ -82,6 +83,10 @@ export const TVChartContainer = (props) => {
 			}
 		}
 	}, [props.tokenDetails.tokenAddress, ExchangesSelected, rendercount])
+
+	useEffect(() => {
+		allSwaps.current = props.swaps;
+	}, [props.swaps]);
 
 	const onSelect = (selectedList, selectedItem) =>{
 		setSelectedDropExchanges(selectedList)

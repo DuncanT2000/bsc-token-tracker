@@ -469,8 +469,8 @@ useEffect(() => {
             console.log(swapevents);
 
 
-            if (swapevents.length > 400) {
-              const results = await processSwaps(swapevents.slice(swapevents.length - 400,swapevents.length))
+            if (swapevents.length > 250) {
+              const results = await processSwaps(swapevents.slice(swapevents.length - 250,swapevents.length))
               console.log(results);
             if (isMounted) {
               setswaps([...swaps,...results].reverse())
@@ -593,9 +593,10 @@ useEffect(() => {
       
           <div className="token-swap-feed-container">
             
-            {typeof tokenDetails.tokenAddress == 'string'  ?
+            {typeof tokenDetails.tokenAddress == 'string' && swaps.length > 0  ?
             <TVChartContainer 
             tokenDetails={tokenDetails}
+            swaps={swaps}
             containerId= 'tv_chart_container'
 		        libraryPath= '/charting_library/'
             chartsStorageUrl= 'https://saveload.tradingview.com'

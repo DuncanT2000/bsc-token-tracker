@@ -375,8 +375,8 @@ export default {
                         if(i == 0){
                             return ({
                               time: new Date(el.timeInterval.minute).getTime(), 
-                              low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
-                              high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
+                              low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].minimum_price).getValue(),
+                              high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].maximum_price).getValue(),
                               open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
                               close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
                               volume: el.tradeAmount,
@@ -391,8 +391,8 @@ export default {
                       
                         return ({
                           time: new Date(el.timeInterval.minute).getTime(), 
-                          low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * result[i].quotePrice).getValue(),
-                          high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * result[i].quotePrice).getValue(),
+                          low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * result[i].minimum_price).getValue(),
+                          high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * result[i].maximum_price).getValue(),
                           open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue() 
                             * result[i-1]['close_price']).getValue(), 
                           close: new bigDecimal(new bigDecimal(el.close_price).getValue() * result[i].close_price).getValue(),  
