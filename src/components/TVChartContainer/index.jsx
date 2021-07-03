@@ -21,6 +21,9 @@ export const TVChartContainer = (props) => {
 	const interval = useRef(localStorage.getItem('tradingview.chart.lastUsedTimeBasedResolution') || '15')
 	const allSwaps = useRef([])
 	const filtedSwaps = useRef([])
+	const latestKlineTime = useRef(0)
+	const currentKlineData = useRef({})
+	
 
 	useEffect(() => {
 		const exchanges = []
@@ -36,11 +39,11 @@ export const TVChartContainer = (props) => {
 			// BEWARE: no trailing slash is expected in feed UR
 			datafeed: datafeed,
 			interval: props.interval,
-			container_id: props.containerId,
+			container: props.containerId,
 			library_path: props.libraryPath,
 			interval: interval.current,
 			locale: getLanguageFromURL() || 'en',
-			disabled_features: ['use_localstorage_for_settings','header_symbol_search'],
+			disabled_features: ['use_localstorage_for_settings','header_symbol_search','timezone_menu'],
 			enabled_features: ['study_templates'],
 			charts_storage_url: props.chartsStorageUrl,
 			charts_storage_api_version: props.chartsStorageApiVersion,
@@ -50,15 +53,6 @@ export const TVChartContainer = (props) => {
 			autosize: props.autosize,
 			studies_overrides: props.studiesOverrides,
 			theme:'Dark',
-			overrides: {
-				"paneProperties.background": "#131722",
-				"paneProperties.vertGridProperties.color": "#363c4e",
-				"paneProperties.horzGridProperties.color": "#363c4e",
-				"symbolWatermarkProperties.transparency": 90,
-				"scalesProperties.textColor" : "#AAA",
-				"mainSeriesProperties.candleStyle.wickUpColor": '#336854',
-				"mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
-			   }
 		};
 
 		const tvWidgetConst = new widget(widgetOptions);
@@ -74,6 +68,22 @@ export const TVChartContainer = (props) => {
 				}
 			);
 
+			tvWidget.activeChart().onDataLoaded().subscribe(null,
+				 async () => {
+					console.log('Data Loaded');
+					const candles = await tvWidget.activeChart().exportData({})
+					const latestKline = {
+						time: candles.data[candles.data.length -1][0],
+						open: candles.data[candles.data.length -1][1],
+						high: candles.data[candles.data.length -1][2],
+						low: candles.data[candles.data.length -1][3],
+						close: candles.data[candles.data.length -1][4],
+					}
+					latestKlineTime.current = latestKline.time;
+				}
+			);
+
+
 		
 		});
 		return () => {
@@ -86,6 +96,8 @@ export const TVChartContainer = (props) => {
 
 	useEffect(() => {
 		allSwaps.current = props.swaps;
+		console.log(ExchangesSelected);
+		filtedSwaps.current = props.swaps;
 	}, [props.swaps]);
 
 	const onSelect = (selectedList, selectedItem) =>{
