@@ -208,6 +208,7 @@ code {
   max-width: 250px;
   background-color: red;
   height: 100vh;
+  display: none;
 }
 
 .trading-chart{
