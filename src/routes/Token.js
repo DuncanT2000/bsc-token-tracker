@@ -123,10 +123,6 @@ const initEffect = async () => {
   let BNBUSDPairv2Address =pairNtokenResults.results.pancakeContractv2.callsReturnContext[1].returnValues[0]
 
 
-  if(tokenPairBUSDv2Address == "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16"){
-    
-  }
-
 const tokenPairAddressArray = [{'ps':'bnb1','address':tokenPairBNBv1Address},
 {'ps':'bnb2','address':tokenPairBNBv2Address}, 
 {'ps':'busd1','address':tokenPairBUSDv1Address}, 

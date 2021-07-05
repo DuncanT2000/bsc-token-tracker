@@ -64,7 +64,6 @@ const configurationData = {
 		
 				const parsedTokenInfo = JSON.parse(symbol)
 				console.log('[resolveSymbol]: Method call', parsedTokenInfo.TokenSymbol);
-				console.log(parsedTokenInfo);
 				let symbolInfo;
 				if (parsedTokenInfo.tokenAddress.toLowerCase() == "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
 				  symbolInfo = {
@@ -91,7 +90,6 @@ const configurationData = {
 				  const max = parsedTokenInfo.lpaddress.reduce(function(prev, current) {
 					return (prev.BalanceOfPair > current.BalanceOfPair) ? prev : current
 				}) //returns object
-				console.log(max);
 				  symbolInfo = {
 					ticker: `${parsedTokenInfo.TokenSymbol}/${max.type}`,
 					name: `${parsedTokenInfo.TokenSymbol}/${max.type}`,
@@ -159,169 +157,15 @@ const configurationData = {
 						default:
 							interval = 15
 					  }
-				console.log('[getBars]: Method call', interval, new Date(0).setUTCSeconds(from), new Date(0).setUTCSeconds(to));
+				console.log('[getBars]: Method call', interval, new Date(from * 1000), new Date(to * 1000));
 		
 				try {
 			  
+
 					let bars = [];
-		
-					if (!firstDataRequest){
+					console.log(lastBarsCache.length);
+
 					  if (symbolInfo.tokenAddress.toLowerCase() != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
-		
-						const response = await client.query({
-						  query: Constants.GET_CHART_DATA,
-						  variables:{
-							"baseCurrency": symbolInfo.tokenAddress,
-							"quoteCurrency": symbolInfo.largestLP.typeAddress,
-							"since": new Date(from * 1000).toISOString(),
-							"till": new Date(lastBarsCache.get('bars')[0].time).toISOString(),
-							"window": Number(interval),
-							"exchangeAddresses": symbolInfo.exchanges,
-							"minTrade": 10
-						  }
-						})
-				  
-		
-		
-						if (typeof response.data.ethereum == 'object' && response.data.ethereum.dexTrades.length > 0) {
-						  // get WBNB to BUSD price
-						  console.log('Token klines were fetched, now getting BNB price')
-						  const res = await client.query({
-							query: Constants.GET_CHART_DATA,
-							variables:{
-							  "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-							  "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
-							  "since": new Date(from * 1000).toISOString(),
-							  "till": new Date(to * 1000).toISOString(),
-							  "window": Number(interval),
-							  "exchangeAddresses": symbolInfo.exchanges,
-							  "minTrade": 10
-							}
-						  })
-		
-						  let result = res.data.ethereum.dexTrades.filter(o1 => 
-							{
-							  return response.data.ethereum.dexTrades.some(o2 => {
-							   return new Date(o1.timeInterval.minute).getTime() === new Date(o2.timeInterval.minute).getTime()
-							  })
-							
-							});
-							
-				  
-		
-						  if (typeof res.data.ethereum.dexTrades == 'object') {
-						   
-							bars = response.data.ethereum.dexTrades.map((el,i) => {
-							  
-							  if(symbolInfo.largestLP.typeAddress.toLowerCase() == "0xe9e7cea3dedca5984780bafc599bd69add087d56".toLowerCase()){
-								console.log('BUSD was detected as largest LP');
-								if(i == 0){
-								  return ({
-									time: new Date(el.timeInterval.minute).getTime(), 
-									low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() ).getValue(),
-									high: new bigDecimal(new bigDecimal(el.maximum_price).getValue()).getValue(),
-									open: new bigDecimal(new bigDecimal(el.open_price).getValue()).getValue(), 
-									close: new bigDecimal(new bigDecimal(el.close_price).getValue()).getValue(),  
-									volume: el.tradeAmount,
-								  })
-								}
-		  
-								
-								return ({
-								time: new Date(el.timeInterval.minute).getTime(), 
-								low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() ).getValue(),
-								high: new bigDecimal(new bigDecimal(el.maximum_price).getValue()).getValue(),
-								open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue()).getValue(), 
-								close: new bigDecimal(new bigDecimal(el.close_price).getValue()).getValue(),  
-								volume: el.tradeAmount,
-							  })
-							  }
-							  else{
-								if(i == 0){
-									return ({
-									  time: new Date(el.timeInterval.minute).getTime(), 
-									  low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
-									  high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].quotePrice).getValue(),
-									  open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
-									  close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
-									  volume: el.tradeAmount,
-									})
-								}
-		
-							  
-								return ({
-								  time: new Date(el.timeInterval.minute).getTime(), 
-								  low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * result[i].quotePrice).getValue(),
-								  high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * result[i].quotePrice).getValue(),
-								  open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue() 
-									* result[i-1]['close_price']).getValue(), 
-								  close: new bigDecimal(new bigDecimal(el.close_price).getValue() * result[i].close_price).getValue(),  
-								  volume: el.tradeAmount,
-								})
-		
-							}
-		
-							  
-						  
-						  })
-							
-						  }
-						  
-						}
-						
-		
-					  }else{
-						
-				
-						const res = await client.query({
-						  query: Constants.GET_CHART_DATA,
-						  variables:{
-							"baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-							"quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
-							"since": new Date(from * 1000).toISOString(),
-							"till": new Date(lastBarsCache.get('bars')[0].time).toISOString(),
-							"window": Number(resolution),
-							"exchangeAddresses": symbolInfo.exchanges,
-							"minTrade": 10
-						  }
-						})
-				  
-		
-					  
-						  if (typeof res.data.ethereum.dexTrades == 'object') {
-							bars = res.data.ethereum.dexTrades.map((el,i) => {
-							  if(i == 0){
-								return ({
-								  time: new Date(el.timeInterval.minute).getTime(), 
-								  low: el.minimum_price,
-								  high: el.maximum_price,
-								  open: el.open_price , 
-								  close: Number(el.close_price), 
-								  volume: el.tradeAmount,
-								})
-							  }
-							  return ({
-							  time: new Date(el.timeInterval.minute).getTime(), 
-							  low: el.minimum_price,
-							  high: el.maximum_price,
-							  open: res.data.ethereum.dexTrades[i-1]['close_price'] , 
-							  close: Number(el.close_price), 
-							  volume: el.tradeAmount,
-							})
-						  })
-						  }
-						
-					  
-		
-					  }
-		
-					}
-					// The else statement will run if its the first request
-					else{
-		
-					  if (symbolInfo.tokenAddress.toLowerCase() != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
-		
-		
 						const response = await client.query({
 						  query: Constants.GET_CHART_DATA,
 						  variables:{
@@ -472,9 +316,6 @@ const configurationData = {
 						  }
 						
 					  }
-		
-		
-					}
 			  
 					latestKlineTime.current =((bars[bars.length - 1].time + (interval * 60 * 1000)));
 
@@ -485,7 +326,7 @@ const configurationData = {
 					var date = new Date();
 					const msDown = roundDownToXMinutes(date)
 					var cdate = new Date(msDown);
-					console.log(cdate)
+					
 
 
 
@@ -499,14 +340,14 @@ const configurationData = {
 					} else {
 					  onHistoryCallback(bars, { noData: true })
 					}
-		
-			  
+	
 					
 				  } catch (err) {
 					console.log({ err })
 					onErrorCallback(err)
 				  }
 				
+				  
 		
 			},
 			subscribeBars: (symbolInfo, resolution, onRealtimeCallback, subscribeUID, onResetCacheNeededCallback) => {
@@ -565,23 +406,6 @@ const configurationData = {
 				}
 			);
 
-			tvWidget.activeChart().onDataLoaded().subscribe(null,
-				 async () => {
-					console.log('Data Loaded');
-					const candles = await tvWidget.activeChart().exportData({})
-					const latestKline = {
-						time: candles.data[candles.data.length -1][0],
-						open: candles.data[candles.data.length -1][1],
-						high: candles.data[candles.data.length -1][2],
-						low: candles.data[candles.data.length -1][3],
-						close: candles.data[candles.data.length -1][4],
-					}
-					latestKlineTime.current = latestKline.time;
-				}
-			);
-
-
-		
 		});
 		return () => {
 			if (tvWidget !== null) {
