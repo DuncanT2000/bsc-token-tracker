@@ -103,6 +103,7 @@ const configurationData = {
 					largestLP:max,
 					pricescale: parseInt(`1${"0".repeat(m+ 4)}`),     
 					has_intraday: true,
+					has_daily: true,
 					has_weekly_and_monthly: true,
 					has_no_volume: false,
 					currency_code:'USD',
@@ -157,43 +158,52 @@ const configurationData = {
 						default:
 							interval = 15
 					  }
-				console.log('[getBars]: Method call', interval, new Date(from * 1000), new Date(to * 1000));
-		
+				
 				try {
 			  
+					console.group('getBars')
+					console.log('[getBars]: Method call', interval, new Date(from * 1000), new Date(to * 1000));
+			
+					console.log('Interval: ' + interval);
 
-					let bars = [];
-					console.log(lastBarsCache.length);
-
-					  if (symbolInfo.tokenAddress.toLowerCase() != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){
+	
+					
+					  if (symbolInfo.tokenAddress.toLowerCase() != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){					
 						const response = await client.query({
 						  query: Constants.GET_CHART_DATA,
 						  variables:{
 							"baseCurrency": symbolInfo.tokenAddress,
 							"quoteCurrency": symbolInfo.largestLP.typeAddress,
 							"since": new Date(from * 1000).toISOString(),
-							"till": new Date(to * 1000).toISOString(),
+							"till": new Date(to * 1000).toISOString(), //lastBarsCache.size > 0 ? new Date(lastBarsCache.get('bars')[0].time).toISOString() : new Date(to * 1000).toISOString(),
 							"window": Number(interval),
 							"exchangeAddresses": symbolInfo.exchanges,
 							"minTrade": 10
 						  }
 						})
+
+						if (response.data.ethereum.dexTrades.length === 0) {
+							console.log('No Bar Found');
+							onHistoryCallback([], { noData: true });
+							return;
+						}
 		
-		
-						if (typeof response.data.ethereum == 'object' && response.data.ethereum.dexTrades.length > 0) {
-						  // get WBNB to BUSD price
-						  const res = await client.query({
+						const res = await client.query({
 							query: Constants.GET_CHART_DATA,
 							variables:{
 							  "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
 							  "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
 							  "since": new Date(from * 1000).toISOString(),
-							  "till": new Date(to * 1000).toISOString(),
+							  "till": new Date(to * 1000).toISOString(), //lastBarsCache.size > 0 ? new Date(lastBarsCache.get('bars')[0].time).toISOString() : new Date(to * 1000).toISOString(),
 							  "window": Number(interval),
 							  "exchangeAddresses": symbolInfo.exchanges,
 							  "minTrade": 10
 							}
 						  })
+		
+						if (typeof response.data.ethereum == 'object') {
+						  
+						 
 				  
 						  
 		
@@ -204,68 +214,79 @@ const configurationData = {
 							  })
 							
 							});
+
+							console.log(result);
 							
-							
+							let bars = [];
 					
 					  
 						  if (typeof res.data.ethereum.dexTrades == 'object') {
+
 		
-							
-							bars = response.data.ethereum.dexTrades.map((el,i) => {
-							  if(symbolInfo.largestLP.typeAddress.toLowerCase() == "0xe9e7cea3dedca5984780bafc599bd69add087d56".toLowerCase()){
-								if(i == 0){
-								  return ({
+							response.data.ethereum.dexTrades.forEach((el, i) => {
+								if (new Date(el.timeInterval.minute).getTime() >= from* 1000 && new Date(el.timeInterval.minute).getTime() < to* 1000) {
+									if(symbolInfo.largestLP.typeAddress.toLowerCase() == "0xe9e7cea3dedca5984780bafc599bd69add087d56".toLowerCase()){
+									if(i == 0){
+									  bars = [...bars,{
+										time: new Date(el.timeInterval.minute).getTime(), 
+										low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() ).getValue(),
+										high: new bigDecimal(new bigDecimal(el.maximum_price).getValue()).getValue(),
+										open: new bigDecimal(new bigDecimal(el.open_price).getValue()).getValue(), 
+										close: new bigDecimal(new bigDecimal(el.close_price).getValue()).getValue(),  
+										volume: el.tradeAmount,
+									  }]
+
+									}else{
+									bars =[...bars,{
 									time: new Date(el.timeInterval.minute).getTime(), 
 									low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() ).getValue(),
 									high: new bigDecimal(new bigDecimal(el.maximum_price).getValue()).getValue(),
-									open: new bigDecimal(new bigDecimal(el.open_price).getValue()).getValue(), 
+									open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue()).getValue(), 
 									close: new bigDecimal(new bigDecimal(el.close_price).getValue()).getValue(),  
 									volume: el.tradeAmount,
-								  })
-								}
-		  
-								
-								return ({
-								time: new Date(el.timeInterval.minute).getTime(), 
-								low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() ).getValue(),
-								high: new bigDecimal(new bigDecimal(el.maximum_price).getValue()).getValue(),
-								open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue()).getValue(), 
-								close: new bigDecimal(new bigDecimal(el.close_price).getValue()).getValue(),  
-								volume: el.tradeAmount,
-							  })
-							  }
-							  else{
-								if(i == 0){
-									return ({
+								  }]
+									}
+			  
+									
+									
+								  }
+								  else{
+									if(i == 0){
+										bars =[...bars,{
+										  time: new Date(el.timeInterval.minute).getTime(), 
+										  low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].minimum_price).getValue(),
+										  high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].maximum_price).getValue(),
+										  open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
+										  close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
+										  volume: el.tradeAmount,
+										}]
+										
+									}else{
+										bars = [...bars,{
 									  time: new Date(el.timeInterval.minute).getTime(), 
-									  low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * res.data.ethereum.dexTrades[i].minimum_price).getValue(),
-									  high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * res.data.ethereum.dexTrades[i].maximum_price).getValue(),
-									  open: new bigDecimal(new bigDecimal(el.open_price).getValue() * res.data.ethereum.dexTrades[i].open_price).getValue(), 
-									  close: new bigDecimal(new bigDecimal(el.close_price).getValue() * res.data.ethereum.dexTrades[i].close_price).getValue(),  
+									  low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * result[i].minimum_price).getValue(),
+									  high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * result[i].maximum_price).getValue(),
+									  open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue() 
+										* result[i-1]['close_price']).getValue(), 
+									  close: new bigDecimal(new bigDecimal(el.close_price).getValue() * result[i].close_price).getValue(),  
 									  volume: el.tradeAmount,
-									})
-								}
-		
-							
-		
-		
+									}]
+									}
+			
 								
-		
-							  
-								return ({
-								  time: new Date(el.timeInterval.minute).getTime(), 
-								  low: new bigDecimal(new bigDecimal(el.minimum_price).getValue() * result[i].minimum_price).getValue(),
-								  high: new bigDecimal(new bigDecimal(el.maximum_price).getValue() * result[i].maximum_price).getValue(),
-								  open: new bigDecimal(new bigDecimal(response.data.ethereum.dexTrades[i-1]['close_price']).getValue() 
-									* result[i-1]['close_price']).getValue(), 
-								  close: new bigDecimal(new bigDecimal(el.close_price).getValue() * result[i].close_price).getValue(),  
-								  volume: el.tradeAmount,
-								})
-							}
-		
-							  
-						  
-						  })
+									
+								}
+								}
+
+								
+							});
+							console.log('Bars in Range');
+							console.log(bars);
+
+							console.log(`[getBars]: returned ${bars.length} bar(s)`);
+							onHistoryCallback(bars, { noData: false });
+							
+							
 		
 						  }
 		
@@ -284,15 +305,17 @@ const configurationData = {
 							  "baseCurrency": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
 							  "quoteCurrency": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
 							  "since": new Date(from * 1000).toISOString(),
-							  "till": new Date(to * 1000).toISOString(),
+							  "till": new Date(to * 1000).toISOString(), //lastBarsCache.size > 0 ? new Date(lastBarsCache.get('bars')[0].time).toISOString() : new Date(to * 1000).toISOString(),
 							  "window": Number(interval),
 							  "exchangeAddresses": symbolInfo.exchanges,
 							  "minTrade": 10
 							}
 						  })
+						  let bars = [];
 		
 						  if (typeof res.data.ethereum.dexTrades == 'object') {
 		
+					
 							bars = res.data.ethereum.dexTrades.map((el,i) => {
 							  if(i == 0){
 								return ({
@@ -313,45 +336,43 @@ const configurationData = {
 							  volume: el.tradeAmount,
 							})
 						  })
+						  console.log(`[getBars]: returned ${bars.length} bar(s)`);
+						  onHistoryCallback(bars, { noData: false });
 						  }
 						
 					  }
 			  
-					latestKlineTime.current =((bars[bars.length - 1].time + (interval * 60 * 1000)));
-
-					const roundDownTo = roundTo => x => Math.floor(x / roundTo) * roundTo;
-
-					const roundDownToXMinutes = roundDownTo(1000 * 60 * interval);
-					
-					var date = new Date();
-					const msDown = roundDownToXMinutes(date)
-					var cdate = new Date(msDown);
-					
 
 
-
-					const d = allSwaps.current.filter(swap =>{
-						// Check for swaps for each Kline
-					});
-
-					if (bars.length) {
-					  lastBarsCache.set('bars', bars)
-					  onHistoryCallback(bars, { noData: false })
-					} else {
-					  onHistoryCallback(bars, { noData: true })
-					}
-	
+					/* 
+						const roundDownTo = roundTo => x => Math.floor(x / roundTo) * roundTo;
+						const roundDownToXMinutes = roundDownTo(1000 * 60 * interval);
+						var date = new Date();
+						const msDown = roundDownToXMinutes(date)
+						var cdate = new Date(msDown);
+						const numofBars = Math.abs(cdate.getTime() - allSwaps.current[allSwaps.current.length - 1].blockData.timestamp) % (1000 * 60 * interval)
+						console.log(numofBars)
+						const d = allSwaps.current.filter(swap =>{
+							// Check for swaps for each Kline
+						});
+					*/
 					
 				  } catch (err) {
 					console.log({ err })
 					onErrorCallback(err)
 				  }
 				
+				  console.groupEnd()
 				  
 		
 			},
 			subscribeBars: (symbolInfo, resolution, onRealtimeCallback, subscribeUID, onResetCacheNeededCallback) => {
+				console.group('subscribeBars')
+				console.log(symbolInfo);
 				console.log('[subscribeBars]: Method call with subscribeUID:', subscribeUID);
+				console.groupEnd()
+				
+
 			},
 			unsubscribeBars: (subscriberUID) => {
 				console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
@@ -376,13 +397,13 @@ const configurationData = {
 			symbol:  JSON.stringify(chartDetails),
 			// BEWARE: no trailing slash is expected in feed UR
 			datafeed: datafeedMemo,
-			interval: props.interval,
+			interval: interval.current,
 			container: props.containerId,
 			library_path: props.libraryPath,
 			interval: interval.current,
 			locale: getLanguageFromURL() || 'en',
-			disabled_features: ['use_localstorage_for_settings','header_symbol_search','timezone_menu'],
-			enabled_features: ['study_templates'],
+			disabled_features: ['header_symbol_search','timezone_menu'],
+			enabled_features: ['study_templates','use_localstorage_for_settings'],
 			charts_storage_url: props.chartsStorageUrl,
 			charts_storage_api_version: props.chartsStorageApiVersion,
 			client_id: props.clientId,
@@ -401,6 +422,14 @@ const configurationData = {
 			
 			tvWidget.activeChart().onIntervalChanged().subscribe(null,
 				(interval, timeframeObj) => {
+					if (interval == 5) {
+						const cdate = new Date()
+					widget.activeChart().setVisibleRange(
+						{ from: cdate.getUTCSeconds()-86400, to: cdate.getUTCSeconds() },
+						{ percentRightMargin: 20 }
+					).then(() => console.log('New visible range is applied'));
+					}
+					
 					tvWidget.chart().setResolution(interval)
 					interval.current = interval
 				}

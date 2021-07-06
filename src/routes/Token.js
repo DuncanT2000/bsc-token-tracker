@@ -466,7 +466,7 @@ useEffect(() => {
             const swapevents = await web3.eth.getPastLogs({
               address: Object.keys(lpAddress[0]),
               topics: ["0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"],
-              fromBlock:swapBlockContext.LatestBlock.number - 4500,
+              fromBlock:swapBlockContext.LatestBlock.number - 2500,
               toBlock: 'latest'
             })
 
@@ -597,7 +597,7 @@ useEffect(() => {
       
           <div className="token-swap-feed-container">
             
-            {typeof tokenDetails.tokenAddress == 'string' && swaps.length > 0  ?
+            {typeof tokenDetails.tokenAddress == 'string' && loadedswaps  ?
             <TVChartContainer 
             tokenDetails={tokenDetails}
             swaps={swaps}
