@@ -56,7 +56,7 @@ export default function MouseOverIcon(props) {
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <span>{converter.toWords(props.number)}</span>
+        <span>{ props.number < 10000000000 ? converter.toWords(props.number): 'Too Large'}</span>
       </Popover>
     </div>
   );
