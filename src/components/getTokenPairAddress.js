@@ -43,13 +43,11 @@ export default async function getTokenPairAddress(tokenAddress, multicall){
       },
     ];
     
-    try{
+    
       const pairNtokenResults = await multicall.call(contractCallContext);
       return pairNtokenResults
-    }
-    catch(e){
-      console.log(e);
-    }
+    
+   
     
     
 
