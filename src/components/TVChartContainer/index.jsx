@@ -31,14 +31,14 @@ export const TVChartContainer = (props) => {
 	const datafeedMemo = useMemo(() => {
 		const cache = new InMemoryCache();
 
-  const client = new ApolloClient({
-  cache: cache,
-  uri: 'https://graphql.bitquery.io',
-  headers:{'X-API-KEY':process.env.REACT_APP_BQAPI},
-  name: 'chart-client',
-  version: '1.3',
-  queryDeduplication: false,
-  })
+  	const client = new ApolloClient({
+		cache: cache,
+		uri: 'https://graphql.bitquery.io',
+		headers:{'X-API-KEY':process.env.REACT_APP_BQAPI},
+		name: 'chart-client',
+		version: '1.3',
+		queryDeduplication: false,
+  	})
 
 
   const lastBarsCache = new Map();
@@ -282,6 +282,7 @@ const configurationData = {
 							});
 							console.log('Bars in Range');
 							console.log(bars);
+
 
 							console.log(`[getBars]: returned ${bars.length} bar(s)`);
 							onHistoryCallback(bars, { noData: false });

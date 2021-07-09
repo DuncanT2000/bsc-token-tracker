@@ -74,6 +74,7 @@ const Token = (props) => {
     const [tokenDetails, settokenDetails] = useState({});
     const [invalidTokenAddress, setinvalidTokenAddress] = useState(false);
     const [noPairFound, setnoPairFound] = useState(false);
+    const [displayRightSideBar, setdisplayRightSideBar] = useState(true);
     const [displaySideBar, setdisplaySideBar] = useState(true);
     const [tokenAddress, setTokenAddress] = useState('');
 
@@ -102,6 +103,7 @@ useEffect(() => {
   }else{
     if (isMounted) {
       setdisplaySideBar(false)
+      setdisplayRightSideBar(false)
       setinvalidTokenAddress(false)
     }
     
@@ -116,7 +118,6 @@ const initEffect = async () => {
   const pairNtokenResults = await getTokenPairAddress(tokenAddress, multicall)
   
   console.log('pairNtokenResults is complete Successfully');
-
 
 
   let tokenPairBNBv1Address =pairNtokenResults.results.pancakeContractv1.callsReturnContext[0].returnValues[0]
@@ -624,7 +625,25 @@ useEffect(() => {
           
           </div>
           </div>
-        <RightSidebar />
+
+          <div id="open-close-SB-container">
+          {displayRightSideBar ?
+          <MdPlayArrow id="close-RSideBar" onClick={(e)=>{setdisplayRightSideBar(s=> !s)}} />
+          :
+          <MdPlayArrow id="open-RSideBar" onClick={(e)=>{ 
+            if (isMounted) {
+            setdisplayRightSideBar(s=> !s)
+            } }} />
+          }
+          </div>
+          {displayRightSideBar ?
+           <RightSidebar TokenDetails={tokenDetails}/>
+           : ''
+            }
+          
+          
+
+        
         </div>
     )
 }

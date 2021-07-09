@@ -203,13 +203,6 @@ code {
   height: 100vh;
 }
 
-#RightSBContainer{
-  width: 100%;
-  max-width: 250px;
-  background-color: red;
-  height: 100vh;
-  display: none;
-}
 
 .trading-chart{
   display: flex;
@@ -227,6 +220,16 @@ code {
 
 }
 
+  #open-RSideBar{
+    color:white; 
+    font-size: 100%;
+    transform: rotate(180deg);
+  }
+
+  #close-RSideBar{
+    color:white; 
+    font-size: 100%;
+  }
 
 
 
@@ -389,6 +392,7 @@ code {
     font-size: 100%;
     transform: rotate(180deg);
   }
+
 
   .SB-active{
     display: none;
@@ -899,7 +903,7 @@ code {
   
   }
 
-  /* SB Styling Tablet */
+  /* SB Styling Desktop */
 
   .token-info-container {
     background-color: rgba(22, 61, 82, 1);

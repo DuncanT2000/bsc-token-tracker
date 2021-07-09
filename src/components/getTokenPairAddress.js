@@ -1,6 +1,5 @@
 export default async function getTokenPairAddress(tokenAddress, multicall){
 
-  console.log(tokenAddress);
 
 
     const contractCallContext = [

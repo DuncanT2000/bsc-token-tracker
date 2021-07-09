@@ -16,6 +16,8 @@ const TokenInfoBar = (props) => {
     const web3 = tokenInfoWeb3Context.web3
     const [isLoading, setisLoading] = useState(true)
 
+
+
     useEffect(() => {
       return ()=>{
         isMounted.current = false
@@ -24,6 +26,7 @@ const TokenInfoBar = (props) => {
 
     useEffect(() => {
       if (isMounted.current) {
+        
         setisLoading(true)
       }
         
