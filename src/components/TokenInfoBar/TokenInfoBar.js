@@ -81,11 +81,15 @@ const TokenInfoBar = (props) => {
           <TokenInfoBarItem title="Price" isLoading={isLoading} 
           content={parseFloat(props.tokenDetails.TokenPrice).toFixed(12)} 
           displaySideBar={props.displaySideBar}/>
+          {
+          /*
           <TokenInfoBarItem title={`Token Supply`} isLoading={isLoading} 
           isNumber={true} content={parseInt(props.tokenDetails.TokenSupply / `1${"0".repeat(props.tokenDetails.TokenDecimals)}`)}
           displaySideBar={props.displaySideBar} />
           <TokenInfoBarItem title={`Market Cap`} isLoading={isLoading} isNumber={true} isMoney={true} content={parseInt(props.tokenDetails.TokenMC)} 
           displaySideBar={props.displaySideBar}/>
+          */
+          }
 
           <div id="tokenInfoContainer" >
           <p> {!isLoading ? tokenInfoLSContext.favourite.some(function (el) { return el.address.toUpperCase() == props.tokenAddress.toUpperCase() }) 
@@ -118,9 +122,6 @@ const TokenInfoBar = (props) => {
               <TokenInfoBarButton text="Trade" 
               displaySideBar={props.displaySideBar}
               url={`https://exchange.pancakeswap.finance/#/swap?outputCurrency=${props.tokenAddress}`} />
-              <TokenInfoBarButton text="BSC Scan" 
-              displaySideBar={props.displaySideBar}
-              url={`https://bscscan.com/address/${props.tokenAddress}`} />
               </div>
           </div>
           

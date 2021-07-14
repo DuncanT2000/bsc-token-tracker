@@ -161,13 +161,10 @@ const configurationData = {
 				
 				try {
 			  
-					console.group('getBars')
 					console.log('[getBars]: Method call', interval, new Date(from * 1000), new Date(to * 1000));
-			
-					console.log('Interval: ' + interval);
 
 	
-					
+					 // Gets Bars for None BNB tokens
 					  if (symbolInfo.tokenAddress.toLowerCase() != "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase()){					
 						const response = await client.query({
 						  query: Constants.GET_CHART_DATA,
@@ -182,11 +179,7 @@ const configurationData = {
 						  }
 						})
 
-						if (response.data.ethereum.dexTrades.length === 0) {
-							console.log('No Bar Found');
-							onHistoryCallback([], { noData: true });
-							return;
-						}
+
 		
 						const res = await client.query({
 							query: Constants.GET_CHART_DATA,
@@ -203,10 +196,6 @@ const configurationData = {
 		
 						if (typeof response.data.ethereum == 'object') {
 						  
-						 
-				  
-						  
-		
 						  let result = res.data.ethereum.dexTrades.filter(o1 => 
 							{
 							  return response.data.ethereum.dexTrades.some(o2 => {
@@ -215,8 +204,6 @@ const configurationData = {
 							
 							});
 
-							console.log(result);
-							
 							let bars = [];
 					
 					  
@@ -280,8 +267,12 @@ const configurationData = {
 
 								
 							});
-							console.log('Bars in Range');
-							console.log(bars);
+
+							if (bars.length === 0) {
+								console.log('No Bar Found');
+								onHistoryCallback([], { noData: true });
+								return;
+							}
 
 
 							console.log(`[getBars]: returned ${bars.length} bar(s)`);
@@ -297,6 +288,8 @@ const configurationData = {
 						}
 		
 					  }
+					 	
+					  // Gets Bars for BNB
 					  else{
 		
 				  
@@ -316,7 +309,6 @@ const configurationData = {
 		
 						  if (typeof res.data.ethereum.dexTrades == 'object') {
 		
-					
 							bars = res.data.ethereum.dexTrades.map((el,i) => {
 							  if(i == 0){
 								return ({
@@ -362,8 +354,7 @@ const configurationData = {
 					console.log({ err })
 					onErrorCallback(err)
 				  }
-				
-				  console.groupEnd()
+
 				  
 		
 			},
