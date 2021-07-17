@@ -1,6 +1,6 @@
 import React, {useContext, useRef, useEffect} from 'react'
-import '../index.css'
-import {Web3Context} from './Contexts/Web3Context.js'
+import '../../index.css'
+import {Web3Context} from '../Contexts/Web3Context.js'
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 

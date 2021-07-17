@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useContext,useRef } from 'react'
 import '../App.css'
-import SwapTable from '../components/SwapTable';
+import SwapTable from '../components/BottomTokenPage/SwapTable';
 import {Web3Context} from '../components/Contexts/Web3Context.js'
 import {BlockContext} from '../components/Contexts/useBlockContext.js'
 import {LSContext} from '../components/Contexts/LSContext.js'
@@ -16,6 +16,8 @@ import getTokenPairAddress from '../components/getTokenPairAddress';
 import {TVChartContainer} from '../components/TVChartContainer/index';
 import _ from 'lodash';
 import RightSidebar from '../components/RightSidebar/RightSidebar';
+
+
 let web3token = new Web3('https://bsc-dataseed1.defibit.io/');
 
 var bigDecimal = require('js-big-decimal');
@@ -77,6 +79,7 @@ const Token = (props) => {
     const [displayRightSideBar, setdisplayRightSideBar] = useState(true);
     const [displaySideBar, setdisplaySideBar] = useState(true);
     const [tokenAddress, setTokenAddress] = useState('');
+    const [bottomTabSelected, setbottomTabSelected] = useState('Swaps');
 
   
   useEffect(() => {
@@ -618,9 +621,21 @@ useEffect(() => {
             <> </>
             }
             
-          <SwapTable loaded={loadedswaps.current} swaps={swaps} TokenDetails={tokenDetails} 
-          bnbPrice={swapWeb3Context.bnbPrice}/> 
-          
+            <div>
+              <button onClick={()=>{setbottomTabSelected('Swaps')}}>Swaps</button>
+              <button onClick={()=>{setbottomTabSelected('LPINFO')}}>LP Info</button>
+            </div>
+            {bottomTabSelected === 'Swaps' ?
+            <SwapTable loaded={loadedswaps.current} swaps={swaps} TokenDetails={tokenDetails} 
+            bnbPrice={swapWeb3Context.bnbPrice}/> 
+            :
+            bottomTabSelected === 'LPINFO' 
+            ? 
+            <p>LP Information</p>
+            :
+            <SwapTable loaded={loadedswaps.current} swaps={swaps} TokenDetails={tokenDetails} 
+            bnbPrice={swapWeb3Context.bnbPrice}/> 
+            }
           </div>
           </div>
 
