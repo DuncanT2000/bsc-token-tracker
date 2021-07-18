@@ -19,7 +19,8 @@ const Home = () => {
           color:'white',
           }}>
           <h1 style={{color:'white'}}>Home</h1>
-        <SideTab  pathprefix="./tokens/"/>
+
+        <SideTab page="Home"  pathprefix="./tokens/"/>
         </div>
         
         </React.Fragment>

@@ -18,10 +18,14 @@ const Navbar = (props) => {
     return (
         <div className="nav-bar">
             <div id="icon-container">
+                <a href="../">
                 <img 
                 id="logo"
                 src={'../diamondLogo.png'}/>
+                </a>
+                <a href="../">
                 <p id="site-title">Diamond Charts</p>
+                </a>
                 </div>
                 
                 <SearchTokenInput tokenAddressInput={props.tokenAddressInput} 

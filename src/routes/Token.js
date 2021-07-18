@@ -92,6 +92,7 @@ const Token = (props) => {
     if(web3.utils.isAddress(props.match.params.tokenAddress)){
       if (isMounted) {
         setTokenAddress(web3.utils.toChecksumAddress(props.match.params.tokenAddress))
+        
       }
       return
     }
@@ -437,9 +438,7 @@ if(web3.utils.isAddress(props.match.params.tokenAddress) ){
   setswaps([])
   initEffect()
 
-  
 }
-
 
 }, [tokenAddress]);
 
@@ -462,8 +461,6 @@ useEffect(() => {
     // 0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73 - Pancake V2
     // Time Format - YYYY-MM-DDTHH:MM:SS.MMMZ
 
-
-    
 
         useEffect(() => {
 
@@ -566,7 +563,7 @@ useEffect(() => {
     return (
     <div className="token-main-container">
           {displaySideBar ?<div className="token-info-container">
-          <SideTab pathprefix="./" />
+          <SideTab page="Token" pathprefix="./" />
           </div>: <></>}
           <div id="open-close-SB-container">
           {displaySideBar ?

@@ -38,6 +38,7 @@ export const TVChartContainer = (props) => {
 		name: 'chart-client',
 		version: '1.3',
 		queryDeduplication: false,
+		shouldBatch: true,
   	})
 
 

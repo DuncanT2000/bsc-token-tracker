@@ -953,4 +953,11 @@ code {
     font-size: clamp(12px,var(--tokenInfoFontSize-Tablet-low-desktop), 15px);
   }
 
+
+  .left-SB-Container{
+    display:flex;
+    flex-direction: column;
+    margin: 0 25%;
+  }
+
 }
