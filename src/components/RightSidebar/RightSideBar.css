@@ -1,22 +1,114 @@
 
-#RightSBContainer{
-  width: 100%;
-  max-width: 250px;
-  height: 100vh;
-}
 
-.TokenInfoItem{
-  margin-top:20px;
-}
-
-.itemHeader{
+@media only screen and (min-width:320px) and (max-width:480px) {
+  #RightSBContainer{
+    width: 100%;
+    max-width: 250px;
+    height: 100vh;
+  }
   
-  margin:0px;
-  margin-bottom: 2%;
+  #RightSBContainer h3{
+    font-size: 12px;
+  }
+  
+  .TokenInfoItem{
+    margin-top:20px;
+    font-size: 10px;
+  }
+  
+  .itemHeader{
+    margin:0px;
+    margin-bottom: 2%;
+    font-size: 11px;
+  }
+  
+  .itemValue{
+    margin:0px;
+  }
+  
 }
 
-.itemValue{
-  margin:0px;
+@media only screen and (min-width:480px) and (max-width:768px) {
+  #RightSBContainer{
+    width: 100%;
+    max-width: 250px;
+    height: 100vh;
+  }
+  
+  #RightSBContainer h3{
+    font-size: 12px;
+  }
+  
+  .TokenInfoItem{
+    margin-top:20px;
+    font-size: 10px;
+  }
+  
+  .itemHeader{
+    margin:0px;
+    margin-bottom: 2%;
+    font-size: 11px;
+  }
+  
+  .itemValue{
+    margin:0px;
+  }
 }
 
+@media only screen and (min-width:769px) and (max-width:1024px) {
 
+  #RightSBContainer{
+    width: 100%;
+    max-width: 250px;
+    height: 100vh;
+  }
+  
+  #RightSBContainer h3{
+    font-size: 14px;
+  }
+  
+  .TokenInfoItem{
+    margin-top:20px;
+    font-size: 12px;
+  }
+  
+  .itemHeader{
+    margin:0px;
+    margin-bottom: 2%;
+    font-size: 14px;
+  }
+  
+  .itemValue{
+    margin:0px;
+  }
+
+}
+
+@media only screen and (min-width:1024px) {
+  
+  #RightSBContainer{
+    width: 100%;
+    max-width: 250px;
+    height: 100vh;
+  }
+  
+  #RightSBContainer h3{
+    font-size: 16px;
+  }
+  
+  .TokenInfoItem{
+    margin-top:20px;
+    font-size: 13px;
+  }
+  
+  .itemHeader{
+    margin:0px;
+    margin-bottom: 2%;
+    font-size: 15px;
+  }
+  
+  .itemValue{
+    margin:0px;
+  }
+
+}
